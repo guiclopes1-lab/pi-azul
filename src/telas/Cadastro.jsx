@@ -5,8 +5,6 @@ function Cadastro() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Aqui você pode adicionar a lógica de cadastro
-    console.log("Cadastro enviado!");
   };
 
   return (
