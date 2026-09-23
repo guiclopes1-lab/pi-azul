@@ -1,0 +1,217 @@
+/* Configurações Gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Fonte chique e minimalista */
+}
+
+body {
+    background-color: #050505; /* Preto profundo mais elegante */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    outline: 0px solid transparent;
+    transition: outline 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Efeito azul claro na borda da tela com brilho suave (Neon Glow) */
+body:has(#termos:checked) {
+    outline: 6px solid #00d2ff;
+    box-shadow: inset 0 0 40px rgba(0, 210, 255, 0.3), 0 0 50px rgba(0, 210, 255, 0.1);
+}
+
+/* Navbar Minimalista */
+.navbar {
+    width: 100%;
+    background-color: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px); /* Efeito de vidro fosco atrás da barra */
+    padding: 25px 40px;
+    border-bottom: 1px solid #161616;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-title {
+    font-size: 20px;
+    font-weight: 300; /* Letras mais finas são mais chiques */
+    letter-spacing: 6px; /* Letras bem espaçadas */
+    text-align: center;
+    color:#c8a96e;
+}
+
+/* Container do Formulário */
+.cadastro-container {
+    width: 100%;
+    max-width: 600px; /* Um pouco mais compacto e elegante */
+    padding: 0 20px;
+}
+
+.cadastro-form {
+    background-color: #0d0d0d;
+    padding: 40px; /* Mais espaço interno */
+    border-radius: 12px; /* Cantos levemente mais arredondados */
+    border: 1px solid #1c1c1c;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7); /* Sombra suave sob o card */
+}
+
+/* Centralizar cabeçalho do formulário */
+.center-text {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 35px;
+    color: #c8a96e;
+}
+
+.cadastro-form h2 {
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666666;
+    font-size: 13px;
+}
+
+/* Fieldset para agrupar seções */
+fieldset {
+    border: 1px solid #1c1c1c;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+legend {
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Grupos de Campos */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group-row {
+    display: flex;
+    gap: 20px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+label {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #aaaaaa;
+    text-transform: uppercase; /* Textos de labels pequenos e em maiúsculo */
+    letter-spacing: 0.5px;
+}
+
+/* Estilo Premium das Caixas de Texto (Fundo escuro, texto branco) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    background-color: #121212;
+    color: #ffffff;
+    border: 1px solid #222222;
+    padding: 14px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+/* Placeholder mais discreto */
+::placeholder {
+    color: #444444;
+}
+
+/* Borda totalmente branca ao passar o mouse */
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="tel"]:hover {
+    border-color: #ffffff;
+    background-color: #161616; /* Fica sutilmente mais claro */
+}
+
+/* Efeito refinado de foco */
+input:focus {
+    border-color: #ffffff;
+    background-color: #1a1a1a;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05); /* Brilho super suave */
+}
+
+/* Caixa de Seleção / Termos */
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0;
+    cursor: pointer;
+}
+
+.form-checkbox input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #c8a96e; /* Deixa o "check" interno azul combinando com a tela */
+}
+
+.form-checkbox label {
+    margin-bottom: 0;
+    font-size: 13px;
+    color: #888888;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.form-checkbox:hover label {
+    color: #ffffff; /* Texto brilha levemente ao passar o mouse perto do checkbox */
+}
+
+/* Botão de Luxo Finalizar Cadastro */
+.btn-finalizar {
+    width: 100%;
+    padding: 16px;
+    background-color: #2e2c2c;
+    color: #c8a96e;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transfrm: uppercase;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-finalizar:hover {
+    background-color: #e5e5e5;
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1); /* Efeito flutuante chique */
+    transform: translateY(-1px);
+}
+
+.btn-finalizar:active {
+    transform: translateY(1px);
+}

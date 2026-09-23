@@ -1,0 +1,208 @@
+/* Configurações Gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #030303; /* Preto puro luxuoso */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fundo Iluminado Sutil (Glow) */
+.glow-bg {
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Navbar Minimalista Flutuante */
+.navbar {
+    width: 100%;
+    max-width: 1200px;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.nav-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 10px; /* Letras super espaçadas estilo marca de grife */
+    text-align: center;
+    color: #c8a96e; /* COR ALTERADA */
+    opacity: 0.9;
+}
+
+/* Container do Formulário */
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 0 24px;
+    margin-top: 40px;
+    z-index: 1;
+}
+
+/* Formulário Efeito Vidro Fosco (Glassmorphism de Luxo) */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    background: rgba(15, 15, 15, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 48px 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Cabeçalho */
+.center-text {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 40px;
+    color: #c8a96e;
+}
+
+.login-form h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+    color: #c8a96e; /* COR ALTERADA */
+    background: none; /* REMOVIDO PARA IMPEDIR SOBREPOSIÇÃO DO GRADIENTE */
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: initial;
+}
+
+.subtitle {
+    color: #666666;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+/* Grupos de Campos */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Envoltório do Input para efeitos especiais */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Caixas de Texto de Alta Tecnologia */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.02);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+::placeholder {
+    color: #3d3d3d;
+}
+
+/* Borda Branca Puríssima no Hover */
+input[type="text"]:hover,
+input[type="password"]:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Foco minimalista com linha nítida */
+input:focus {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* Botão Ajustado e Centralizado */
+.btn-entrar {
+    width: 100%;
+    max-width: 200px;
+    margin: 24px auto 0 auto;
+    padding: 14px;
+    background-color: #2e2c2c;
+    color: #c8a96e;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-entrar:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.btn-entrar:active {
+    transform: translateY(0);
+}
+
+/* Link para Cadastro */
+.register-link {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 13px;
+    color: #666666;
+    font-weight: 400;
+}
+
+.register-link a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 4px;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #bbbbbb;
+    text-decoration: underline;
+}

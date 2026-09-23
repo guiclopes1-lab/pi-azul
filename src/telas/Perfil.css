@@ -1,0 +1,194 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Fundo da página */
+body {
+  background-color: #111214;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Caixa Principal com fundo #2e2c2c e animação suave ao carregar */
+.profile-box {
+  background-color: #2e2c2c;
+  border: 1px solid #3d3a3a;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 400px;
+  padding: 32px 24px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Container da Foto Redonda */
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 16px auto;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c8a96e;
+  padding: 3px;
+  transition: transform 0.2s ease;
+}
+
+.avatar-container:hover .profile-img {
+  transform: scale(1.03);
+}
+
+/* Ícone/Botão de trocar foto embutido na imagem */
+.btn-change-photo {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background-color: #c8a96e;
+  color: #111214;
+  border: 2px solid #2e2c2c;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-change-photo:hover {
+  background-color: #b5955a;
+  transform: scale(1.1);
+}
+
+/* Nome do Usuário */
+.user-name {
+  font-size: 1.4rem;
+  color: #f1f5f9;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+/* Caixa Interna com borda #c8a96e */
+.info-box {
+  background-color: #242222;
+  border: 1px solid #c8a96e;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.info-group {
+  margin-bottom: 12px;
+}
+
+.info-group:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #c8a96e;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.info-icon {
+  width: 14px;
+  height: 14px;
+  color: #c8a96e;
+}
+
+.info-value {
+  font-size: 0.925rem;
+  color: #e5e7eb;
+  line-height: 1.5;
+  padding-left: 20px;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: #3d3a3a;
+  margin: 14px 0;
+}
+
+/* Botões de Ação */
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid #c8a96e;
+  outline-offset: 2px;
+}
+
+/* Botão Editar Perfil com tom #c8a96e */
+.btn-primary {
+  background-color: #c8a96e;
+  color: #111214;
+}
+
+.btn-primary:hover {
+  background-color: #b5955a;
+  transform: translateY(-1px);
+}
+
+/* Botão Sair */
+.btn-secondary {
+  background-color: transparent;
+  color: #e5e7eb;
+  border: 1px solid #3d3a3a;
+}
+
+.btn-secondary:hover {
+  background-color: #3d3a3a;
+  border-color: #4a4747;
+  transform: translateY(-1px);
+}
