@@ -5,65 +5,6 @@ function ComoFunciona() {
   return (
     <div className="pagina-como-funciona">
 
-      {/* NAVBAR */}
-      <header className="navbar">
-
-        <div className="navbar-topo">
-
-          <div className="navbar-esquerda">
-            {/* Espaçador mantendo o alinhamento da logo ao centro */}
-          </div>
-
-          <div className="navbar-centro">
-            <a className="logo-site">
-              Colecionáveis Leilões
-            </a>
-          </div>
-
-          <div className="navbar-direita">
-
-            <button
-              className="btn-nav"
-              type="button"
-            >
-              Criar conta
-            </button>
-
-            <button
-              className="btn-nav"
-              type="button"
-            >
-              Entrar
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* MENU INFERIOR */}
-        <nav className="navbar-sub">
-
-          <button
-            className="btn-subnav"
-            type="button"
-          >
-            Categorias
-          </button>
-
-          <button
-            className="btn-subnav"
-            type="button"
-          >
-            Como funciona
-          </button>
-
-        </nav>
-
-      </header>
-
-      {/* DIVISÓRIA */}
-      <hr className="divisoria-horizontal" />
-
       {/* CONTEÚDO PRINCIPAL */}
       <main className="conteudo-principal">
 
@@ -97,45 +38,30 @@ function ComoFunciona() {
           <div className="cards-grid">
 
             <article className="card-item">
-
-              <h3>
-                1. Escolha o Colecionável
-              </h3>
-
+              <h3>1. Escolha o Colecionável</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
             <article className="card-item">
-
-              <h3>
-                2. Dê o seu Lance
-              </h3>
-
+              <h3>2. Dê o seu Lance</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
             <article className="card-item">
-
-              <h3>
-                3. Finalize a Compra
-              </h3>
-
+              <h3>3. Finalize a Compra</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
           </div>
@@ -158,45 +84,30 @@ function ComoFunciona() {
           <div className="cards-grid">
 
             <article className="card-item">
-
-              <h3>
-                1. Cadastre seu Item
-              </h3>
-
+              <h3>1. Cadastre seu Item</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
             <article className="card-item">
-
-              <h3>
-                2. Defina o Leilão
-              </h3>
-
+              <h3>2. Defina o Leilão</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
             <article className="card-item">
-
-              <h3>
-                3. Envie o Produto
-              </h3>
-
+              <h3>3. Envie o Produto</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.
               </p>
-
             </article>
 
           </div>
@@ -229,43 +140,31 @@ function ComoFunciona() {
           <ul className="lista-regras">
 
             <li>
-              <strong>
-                Regra de Incremento Mínimo:
-              </strong>{" "}
+              <strong>Regra de Incremento Mínimo:</strong>{" "}
               Para ser efetuado um lance é necessário que ele esteja{" "}
-              <strong>
-                50 reais acima do valor atual
-              </strong>.
+              <strong>50 reais acima do valor atual</strong>.
             </li>
 
             <li>
-              <strong>
-                Irrevogabilidade dos Lances:
-              </strong>{" "}
+              <strong>Irrevogabilidade dos Lances:</strong>{" "}
               Todo lance confirmado é definitivo e não pode ser
               cancelado pelo usuário.
             </li>
 
             <li>
-              <strong>
-                Prazo de Pagamento:
-              </strong>{" "}
+              <strong>Prazo de Pagamento:</strong>{" "}
               O comprador que arrematar o lote tem até 24 horas
               para efetuar o pagamento.
             </li>
 
             <li>
-              <strong>
-                Prorrogação de Tempo:
-              </strong>{" "}
+              <strong>Prorrogação de Tempo:</strong>{" "}
               Lances nos últimos minutos estendem a duração do lote
               para dar chance a outros participantes.
             </li>
 
             <li>
-              <strong>
-                Pagamento do Produto:
-              </strong>{" "}
+              <strong>Pagamento do Produto:</strong>{" "}
               O pagamento só será efetuado após o término do tempo
               do leilão feito entre site, vendedor e leilão.
             </li>
@@ -292,15 +191,6 @@ function ComoFunciona() {
         </section>
 
       </main>
-
-      {/* RODAPÉ */}
-      <footer className="rodape">
-
-        <p>
-          © 2026 Site de Leilões de Colecionáveis do Grupo Azul.
-        </p>
-
-      </footer>
 
     </div>
   );
