@@ -11,35 +11,40 @@ import {
   BrowserRouter,
   Route,
   Routes,
-  Navigate
+  Navigate,
+  useLocation
 } from "react-router-dom";
+
+// Componente auxiliar para verificar a rota atual
+function AppContent() {
+  const location = useLocation();
+
+  // Rotas onde o Menu e o Rodapé NÃO devem aparecer
+  const rotasSemMenu = ["/login", "/cadastro"];
+  const esconderMenuERodape = rotasSemMenu.includes(location.pathname);
+
+  return (
+    <>
+      {!esconderMenuERodape && <MenuSuperior />}
+
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/produto" element={<Produto />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/comofunciona" element={<ComoFunciona />} />
+        <Route path="/perfil" element={<Perfil />} />
+      </Routes>
+
+      {!esconderMenuERodape && <Rodape />}
+    </>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <MenuSuperior />
-      <Routes>
-        <Route
-          path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/produto" element={<Produto />} />
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-        <Route
-          path="/cadastro"
-          element={<Cadastro />}
-        />
-        <Route
-          path="/comofunciona"
-          element={<ComoFunciona />}
-        />
-        <Route
-          path="/perfil"
-          element={<Perfil />}
-        />
-      </Routes>
-      <Rodape />
+      <AppContent />
     </BrowserRouter>
   );
 }
