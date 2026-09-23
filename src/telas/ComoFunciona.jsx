@@ -1,5 +1,5 @@
 import React from "react";
-import "./como-funciona.css";
+import "./ComoFunciona.css";
 
 function ComoFunciona() {
   return (

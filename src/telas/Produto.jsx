@@ -5,47 +5,6 @@ function Produto() {
   return (
     <div className="body">
 
-      {/* NAVBAR */}
-      <nav className="navbar">
-
-        {/* LOGO */}
-        <div className="logo-container">
-          <span className="logo">logo</span>
-        </div>
-
-        {/* TÍTULO CENTRAL */}
-        <div className="nav-center">
-          <h1 className="site-title">
-            Site de Leilões
-          </h1>
-
-          <div className="nav-links">
-            <button className="btn-link">
-              Categorias
-            </button>
-
-            <button className="btn-link">
-              Como funciona
-            </button>
-          </div>
-        </div>
-
-        {/* BOTÕES DO LADO DIREITO */}
-        <div className="nav-right">
-          <button className="btn">
-            criar conta
-          </button>
-
-          <button className="btn">
-            entrar
-          </button>
-        </div>
-
-      </nav>
-
-      {/* LINHA DIVISÓRIA */}
-      <hr className="divider" />
-
       {/* CONTEÚDO PRINCIPAL */}
       <main className="content">
 
