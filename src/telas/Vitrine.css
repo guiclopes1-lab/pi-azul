@@ -1,0 +1,275 @@
+/* ================================
+   Navbar
+================================ */
+.navbar {
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 20px;
+    height: 180px;
+    /* Formato retangular */
+}
+
+/* Botões de Autenticação - Canto superior direito */
+.auth-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.auth-buttons .btn-auth {
+    color: var(--text);
+    text-decoration: none;
+    margin-left: 10px;
+    padding: 8px 16px;
+    border: 1px solid var(--text);
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.auth-buttons .btn-auth:hover {
+    background-color: var(--text);
+    color: var(--bg);
+}
+
+/* Branding - Centro da Navbar */
+.site-branding {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.site-slogan {
+    text-align: center;
+}
+
+.site-branding h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.site-branding strong {
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+/* Links de navegação - Centralizados na parte inferior da navbar */
+.navbar-bottom {
+    margin-top: auto;
+    /* Empurra para a parte inferior */
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links li a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: opacity 0.3s;
+}
+
+.nav-links li a:hover {
+    opacity: 0.8;
+}
+
+/* ================================
+   Área de Leilões (Main)
+================================ */
+.auction-area {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Grid com trios por linha */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+/* Estilo do Card */
+.card {
+    background-color: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    border: 1px solid var(--text); /* Adicionado para contraste */
+}
+
+/* Container e Imagem do Card com 350x350px */
+.img-container {
+    width: 350px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.card-img {
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+}
+
+/* Box de informações abaixo da imagem */
+.card-info {
+    width: 100%;
+    padding: 20px;
+    background-color: var(--bg);
+    border-top: 1px solid var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.category {
+    background-color: var(--text);
+    color: var(--bg);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+
+.product-name {
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.starting-bid {
+    font-size: 1.2rem;
+    color: var(--text);
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Botão "Veja mais" */
+.btn-more {
+    display: inline-block;
+    text-align: center;
+    background-color: var(--text);
+    color: var(--bg);
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: auto;
+    /* Empurra o botão para o final do card-info */
+    transition: opacity 0.3s;
+    width: 100%;
+}
+
+.btn-more:hover {
+    opacity: 0.8;
+}
+
+/* ================================
+   Footer
+================================ */
+.site-footer {
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 50px 20px;
+    margin-top: 40px;
+    border-top: 1px solid var(--text);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--text);
+    text-transform: uppercase;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: opacity 0.3s;
+}
+
+.footer-section ul li a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.notification-box p {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.newsletter-form input {
+    padding: 12px;
+    border: 1px solid var(--text);
+    background-color: var(--bg);
+    color: var(--text);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.newsletter-form button {
+    padding: 12px;
+    background-color: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.newsletter-form button:hover {
+    opacity: 0.8;
+}

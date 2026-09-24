@@ -1,3 +1,4 @@
+import './Rodape.css'
 function Rodape() {
     return (
         <footer>

@@ -1,9 +1,10 @@
+import './MenuSuperior.css';
 function MenuSuperior() {
     return (
         <header>
             <div>
-                <a href="#">Entrar</a>
-                <a href="#">Cadastrar</a>
+                <a href="/login">Entrar</a>
+                <a href="/cadastro">Cadastrar</a>
             </div>
 
             <div>
@@ -18,11 +19,7 @@ function MenuSuperior() {
                     </li>
 
                     <li>
-                        <a href="#">Contato</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Como funciona</a>
+                        <a href="/ComoFunciona">Como funciona</a>
                     </li>
 
                     <li>
