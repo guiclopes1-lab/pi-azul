@@ -1,9 +1,26 @@
 import React from 'react';
 import '../index.css';
 import './Vitrine.css'
-
+import { supabase } from '../supabase'
+import { useState, useEffect } from 'react';
 
 function Vitrine() {
+    const [Produtos, setProdutos] = useState([])
+    async function CarregaProduto() {
+        const { data, error } = await supabase
+            .from('produtos')
+            .select();
+
+        if (error) {
+            console.error('Erro ao carregar produtos:', error);
+            return;
+        }
+
+        setProdutos(data);
+    }
+    useEffect(() => {
+        CarregaProduto();
+    }, []);
 
 
     return (
