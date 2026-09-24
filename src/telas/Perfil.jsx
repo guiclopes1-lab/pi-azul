@@ -1,5 +1,6 @@
 import React from "react";
 import "./perfil.css";
+import { supabase } from './supabase'
 
 function Perfil() {
   return (

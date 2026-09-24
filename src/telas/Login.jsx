@@ -1,5 +1,6 @@
 import React from "react";
 import "./login.css";
+import { supabase } from './supabase'
 
 function Login() {
   const handleSubmit = (event) => {
