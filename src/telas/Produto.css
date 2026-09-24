@@ -1,12 +1,23 @@
+/* =========================
+   RESET
+========================= */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
+/* =========================
+   BODY
+========================= */
+
 body {
     background-color: #111214;
+
     color: #c8a96b;
+
     font-family: Georgia, "Times New Roman", serif;
 }
 
@@ -113,6 +124,12 @@ body {
     font-size: 20px;
 
     cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-arrow:hover {
+    background-color: #e0c17c;
 }
 
 
@@ -156,7 +173,7 @@ body {
 
     border-radius: 8px;
 
-    padding: 165px 28px 30px;
+    padding: 100px 28px 30px;
 
     display: flex;
 
@@ -164,39 +181,49 @@ body {
 }
 
 
-/* Lance inicial */
+/* =========================
+   LANCE ATUAL
+========================= */
 
-.btn-bid-initial {
+.current-bid-display {
     width: 100%;
 
-    height: 60px;
+    min-height: 70px;
+
+    padding: 15px 18px;
 
     background-color: #111214;
 
     color: #c8a96b;
 
-    border: none;
-
     border-radius: 5px;
 
-    font-family: Georgia, "Times New Roman", serif;
+    display: flex;
 
-    font-size: 18px;
+    align-items: center;
 
-    font-weight: bold;
+    justify-content: space-between;
 
-    cursor: pointer;
+    margin-bottom: 18px;
+}
+
+.current-bid-display span {
+    font-size: 16px;
+}
+
+.current-bid-display strong {
+    font-size: 20px;
 }
 
 
-/* Dar lance */
+/* =========================
+   BOTÃO DAR LANCE
+========================= */
 
 .btn-bid {
     width: 100%;
 
-    height: 55px;
-
-    margin-top: 18px;
+    height: 60px;
 
     background-color: #c8a96b;
 
@@ -208,22 +235,32 @@ body {
 
     font-family: Georgia, "Times New Roman", serif;
 
-    font-size: 17px;
+    font-size: 18px;
 
     font-weight: bold;
 
     cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-bid:hover {
+    background-color: #e0c17c;
 }
 
 
-/* Outro valor */
+/* =========================
+   OUTRO VALOR
+========================= */
 
 .btn-bid-custom {
     width: 100%;
 
-    height: 45px;
+    min-height: 50px;
 
     margin-top: 18px;
+
+    padding: 8px;
 
     background-color: #242424;
 
@@ -238,6 +275,12 @@ body {
     font-size: 14px;
 
     cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-bid-custom:hover {
+    background-color: #111214;
 }
 
 
@@ -289,10 +332,411 @@ body {
 
 
 /* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.80);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+}
+
+
+/* =========================
+   CAIXA DO MODAL
+========================= */
+
+.bid-modal {
+    position: relative;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    background-color: #c8a96b;
+
+    color: #111214;
+
+    border-radius: 8px;
+
+    padding: 40px;
+
+    border: 2px solid #c8a96b;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+
+    animation: modalAparecer 0.2s ease-out;
+}
+
+
+/* =========================
+   ANIMAÇÃO DO MODAL
+========================= */
+
+@keyframes modalAparecer {
+
+    from {
+        opacity: 0;
+
+        transform: scale(0.90);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+}
+
+
+/* =========================
+   BOTÃO FECHAR
+========================= */
+
+.modal-close {
+    position: absolute;
+
+    top: 10px;
+    right: 15px;
+
+    width: 35px;
+    height: 35px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #111214;
+
+    font-size: 30px;
+
+    line-height: 30px;
+
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    opacity: 0.6;
+}
+
+
+/* =========================
+   TÍTULO DO MODAL
+========================= */
+
+.modal-title {
+    color: #111214;
+
+    font-size: 32px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   LANCE ATUAL DO MODAL
+========================= */
+
+.modal-current-bid {
+    width: 100%;
+
+    min-height: 65px;
+
+    padding: 15px;
+
+    background-color: #111214;
+
+    color: #c8a96b;
+
+    border-radius: 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.modal-current-bid span {
+    font-size: 15px;
+}
+
+.modal-current-bid strong {
+    font-size: 22px;
+}
+
+
+/* =========================
+   REGRA DO LANCE
+========================= */
+
+.bid-rule {
+    width: 100%;
+
+    background-color: #242424;
+
+    color: #c8a96b;
+
+    border-radius: 5px;
+
+    padding: 18px;
+
+    margin-bottom: 25px;
+}
+
+.bid-rule h3 {
+    color: #ffffff;
+
+    font-size: 17px;
+
+    margin-bottom: 8px;
+}
+
+.bid-rule p {
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 15px;
+}
+
+.bid-rule p strong {
+    color: #ffffff;
+}
+
+
+/* Valor mínimo */
+
+.minimum-value {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #555;
+}
+
+.minimum-value span {
+    font-size: 14px;
+}
+
+.minimum-value strong {
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.modal-label {
+    display: block;
+
+    color: #111214;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+
+/* =========================
+   CAMPO DO NOVO LANCE
+========================= */
+
+.bid-input {
+    width: 100%;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    background-color: #111214;
+
+    border: 2px solid #111214;
+
+    border-radius: 5px;
+
+    overflow: hidden;
+
+    margin-bottom: 10px;
+}
+
+.bid-input span {
+    color: #c8a96b;
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    padding-left: 15px;
+}
+
+.bid-input input {
+    width: 100%;
+
+    height: 100%;
+
+    padding: 0 15px;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    color: #c8a96b;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 21px;
+}
+
+
+/* Remove setas do input number */
+
+.bid-input input::-webkit-outer-spin-button,
+.bid-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+
+    margin: 0;
+}
+
+.bid-input input[type="number"] {
+    -moz-appearance: textfield;
+
+    appearance: textfield;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.bid-error {
+    color: #8b0000;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    line-height: 1.4;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   BOTÕES DO MODAL
+========================= */
+
+.modal-buttons {
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+
+/* Cancelar */
+
+.modal-cancel {
+    flex: 1;
+
+    height: 50px;
+
+    background-color: transparent;
+
+    color: #111214;
+
+    border: 2px solid #111214;
+
+    border-radius: 5px;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.modal-cancel:hover {
+    background-color: #111214;
+
+    color: #c8a96b;
+}
+
+
+/* Confirmar */
+
+.modal-confirm {
+    flex: 1;
+
+    height: 50px;
+
+    background-color: #111214;
+
+    color: #c8a96b;
+
+    border: 2px solid #111214;
+
+    border-radius: 5px;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.modal-confirm:hover {
+    background-color: #242424;
+}
+
+
+/* =========================
    RESPONSIVIDADE
 ========================= */
 
 @media (max-width: 1000px) {
+
+    .content {
+        padding: 30px 20px;
+    }
 
     .product-layout {
         grid-template-columns: 1fr;
@@ -311,6 +755,42 @@ body {
     .bid-section {
         min-height: 500px;
 
-        padding-top: 50px;
+        padding: 50px 25px;
     }
+}
+
+
+/* =========================
+   MODAL NO CELULAR
+========================= */
+
+@media (max-width: 600px) {
+
+    .bid-modal {
+        padding: 30px 20px;
+
+        max-width: 95%;
+    }
+
+    .modal-title {
+        font-size: 26px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .modal-cancel,
+    .modal-confirm {
+        width: 100%;
+    }
+
+    .modal-current-bid strong {
+        font-size: 18px;
+    }
+
+    .minimum-value strong {
+        font-size: 18px;
+    }
+
 }
