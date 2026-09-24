@@ -1,7 +1,15 @@
 import React from 'react';
-import '../css/index.css';
+import '../index.css';
+import { supabase } from "./supabase";
 
-function index() {
+function Vitrine() {
+    const [produtos, setProdutos] = useState([]);
+
+    async function buscaTodos() {
+        const { data, error } = await supabase.from('produtos').select().order('id', { ascending: false })
+        console.log(data)
+        alteraProdutos(data)
+    }
     return (
         <div>
             <div className="card-grid">
@@ -87,4 +95,4 @@ function index() {
         </div>
     )
 }
-export default Index;
+export default Vitrine;

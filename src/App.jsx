@@ -1,11 +1,11 @@
 import MenuSuperior from "./components/MenuSuperior";
 import Rodape from "./components/Rodape";
-
 import Produto from "./telas/Produto";
 import Login from "./telas/Login";
 import Cadastro from "./telas/Cadastro";
 import ComoFunciona from "./telas/ComoFunciona";
 import Perfil from "./telas/Perfil";
+import Vitrine from "./telas/Vitrine";
 
 import {
   BrowserRouter,
@@ -28,6 +28,7 @@ function AppContent() {
       {!esconderMenuERodape && <MenuSuperior />}
 
       <Routes>
+        <Route path="/" element={<Vitrine />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/produto" element={<Produto />} />
         <Route path="/login" element={<Login />} />
