@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif; /* Fonte chique e minimalista */
 }
 
 body {
@@ -201,7 +200,7 @@ input:focus {
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 1px;
-    text-transfrm: uppercase;
+    text-transform: uppercase;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
