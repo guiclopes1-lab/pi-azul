@@ -6,6 +6,7 @@ import Cadastro from "./telas/Cadastro";
 import ComoFunciona from "./telas/ComoFunciona";
 import Perfil from "./telas/Perfil";
 import Vitrine from "./telas/Vitrine";
+import { supabase } from './supabase'
 
 import {
   BrowserRouter,

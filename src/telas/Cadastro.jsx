@@ -1,5 +1,6 @@
 import React from "react";
 import "./cadastro.css";
+import { supabase } from './supabase'
 
 function Cadastro() {
   const handleSubmit = (event) => {
