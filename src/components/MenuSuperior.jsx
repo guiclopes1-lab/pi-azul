@@ -23,7 +23,7 @@ function MenuSuperior() {
                     </li>
 
                     <li>
-                        <a href="#">Quero leiloar</a>
+                        <a href="/QueroLeiloar">Quero leiloar</a>
                     </li>
                 </ul>
             </nav>

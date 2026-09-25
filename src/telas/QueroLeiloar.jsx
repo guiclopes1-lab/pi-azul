@@ -1,25 +1,26 @@
-import { useState } from "react";
-import "./CadastroProduto.css";
+import { useEffect, useState } from "react";
+import "./QueroLeiloar.css";
+import { supabase } from '../supabase'
 
 
 function CadastroProduto() {
 
-     const [Produtos, setProdutos] = useState([])
-            async function CarregaProduto() {
-                const { data, error } = await supabase
-                    .from('produtos')
-                    .select();
-    
-                if (error) {
-                    console.error('Erro ao carregar produtos:', error);
-                    return;
-                }
-    
-                setProdutos(data);
-            }
-            useEffect(() => {
-                CarregaProduto();
-            }, []);
+  const [Produtos, setProdutos] = useState([])
+  async function CarregaProduto() {
+    const { data, error } = await supabase
+      .from('produtos')
+      .select();
+
+    if (error) {
+      console.error('Erro ao carregar produtos:', error);
+      return;
+    }
+
+    setProdutos(data);
+  }
+  useEffect(() => {
+    CarregaProduto();
+  }, []);
 
 
 
