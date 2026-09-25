@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Produto.css";
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 function Produto() {
   

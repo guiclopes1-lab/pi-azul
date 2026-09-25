@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 function Login() {
+
+   const [Usuarios, setusuarios] = useState([])
+        async function Carregausuarios() {
+            const { data, error } = await supabase
+                .from('usuarios')
+                .select();
+    
+            if (error) {
+                console.error('Erro ao carregar usuarios:', error);
+                return;
+            }
+    
+            setusuarios(data);
+        }
+        useEffect(() => {
+            Carregausuarios();
+        }, []);
+  
+
   const handleSubmit = (event) => {
     event.preventDefault();
 

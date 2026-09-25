@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./cadastro.css";
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 function Cadastro() {
+
+  const [Usuarios, setusuarios] = useState([])
+      async function Carregausuarios() {
+          const { data, error } = await supabase
+              .from('usuarios')
+              .select();
+  
+          if (error) {
+              console.error('Erro ao carregar usuarios:', error);
+              return;
+          }
+  
+          setusuarios(data);
+      }
+      useEffect(() => {
+          Carregausuarios();
+      }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
