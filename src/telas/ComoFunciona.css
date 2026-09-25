@@ -1,143 +1,265 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap');
+/* =========================
+   CONTEÚDO PRINCIPAL
+========================= */
 
-/* ==========================================================================
-   Reset e Estilos Globais
-   ========================================================================== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-/* ==========================================================================
-   Conteúdo Principal
-   ========================================================================== */
 .conteudo-principal {
-    max-width: 1000px;
-    margin: 32px auto;
-    padding: 0 20px;
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 32px auto;
+  padding: 0 20px;
 }
+
+/* =========================
+   TÍTULO DA SEÇÃO
+========================= */
 
 .secao-titulo {
-    text-align: center;
-    margin-bottom: 32px;
-    color: #c8a96e;
+  margin-bottom: 32px;
+
+  text-align: center;
+  color: var(--gold);
 }
 
 .secao-titulo h1 {
-    font-size: 28px;
-    color: #c8a96e;
-    margin-bottom: 8px;
+  margin-bottom: 8px;
+
+  color: var(--gold);
+
+  font-size: 28px;
+  font-weight: 500;
 }
 
 .secao-titulo p {
-    font-size: 16px;
-    color: #ffffff;
+  color: var(--text);
+
+  font-size: 16px;
 }
 
+/* =========================
+   BLOCOS DE CONTEÚDO
+========================= */
+
 .secao-bloco {
-    background-color: #111214;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    border: 1px solid #c8a96e;
+  margin-bottom: 24px;
+  padding: 24px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-md);
 }
 
 .secao-bloco h2 {
-    font-size: 20px;
-    color: #c8a96e;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #c8a96e;
-    padding-bottom: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+
+  color: var(--gold);
+
+  border-bottom: 2px solid var(--gold);
+
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .secao-bloco p {
-    margin-bottom: 16px;
-    color: #ffffff;
+  margin-bottom: 16px;
+
+  color: var(--text);
+
+  font-size: 15px;
 }
 
-/* Grid para Passos do Comprador e Vendedor */
+/* =========================
+   GRID DE CARDS
+========================= */
+
 .cards-grid {
-    display: flex;
-    gap: 16px;
-    margin-top: 16px;
+  width: 100%;
+
+  display: flex;
+  gap: 16px;
+
+  margin-top: 16px;
 }
 
 .card-item {
-    flex: 1;
-    background-color: #17181b;
-    border: 1px solid #111214;
-    padding: 16px;
-    border-radius: 6px;
+  flex: 1;
+
+  padding: 16px;
+
+  background: #17181b;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    transform var(--transition);
+}
+
+.card-item:hover {
+  background: #1b1c1f;
+
+  border-color: var(--gold);
+
+  transform: translateY(-2px);
 }
 
 .card-item h3 {
-    font-size: 20px;
-    color: #ffffff;
-    margin-bottom: 8px;
+  margin-bottom: 8px;
+
+  color: var(--text);
+
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .card-item p {
-    font-size: 16px;
-    color: #ffffff;
-    margin-bottom: 0;
+  margin-bottom: 0;
+
+  color: var(--text);
+
+  font-size: 15px;
 }
 
+/* =========================
+   CURADORIA
+========================= */
+
 .curadoria {
-    background-color: #111214;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    border: 1px solid #c8a96e;
+  margin-bottom: 24px;
+  padding: 24px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-md);
 }
 
 .curadoria h2 {
-    font-size: 20px;
-    color: #c8a96e;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #c8a96e;
-    padding-bottom: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+
+  color: var(--gold);
+
+  border-bottom: 2px solid var(--gold);
+
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .curadoria p {
-    margin-bottom: 16px;
-    color: #ffffff;
+  margin-bottom: 16px;
+
+  color: var(--text);
+
+  font-size: 15px;
 }
 
-/* Lista de Regras */
+/* =========================
+   LISTA DE REGRAS
+========================= */
+
 .lista-regras {
-    list-style: none;
-    padding: 0;
+  padding: 0;
+
+  list-style: none;
 }
 
 .lista-regras li {
-    padding: 12px 16px;
-    background-color: #111214;
-    border-left: 4px solid #c8a96e;
-    margin-bottom: 10px;
-    border-radius: 0 4px 4px 0;
-    font-size: 14px;
-    color: #ffffff;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+
+  background: var(--surface);
+
+  border-left: 4px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+
+  color: var(--text);
+
+  font-size: 14px;
+
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
-/* Seção Sobre o Site */
+.lista-regras li:hover {
+  background: #17181b;
+}
+
+/* =========================
+   SOBRE O SITE
+========================= */
+
 .secao-sobre {
-    background-color: #111214;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 32px;
-    border: 1px solid #c8a96e;
+  margin-bottom: 32px;
+  padding: 24px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-md);
 }
 
 .secao-sobre h2 {
-    font-size: 20px;
-    color: #c8a96e;
-    margin-bottom: 12px;
-    border-bottom: 2px solid #c8a96e;
-    padding-bottom: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+
+  color: var(--gold);
+
+  border-bottom: 2px solid var(--gold);
+
+  font-size: 20px;
+  font-weight: 500;
 }
 
+.secao-sobre p {
+  color: var(--text);
+  font-size: 15px;
+}
+
+/* =========================
+   ÁREA DE AÇÃO
+========================= */
+
 .container-acao {
-    text-align: center;
-    margin-top: 24px;
+  margin-top: 24px;
+
+  text-align: center;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 700px) {
+  .conteudo-principal {
+    margin: 24px auto;
+    padding: 0 14px;
+  }
+
+  .secao-titulo h1 {
+    font-size: 24px;
+  }
+
+  .secao-titulo p {
+    font-size: 14px;
+  }
+
+  .secao-bloco,
+  .curadoria,
+  .secao-sobre {
+    padding: 18px;
+  }
+
+  .cards-grid {
+    flex-direction: column;
+  }
+
+  .card-item {
+    width: 100%;
+  }
 }

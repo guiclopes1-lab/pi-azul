@@ -1,58 +1,78 @@
-/* Reset básico */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* =========================
+   PÁGINA DE PERFIL
+========================= */
 
-/* Fundo da página */
-body {
-  background-color: #111214;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.profile-page {
+  width: 100%;
   min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 20px;
 }
 
-/* Caixa Principal com fundo #2e2c2c e animação suave ao carregar */
+/* =========================
+   CARD PRINCIPAL
+========================= */
+
 .profile-box {
-  background-color: #2e2c2c;
-  border: 1px solid #3d3a3a;
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   width: 100%;
   max-width: 400px;
+
   padding: 32px 24px;
+
+  background: var(--surface);
+
+  border: 1px solid #3d3a3a;
+  border-radius: 16px;
+
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+
   text-align: center;
-  animation: fadeIn 0.4s ease-out;
+
+  animation: profileFadeIn 0.4s ease-out;
 }
 
-@keyframes fadeIn {
+@keyframes profileFadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Container da Foto Redonda */
+/* =========================
+   FOTO DE PERFIL
+========================= */
+
 .avatar-container {
   position: relative;
-  width: 300px;
-  margin: 0 auto 16px auto;
+
+  width: 180px;
+  height: 180px;
+
+  margin: 0 auto 16px;
 }
 
 .profile-img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+
+  display: block;
+
   object-fit: cover;
-  border: 3px solid #c8a96e;
+
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+
   padding: 3px;
+
   transition: transform 0.2s ease;
 }
 
@@ -60,46 +80,73 @@ body {
   transform: scale(1.03);
 }
 
-/* Ícone/Botão de trocar foto embutido na imagem */
+/* =========================
+   BOTÃO TROCAR FOTO
+========================= */
+
 .btn-change-photo {
   position: absolute;
-  bottom: 4px;
+
   right: 4px;
-  background-color: #c8a96e;
-  color: #111214;
-  border: 2px solid #2e2c2c;
-  border-radius: 50%;
+  bottom: 4px;
+
   width: 32px;
   height: 32px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background: var(--gold);
+  color: var(--bg);
+
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+
   text-decoration: none;
-  transition: background-color 0.2s, transform 0.2s;
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition),
+    transform var(--transition);
 }
 
 .btn-change-photo:hover {
-  background-color: #b5955a;
+  background: var(--gold-light);
+
   transform: scale(1.1);
 }
 
-/* Nome do Usuário */
+/* =========================
+   NOME
+========================= */
+
 .user-name {
-  font-size: 1.4rem;
-  color: #f1f5f9;
-  font-weight: 700;
   margin-bottom: 20px;
+
+  color: #f1f5f9;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
   letter-spacing: -0.02em;
 }
 
-/* Caixa Interna com borda #c8a96e */
+/* =========================
+   INFORMAÇÕES
+========================= */
+
 .info-box {
-  background-color: #242222;
-  border: 1px solid #c8a96e;
-  border-radius: 12px;
-  padding: 18px;
-  text-align: left;
   margin-bottom: 24px;
+  padding: 18px;
+
+  background: #242222;
+
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-lg);
+
+  text-align: left;
 }
 
 .info-group {
@@ -110,83 +157,181 @@ body {
   margin-bottom: 0;
 }
 
+/* =========================
+   LABEL DAS INFORMAÇÕES
+========================= */
+
 .info-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #c8a96e;
-  font-weight: 600;
   display: flex;
   align-items: center;
+
   gap: 6px;
+
   margin-bottom: 6px;
+
+  color: var(--gold);
+
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .info-icon {
   width: 14px;
   height: 14px;
-  color: #c8a96e;
+
+  color: var(--gold);
+
+  flex-shrink: 0;
 }
+
+/* =========================
+   VALOR
+========================= */
 
 .info-value {
-  font-size: 0.925rem;
-  color: #e5e7eb;
-  line-height: 1.5;
   padding-left: 20px;
+
+  color: #e5e7eb;
+
+  font-size: 0.925rem;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
+
+/* =========================
+   DIVISOR
+========================= */
 
 .divider {
-  border: 0;
   height: 1px;
-  background-color: #3d3a3a;
+
   margin: 14px 0;
+
+  background: #3d3a3a;
+
+  border: 0;
 }
 
-/* Botões de Ação */
+/* =========================
+   AÇÕES
+========================= */
+
 .actions {
+  width: 100%;
+
   display: flex;
   gap: 12px;
 }
 
+/* =========================
+   BOTÃO BASE
+========================= */
+
 .btn {
   flex: 1;
+
+  min-height: 42px;
+
   padding: 11px 16px;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
-  transition: all 0.2s ease;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.875rem;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
 }
 
-.btn:focus-visible {
-  outline: 2px solid #c8a96e;
-  outline-offset: 2px;
-}
-
-/* Botão Editar Perfil com tom #c8a96e */
-.btn-primary {
-  background-color: #c8a96e;
-  color: #111214;
-}
-
-.btn-primary:hover {
-  background-color: #b5955a;
+.btn:hover {
   transform: translateY(-1px);
 }
 
-/* Botão Sair */
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* =========================
+   BOTÃO EDITAR
+========================= */
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--bg);
+
+  border: 1px solid var(--gold);
+}
+
+.btn-primary:hover {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+}
+
+/* =========================
+   BOTÃO SAIR
+========================= */
+
 .btn-secondary {
-  background-color: transparent;
+  background: transparent;
   color: #e5e7eb;
+
   border: 1px solid #3d3a3a;
 }
 
 .btn-secondary:hover {
-  background-color: #3d3a3a;
+  background: #3d3a3a;
   border-color: #4a4747;
-  transform: translateY(-1px);
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 16px;
+  }
+
+  .profile-box {
+    padding: 28px 18px;
+  }
+
+  .avatar-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .user-name {
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
