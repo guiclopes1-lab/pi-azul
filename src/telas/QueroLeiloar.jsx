@@ -1,5 +1,6 @@
 import { useState } from "react";
-import "./CadastroProduto.css";
+import "./QueroLeiloar.css";
+import { supabase } from '../supabase'
 
 
 function CadastroProduto() {
@@ -8,6 +9,19 @@ function CadastroProduto() {
             async function CarregaProduto() {
                 const { data, error } = await supabase
                     .from('produtos')
+                    .select();
+    
+                if (error) {
+                    console.error('Erro ao carregar produtos:', error);
+                    return;
+                }
+    
+                setProdutos(data);
+
+                 const [usuarios, setusuarios] = useState([])
+            async function Carregausuario() {
+                const { data, error } = await supabase
+                    .from('usuarios')
                     .select();
     
                 if (error) {
