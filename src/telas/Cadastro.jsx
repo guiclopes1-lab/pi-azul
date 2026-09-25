@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import "./cadastro.css";
 import { supabase } from '../supabase'
