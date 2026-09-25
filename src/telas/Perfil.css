@@ -42,8 +42,7 @@ body {
 /* Container da Foto Redonda */
 .avatar-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 300px;
   margin: 0 auto 16px auto;
 }
 
