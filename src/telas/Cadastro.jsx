@@ -5,7 +5,19 @@ import { supabase } from '../supabase'
 
 function Cadastro() {
   const [Usuarios, setusuarios] = useState([])
-  const [criarusuario, setcriarusuario] = useState()
+  const [form, setForm] = useState({
+    nome_usuario: "",
+    cpf: "",
+    telefone: "",
+    email: "",
+    senha: "",
+    cep: "",
+    rua: "",
+    estado: "",
+    cidade: "",
+    n_casa: "",
+  });
+
   async function Carregausuarios() {
     const { data, error } = await supabase
       .from('usuarios')
@@ -16,13 +28,17 @@ function Cadastro() {
       return;
     }
 
-    setusuarios(data);
+    setusuarios(data || []);
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  function handleChange(event) {
+    const { name, value } = event.target;
 
-  };
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
 
   async function criarlogin() {
     const { data, error } = await supabase
@@ -42,7 +58,39 @@ function Cadastro() {
           n_casa: n_casa
         }
       ])
+      .select();
+
+    if (error) {
+      console.error("Erro ao criar usuário:", error);
+      alert("Erro ao criar usuário.");
+      return;
+    }
+    console.log("Usuário criado:", data);
+
+    alert("Cadastro realizado com sucesso!");
+    setForm({
+      nome_usuario: "",
+      cpf: "",
+      telefone: "",
+      email: "",
+      senha: "",
+      cep: "",
+      rua: "",
+      estado: "",
+      cidade: "",
+      n_casa: "",
+    });
+
+    // Atualiza lista
+    carregaUsuarios();
   }
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    await criarLogin();
+  }
+
+
 
   useEffect(() => {
     Carregausuarios();

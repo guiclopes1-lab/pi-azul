@@ -17,21 +17,11 @@ function Login() {
 
     setusuarios(data);
   }
-  async function criarlogin() {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .insert([
-        {
-          id: id,
-          nome: nome_usuario
-        }
-      ])
-  }
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Aqui você pode adicionar a lógica de login
     console.log("Login enviado!");
   };
   useEffect(() => {
