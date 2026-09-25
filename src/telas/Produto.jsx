@@ -11,7 +11,7 @@ function Produto() {
                 .select();
     
             if (error) {
-                console.error('Erro ao carregar o produto:', error);
+                console.error('Erro ao carregar produtos:', error);
                 return;
             }
     
