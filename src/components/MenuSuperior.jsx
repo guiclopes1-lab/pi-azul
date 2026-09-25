@@ -14,9 +14,7 @@ function MenuSuperior() {
 
             <nav>
                 <ul>
-                    <li>
-                        <a href="#">Categorias</a>
-                    </li>
+
 
                     <li>
                         <a href="/ComoFunciona">Como funciona</a>
