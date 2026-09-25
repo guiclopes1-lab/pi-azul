@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Produto.css";
 import { supabase } from './supabase'
 
@@ -11,7 +11,7 @@ function Produto() {
                 .select();
     
             if (error) {
-                console.error('Erro ao carregar o produto:', error);
+                console.error('Erro ao carregar produtos:', error);
                 return;
             }
     
