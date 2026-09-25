@@ -6,6 +6,7 @@ import Cadastro from "./telas/Cadastro";
 import ComoFunciona from "./telas/ComoFunciona";
 import Perfil from "./telas/Perfil";
 import Vitrine from "./telas/Vitrine";
+import QueroLeiloar from "./telas/QueroLeiloar"
 import { supabase } from './supabase'
 
 import {
@@ -36,6 +37,7 @@ function AppContent() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/comofunciona" element={<ComoFunciona />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/QueroLeiloar" element={<QueroLeiloar/>} />
       </Routes>
 
       {!esconderMenuERodape && <Rodape />}
