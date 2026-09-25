@@ -14,17 +14,13 @@
 
 .content {
   width: 100%;
-
   padding: 40px 45px;
 }
 
 .product-layout {
   display: grid;
-
   grid-template-columns: 36% 38% 26%;
-
   align-items: center;
-
   min-height: 680px;
 }
 
@@ -34,7 +30,6 @@
 
 .carousel-section {
   display: flex;
-
   justify-content: center;
 }
 
@@ -42,37 +37,22 @@
   width: 575px;
 }
 
-/* Área das imagens */
-
 .slides {
   width: 100%;
-
   height: 390px;
-
   overflow: hidden;
-
   border: 2px solid #c8a96b;
-
   border-radius: 8px;
 }
 
-/* Imagens */
-
 .slide {
   width: 100%;
-
   height: 100%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   background-color: #c8a96b;
-
   color: #111214;
-
   font-size: 30px;
 }
 
@@ -82,31 +62,20 @@
 
 .carousel-controls {
   display: flex;
-
   justify-content: center;
-
   gap: 18px;
-
   margin-top: 18px;
 }
 
 .btn-arrow {
   width: 90px;
-
   height: 45px;
-
   background-color: #c8a96b;
-
   color: #111214;
-
   border: none;
-
   border-radius: 5px;
-
   font-size: 20px;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
@@ -124,19 +93,14 @@
 
 .product-title {
   color: #c8a96b;
-
   font-size: 34px;
-
   margin-bottom: 35px;
 }
 
 .product-desc {
   color: #c8a96b;
-
   font-size: 17px;
-
   line-height: 1.9;
-
   text-align: justify;
 }
 
@@ -146,17 +110,11 @@
 
 .bid-section {
   width: 100%;
-
   min-height: 690px;
-
   background-color: #c8a96b;
-
   border-radius: 8px;
-
   padding: 100px 28px 30px;
-
   display: flex;
-
   flex-direction: column;
 }
 
@@ -166,23 +124,14 @@
 
 .current-bid-display {
   width: 100%;
-
   min-height: 70px;
-
   padding: 15px 18px;
-
   background-color: #111214;
-
   color: #c8a96b;
-
   border-radius: 5px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   margin-bottom: 18px;
 }
 
@@ -200,25 +149,15 @@
 
 .btn-bid {
   width: 100%;
-
   height: 60px;
-
   background-color: #c8a96b;
-
   color: #111214;
-
   border: 2px solid #111214;
-
   border-radius: 5px;
-
   font-family: Georgia, "Times New Roman", serif;
-
   font-size: 18px;
-
   font-weight: bold;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
@@ -232,27 +171,16 @@
 
 .btn-bid-custom {
   width: 100%;
-
   min-height: 50px;
-
   margin-top: 18px;
-
   padding: 8px;
-
   background-color: #242424;
-
   color: #c8a96b;
-
   border: 1px solid white;
-
   border-radius: 5px;
-
   font-family: Georgia, "Times New Roman", serif;
-
   font-size: 14px;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
@@ -266,39 +194,26 @@
 
 .timer-section {
   margin-top: 100px;
-
   text-align: center;
-
   color: #111214;
 }
 
 .timer-section h3 {
   font-size: 18px;
-
   margin-bottom: 15px;
 }
 
 .timer {
   width: 100%;
-
   height: 65px;
-
   display: flex;
-
   justify-content: center;
-
   align-items: center;
-
   gap: 8px;
-
   background-color: #111214;
-
   color: #c8a96b;
-
   border-radius: 5px;
-
   font-family: monospace;
-
   font-size: 28px;
 }
 
@@ -307,96 +222,65 @@
 }
 
 /* =========================
-   MODAL
+   MODAL (OVERLAY COMPARTILHADO)
 ========================= */
 
 .modal-overlay {
   position: fixed;
-
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   background-color: rgba(0, 0, 0, 0.8);
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   padding: 20px;
-
   z-index: 9999;
 }
 
 /* =========================
-   CAIXA DO MODAL
+   CAIXA DO MODAL DE LANCE
 ========================= */
 
 .bid-modal {
   position: relative;
-
   width: 100%;
-
   max-width: 500px;
-
   background-color: #c8a96b;
-
   color: #111214;
-
   border-radius: 8px;
-
   padding: 40px;
-
   border: 2px solid #c8a96b;
-
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-
   animation: modalAparecer 0.2s ease-out;
 }
-
-/* =========================
-   ANIMAÇÃO DO MODAL
-========================= */
 
 @keyframes modalAparecer {
   from {
     opacity: 0;
-
     transform: scale(0.9);
   }
-
   to {
     opacity: 1;
-
     transform: scale(1);
   }
 }
 
 /* =========================
-   BOTÃO FECHAR
+   BOTÃO FECHAR (LANCE)
 ========================= */
 
 .modal-close {
   position: absolute;
-
   top: 10px;
   right: 15px;
-
   width: 35px;
   height: 35px;
-
   background: transparent;
-
   border: none;
-
   color: #111214;
-
   font-size: 30px;
-
   line-height: 30px;
-
   cursor: pointer;
 }
 
@@ -410,9 +294,7 @@
 
 .modal-title {
   color: #111214;
-
   font-size: 32px;
-
   margin-bottom: 25px;
 }
 
@@ -422,23 +304,14 @@
 
 .modal-current-bid {
   width: 100%;
-
   min-height: 65px;
-
   padding: 15px;
-
   background-color: #111214;
-
   color: #c8a96b;
-
   border-radius: 5px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   margin-bottom: 18px;
 }
 
@@ -456,31 +329,22 @@
 
 .bid-rule {
   width: 100%;
-
   background-color: #242424;
-
   color: #c8a96b;
-
   border-radius: 5px;
-
   padding: 18px;
-
   margin-bottom: 25px;
 }
 
 .bid-rule h3 {
   color: #ffffff;
-
   font-size: 17px;
-
   margin-bottom: 8px;
 }
 
 .bid-rule p {
   font-size: 14px;
-
   line-height: 1.5;
-
   margin-bottom: 15px;
 }
 
@@ -488,17 +352,11 @@
   color: #ffffff;
 }
 
-/* Valor mínimo */
-
 .minimum-value {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   padding-top: 12px;
-
   border-top: 1px solid #555;
 }
 
@@ -508,7 +366,6 @@
 
 .minimum-value strong {
   color: #ffffff;
-
   font-size: 20px;
 }
 
@@ -518,13 +375,9 @@
 
 .modal-label {
   display: block;
-
   color: #111214;
-
   font-size: 16px;
-
   font-weight: bold;
-
   margin-bottom: 8px;
 }
 
@@ -534,66 +387,43 @@
 
 .bid-input {
   width: 100%;
-
   height: 58px;
-
   display: flex;
-
   align-items: center;
-
   background-color: #111214;
-
   border: 2px solid #111214;
-
   border-radius: 5px;
-
   overflow: hidden;
-
   margin-bottom: 10px;
 }
 
 .bid-input span {
   color: #c8a96b;
-
   font-size: 19px;
-
   font-weight: bold;
-
   padding-left: 15px;
 }
 
 .bid-input input {
   width: 100%;
-
   height: 100%;
-
   padding: 0 15px;
-
   background: transparent;
-
   border: none;
-
   outline: none;
-
   color: #c8a96b;
-
   font-family: Georgia, "Times New Roman", serif;
-
   font-size: 21px;
 }
-
-/* Remove setas do input number */
 
 .bid-input input::-webkit-outer-spin-button,
 .bid-input input::-webkit-inner-spin-button {
   -webkit-appearance: none;
-
   margin: 0;
 }
 
 .bid-input input[type="number"] {
   -moz-appearance: textfield;
-
   appearance: textfield;
 }
 
@@ -603,88 +433,191 @@
 
 .bid-error {
   color: #8b0000;
-
   font-size: 14px;
-
   font-weight: bold;
-
   line-height: 1.4;
-
   margin-bottom: 10px;
 }
 
 /* =========================
-   BOTÕES DO MODAL
+   BOTÕES DO MODAL DE LANCE
 ========================= */
 
 .modal-buttons {
   display: flex;
-
   gap: 12px;
-
   margin-top: 20px;
 }
 
-/* Cancelar */
-
 .modal-cancel {
   flex: 1;
-
   height: 50px;
-
   background-color: transparent;
-
   color: #111214;
-
   border: 2px solid #111214;
-
   border-radius: 5px;
-
   font-family: Georgia, "Times New Roman", serif;
-
   font-size: 15px;
-
   font-weight: bold;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
 .modal-cancel:hover {
   background-color: #111214;
-
   color: #c8a96b;
 }
 
-/* Confirmar */
-
 .modal-confirm {
   flex: 1;
-
   height: 50px;
-
   background-color: #111214;
-
   color: #c8a96b;
-
   border: 2px solid #111214;
-
   border-radius: 5px;
-
   font-family: Georgia, "Times New Roman", serif;
-
   font-size: 15px;
-
   font-weight: bold;
-
   cursor: pointer;
-
   transition: 0.2s;
 }
 
 .modal-confirm:hover {
   background-color: #242424;
+}
+
+/* =========================
+   MODAL DE PAGAMENTO PIX
+========================= */
+
+.pix-modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+  color: #111214;
+  border-radius: 12px;
+  padding: 35px 30px 30px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: modalAparecer 0.2s ease-out;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.pix-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  background: transparent;
+  border: none;
+  color: #111214;
+  font-size: 28px;
+  line-height: 28px;
+  cursor: pointer;
+}
+
+.pix-close:hover {
+  opacity: 0.6;
+}
+
+.pix-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 18px;
+}
+
+.pix-brand {
+  font-size: 30px;
+  font-weight: bold;
+  color: #6b6b6b;
+  letter-spacing: 1px;
+}
+
+.pix-powered {
+  font-size: 11px;
+  color: #999;
+}
+
+.pix-value-label {
+  font-size: 14px;
+  color: #444;
+}
+
+.pix-value {
+  font-size: 26px;
+  font-weight: bold;
+  color: #32bcad;
+  margin-bottom: 20px;
+}
+
+.pix-qrcode {
+  width: 220px;
+  margin: 0 auto 20px;
+  padding: 8px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.pix-qrcode img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pix-copia-cola {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.pix-copia-cola input {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #444;
+  background-color: #f7f7f7;
+}
+
+.pix-copia-cola button {
+  height: 42px;
+  padding: 0 16px;
+  background-color: #32bcad;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pix-copia-cola button:hover {
+  background-color: #279d90;
+}
+
+.pix-instructions {
+  color: #32bcad;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.pix-steps {
+  text-align: left;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+  padding-left: 20px;
 }
 
 /* =========================
@@ -698,7 +631,6 @@
 
   .product-layout {
     grid-template-columns: 1fr;
-
     gap: 40px;
   }
 
@@ -712,19 +644,18 @@
 
   .bid-section {
     min-height: 500px;
-
     padding: 50px 25px;
   }
 }
 
 /* =========================
-   MODAL NO CELULAR
+   MODAIS NO CELULAR
 ========================= */
 
 @media (max-width: 600px) {
-  .bid-modal {
+  .bid-modal,
+  .pix-modal {
     padding: 30px 20px;
-
     max-width: 95%;
   }
 
@@ -747,5 +678,13 @@
 
   .minimum-value strong {
     font-size: 18px;
+  }
+
+  .pix-qrcode {
+    width: 170px;
+  }
+
+  .pix-copia-cola {
+    flex-direction: column;
   }
 }
