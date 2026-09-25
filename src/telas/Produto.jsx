@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Produto.css";
 import { supabase } from './supabase'
 
 function Produto() {
-  // =========================
-  // ESTADOS
-  // =========================
+  
+     const [Produtos, setProdutos] = useState([])
+        async function CarregaProduto() {
+            const { data, error } = await supabase
+                .from('produtos')
+                .select();
+    
+            if (error) {
+                console.error('Erro ao carregar o produto:', error);
+                return;
+            }
+    
+            setProdutos(data);
+        }
+        useEffect(() => {
+            CarregaProduto();
+        }, []);
 
   // Lance atual
   const [lanceAtual, setLanceAtual] = useState(50);
