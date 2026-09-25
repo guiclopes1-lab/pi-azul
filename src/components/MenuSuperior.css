@@ -1,22 +1,158 @@
 header {
-    width: 100%;
-    padding: 25px 40px;
+  width: 100%;
+  min-height: 180px;
+  padding: 20px 40px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--text);
+
+  position: relative;
 }
 
-header a {
-    color: var(--text);
+/* ================================
+   BOTÕES ENTRAR / CADASTRAR
+================================ */
+
+.auth-buttons {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-buttons a {
+  color: var(--text);
+  text-decoration: none;
+
+  padding: 8px 16px;
+
+  border: 1px solid var(--text);
+  border-radius: 4px;
+
+  font-weight: 600;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.auth-buttons a:hover {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+/* ================================
+   NOME DO SITE
+================================ */
+
+.site-branding {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.site-branding h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.site-branding strong {
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+/* ================================
+   MENU DE NAVEGAÇÃO
+================================ */
+
+header nav {
+  margin-top: auto;
+  margin-bottom: 10px;
 }
 
 header nav ul {
-    display: flex;
-    gap: 30px;
-    list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+
+  list-style: none;
+}
+
+header nav ul li a {
+  position: relative;
+
+  color: var(--text);
+  text-decoration: none;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  padding: 8px 0;
+
+  transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+  color: #e0c58b;
+}
+
+header nav ul li a::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+
+  width: 0;
+  height: 2px;
+
+  background-color: var(--text);
+
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+header nav ul li a:hover::after {
+  width: 100%;
+}
+
+/* ================================
+   RESPONSIVO
+================================ */
+
+@media (max-width: 600px) {
+  header {
+    padding: 20px;
+  }
+
+  .auth-buttons {
+    top: 15px;
+    right: 20px;
+  }
+
+  .auth-buttons a {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .site-branding {
+    margin-top: 55px;
+  }
+
+  .site-branding h1 {
+    font-size: 2rem;
+  }
+
+  header nav ul {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

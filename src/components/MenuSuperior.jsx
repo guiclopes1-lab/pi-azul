@@ -2,7 +2,7 @@ import './MenuSuperior.css';
 function MenuSuperior() {
     return (
         <header>
-            <div>
+            <div className='auth-buttons'>
                 <a href="/login">Entrar</a>
                 <a href="/cadastro">Cadastrar</a>
             </div>
