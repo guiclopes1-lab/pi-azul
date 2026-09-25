@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./perfil.css";
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 function Perfil() {
+
+ const [Usuarios, setusuarios] = useState([])
+      async function Carregausuarios() {
+          const { data, error } = await supabase
+              .from('usuarios')
+              .select();
+  
+          if (error) {
+              console.error('Erro ao carregar usuarios:', error);
+              return;
+          }
+  
+          setusuarios(data);
+      }
+      useEffect(() => {
+          Carregausuarios();
+      }, []);
+
   return (
     <main className="profile-box">
 

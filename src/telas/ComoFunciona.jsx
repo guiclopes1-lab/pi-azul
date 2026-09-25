@@ -1,6 +1,6 @@
 import React from "react";
 import "./ComoFunciona.css";
-import { supabase } from './supabase'
+
 
 function ComoFunciona() {
   return (
