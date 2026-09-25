@@ -4,23 +4,29 @@ import { supabase } from '../supabase'
 
 function Login() {
 
-   const [Usuarios, setusuarios] = useState([])
-        async function Carregausuarios() {
-            const { data, error } = await supabase
-                .from('usuarios')
-                .select();
-    
-            if (error) {
-                console.error('Erro ao carregar usuarios:', error);
-                return;
-            }
-    
-            setusuarios(data);
+  const [Usuarios, setusuarios] = useState([])
+  async function Carregausuarios() {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select();
+
+    if (error) {
+      console.error('Erro ao carregar usuarios:', error);
+      return;
+    }
+
+    setusuarios(data);
+  }
+  async function criarlogin() {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .insert([
+        {
+          id: id,
+          nome: nome_usuario
         }
-        useEffect(() => {
-            Carregausuarios();
-        }, []);
-  
+      ])
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -28,6 +34,9 @@ function Login() {
     // Aqui você pode adicionar a lógica de login
     console.log("Login enviado!");
   };
+  useEffect(() => {
+    Carregausuarios();
+  }, []);
 
   return (
     <div className="login-page">
@@ -117,7 +126,7 @@ function Login() {
           <div className="register-link">
             Não tem uma conta?{" "}
 
-            <a href="#">
+            <a href="/cadastro">
               Cadastre-se
             </a>
           </div>

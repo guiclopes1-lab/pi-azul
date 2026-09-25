@@ -30,7 +30,7 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<Vitrine />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Login />} />
         <Route path="/produto" element={<Produto />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />

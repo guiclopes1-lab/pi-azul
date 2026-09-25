@@ -5,7 +5,7 @@ import { supabase } from '../supabase'
 import { useState, useEffect } from 'react';
 
 function Vitrine() {
-    const [Produtos, setProdutos] = useState([])
+    const [produtos, setProdutos] = useState([])
     async function CarregaProduto() {
         const { data, error } = await supabase
             .from('produtos')
@@ -32,9 +32,9 @@ function Vitrine() {
                         <img src="../image-placeholder.png" alt="Imagem do Produto 1" className="card-img" />
                     </div>
                     <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 1</h2>
-                        <p className="starting-bid">Lance inicial: R$ 100,00</p>
+                        <p className="category">{produtos.categoria}</p>
+                        <h2 className="product-name">{produtos.nome} </h2>
+                        <p className="starting-bid">Lance inicial: R$ {produtos.preco_inicial}</p>
                         <a href="#" className="btn-more">Veja mais</a>
                     </div>
                 </div>

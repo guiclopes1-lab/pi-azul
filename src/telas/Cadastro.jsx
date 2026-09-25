@@ -1,31 +1,51 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./cadastro.css";
 import { supabase } from '../supabase'
 
 function Cadastro() {
-
   const [Usuarios, setusuarios] = useState([])
-      async function Carregausuarios() {
-          const { data, error } = await supabase
-              .from('usuarios')
-              .select();
-  
-          if (error) {
-              console.error('Erro ao carregar usuarios:', error);
-              return;
-          }
-  
-          setusuarios(data);
-      }
-      useEffect(() => {
-          Carregausuarios();
-      }, []);
+  const [criarusuario, setcriarusuario] = useState()
+  async function Carregausuarios() {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select();
+
+    if (error) {
+      console.error('Erro ao carregar usuarios:', error);
+      return;
+    }
+
+    setusuarios(data);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
   };
 
+  async function criarlogin() {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .insert([
+        {
+          id: id,
+          nome_usuario: nome_usuario,
+          cpf: cpf,
+          telefone: telefone,
+          email: email,
+          senha: senha,
+          cep: cep,
+          rua: rua,
+          estado: estado,
+          cidade: cidade,
+          n_casa: n_casa
+        }
+      ])
+  }
+
+  useEffect(() => {
+    Carregausuarios();
+  }, []);
   return (
     <div className="cadastro-page">
 
@@ -162,7 +182,7 @@ function Cadastro() {
               <div className="form-group flex-2">
 
                 <label htmlFor="rua">
-                  Rua e Número
+                  Rua
                 </label>
 
                 <input
@@ -170,11 +190,22 @@ function Cadastro() {
                   id="rua"
                   name="rua"
                   required
-                  placeholder="Ex: Av. Paulista, 1230"
+                  placeholder="Ex: Av. Paulista"
                 />
 
               </div>
-
+              <div className="form-group flex-2 ">
+                <label htmlFor="numero">
+                  Número
+                </label>
+                <input
+                  type="text"
+                  id="numero"
+                  name="numero"
+                  required
+                  placeholder="Ex: 1230"
+                />
+              </div>
               <div className="form-group flex-1">
 
                 <label htmlFor="cep">
