@@ -3,6 +3,8 @@ import '../index.css';
 import './Vitrine.css'
 import { supabase } from '../supabase'
 import { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+
 
 function Vitrine() {
     const [produtos, setProdutos] = useState([])
@@ -26,84 +28,51 @@ function Vitrine() {
     return (
         <div>
             <div className="card-grid">
-                {/* Produto 1 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 1" className="card-img" />
-                    </div>
-                    <div className="card-info">
-                        <p className="category">{produtos.categoria}</p>
-                        <h2 className="product-name">{produtos.nome} </h2>
-                        <p className="starting-bid">Lance inicial: R$ {produtos.preco_inicial}</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                {produtos.map((produto) => (
+                    <div className="card" key={produto.id}>
 
-                {/* Produto 2 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 2" className="card-img" />
-                    </div>
-                    <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 2</h2>
-                        <p className="starting-bid">Lance inicial: R$ 250,00</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                        <div className="img-container">
+                            <img
+                                src={produto.imagem}
+                                alt={produto.nome}
+                                className="card-img"
+                            />
+                        </div>
 
-                {/* Produto 3 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 3" className="card-img" />
-                    </div>
-                    <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 3</h2>
-                        <p className="starting-bid">Lance inicial: R$ 50,00</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                        <div className="card-info">
 
-                {/* Produto 4 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 4" className="card-img" />
-                    </div>
-                    <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 4</h2>
-                        <p className="starting-bid">Lance inicial: R$ 300,00</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                            <p className="category">
+                                {produto.categoria}
+                            </p>
 
-                {/* Produto 5 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 5" className="card-img" />
-                    </div>
-                    <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 5</h2>
-                        <p className="starting-bid">Lance inicial: R$ 450,00</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                            <h2 className="product-name">
+                                {produto.nome}
+                            </h2>
 
-                {/* Produto 6 */}
-                <div className="card">
-                    <div className="img-container">
-                        <img src="../image-placeholder.png" alt="Imagem do Produto 6" className="card-img" />
+                            <p className="starting-bid">
+                                Lance inicial:{" "}
+                                {produto.preco != null
+                                    ? Number(produto.preco).toLocaleString("pt-BR", {
+                                        style: "currency",
+                                        currency: "BRL",
+                                    })
+                                    : "R$ 0,00"}
+                            </p>
+                            <Link
+                                to={`/produto/${produto.id}`}
+                                className="btn-more"
+                            >
+                                Veja mais
+                            </Link>
+
+
+                        </div>
+
                     </div>
-                    <div className="card-info">
-                        <p className="category">Categoria do produto</p>
-                        <h2 className="product-name">Nome do produto 6</h2>
-                        <p className="starting-bid">Lance inicial: R$ 120,00</p>
-                        <a href="#" className="btn-more">Veja mais</a>
-                    </div>
-                </div>
+                ))}
+
             </div>
+
 
         </div>
     )

@@ -31,13 +31,24 @@ function Cadastro() {
     setusuarios(data || []);
   }
   async function criarlogin() {
+
+    // Limpa os dados antes de enviar
+    const nomeUsuario = form.nome_usuario.trim();
+    const email = form.email.trim().toLowerCase();
+    const rua = form.rua.trim();
+    const cidade = form.cidade.trim();
+    const estado = form.estado.trim();
+
+    const cpf = form.cpf.replace(/\D/g, "");
+    const telefone = form.telefone.replace(/\D/g, "");
+    const cep = form.cep.replace(/\D/g, "");
+
     // 1. Cria a conta no Supabase Auth
     const { data: authData, error: authError } =
       await supabase.auth.signUp({
-        email: form.email,
+        email: email,
         password: form.senha,
       });
-
 
     if (authError) {
       console.error("Erro ao criar conta:", authError);
@@ -45,7 +56,7 @@ function Cadastro() {
       return;
     }
 
-    // 2. Pega o ID do usuário criado
+    // 2. Pega o ID do usuário
     const userId = authData.user?.id;
 
     if (!userId) {
@@ -53,21 +64,21 @@ function Cadastro() {
       return;
     }
 
-    // 3. Salva os dados do usuário na sua tabela
+    // 3. Salva os dados limpos na tabela usuarios
     const { data, error } = await supabase
       .from("usuarios")
       .insert([
         {
           id: userId,
-          nome_usuario: form.nome_usuario,
-          cpf: form.cpf,
-          telefone: form.telefone,
-          email: form.email,
-          cep: form.cep,
-          rua: form.rua,
-          estado: form.estado,
-          cidade: form.cidade,
-          n_casa: form.n_casa,
+          nome_usuario: nomeUsuario,
+          cpf: cpf,
+          telefone: telefone,
+          email: email,
+          cep: cep,
+          rua: rua,
+          estado: estado,
+          cidade: cidade,
+          n_casa: form.n_casa.trim(),
         },
       ])
       .select();
@@ -81,15 +92,58 @@ function Cadastro() {
     console.log("Usuário criado:", data);
     alert("Cadastro realizado com sucesso!");
   }
+  function formatarCPF(value) {
+    return value
+      .replace(/\D/g, "")
+      .slice(0, 11)
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  }
 
+  function formatarTelefone(value) {
+    const numeros = value.replace(/\D/g, "").slice(0, 11);
+
+    if (numeros.length <= 10) {
+      return numeros
+        .replace(/(\d{2})(\d)/, "($1) $2")
+        .replace(/(\d{4})(\d)/, "$1-$2");
+    }
+
+    return numeros
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2");
+  }
+
+  function formatarCEP(value) {
+    return value
+      .replace(/\D/g, "")
+      .slice(0, 8)
+      .replace(/(\d{5})(\d)/, "$1-$2");
+  }
   function handleChange(event) {
     const { name, value } = event.target;
 
+    let valorFormatado = value;
+
+    if (name === "cpf") {
+      valorFormatado = formatarCPF(value);
+    }
+
+    if (name === "telefone") {
+      valorFormatado = formatarTelefone(value);
+    }
+
+    if (name === "cep") {
+      valorFormatado = formatarCEP(value);
+    }
+
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: valorFormatado,
     }));
   }
+
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -245,7 +299,7 @@ function Cadastro() {
                   name="rua"
                   value={form.rua}
                   onChange={handleChange}
-                  pattern="[A-Za-zÀ-ÿ0-9\s,.'-]{3,}"
+                  pattern="[\p{L}0-9\s,.'\-]{3,}"
                   title="A rua deve conter pelo menos 3 caracteres."
                 />
               </div>
