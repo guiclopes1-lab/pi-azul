@@ -30,6 +30,57 @@ function Cadastro() {
 
     setusuarios(data || []);
   }
+  async function criarlogin() {
+    // 1. Cria a conta no Supabase Auth
+    const { data: authData, error: authError } =
+      await supabase.auth.signUp({
+        email: form.email,
+        password: form.senha,
+      });
+
+
+    if (authError) {
+      console.error("Erro ao criar conta:", authError);
+      alert(authError.message);
+      return;
+    }
+
+    // 2. Pega o ID do usuário criado
+    const userId = authData.user?.id;
+
+    if (!userId) {
+      alert("Não foi possível obter o usuário criado.");
+      return;
+    }
+
+    // 3. Salva os dados do usuário na sua tabela
+    const { data, error } = await supabase
+      .from("usuarios")
+      .insert([
+        {
+          id: userId,
+          nome_usuario: form.nome_usuario,
+          cpf: form.cpf,
+          telefone: form.telefone,
+          email: form.email,
+          cep: form.cep,
+          rua: form.rua,
+          estado: form.estado,
+          cidade: form.cidade,
+          n_casa: form.n_casa,
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Erro ao salvar usuário:", error);
+      alert(error.message);
+      return;
+    }
+
+    console.log("Usuário criado:", data);
+    alert("Cadastro realizado com sucesso!");
+  }
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -40,57 +91,10 @@ function Cadastro() {
     }));
   }
 
-  async function criarlogin() {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .insert([
-        {
-          id: id,
-          nome_usuario: nome_usuario,
-          cpf: cpf,
-          telefone: telefone,
-          email: email,
-          senha: senha,
-          cep: cep,
-          rua: rua,
-          estado: estado,
-          cidade: cidade,
-          n_casa: n_casa
-        }
-      ])
-      .select();
-
-    if (error) {
-      console.error("Erro ao criar usuário:", error);
-      alert("Erro ao criar usuário.");
-      return;
-    }
-    console.log("Usuário criado:", data);
-
-    alert("Cadastro realizado com sucesso!");
-    setForm({
-      nome_usuario: "",
-      cpf: "",
-      telefone: "",
-      email: "",
-      senha: "",
-      cep: "",
-      rua: "",
-      estado: "",
-      cidade: "",
-      n_casa: "",
-    });
-
-    // Atualiza lista
-    carregaUsuarios();
-  }
   async function handleSubmit(event) {
     event.preventDefault();
-
-    await criarLogin();
+    await criarlogin();
   }
-
-
 
   useEffect(() => {
     Carregausuarios();
@@ -113,6 +117,8 @@ function Cadastro() {
           onSubmit={handleSubmit}
         >
 
+
+
           {/* TÍTULO */}
           <div className="center-text">
             <h2>Criar Conta</h2>
@@ -122,20 +128,6 @@ function Cadastro() {
             </p>
           </div>
 
-          {/* NOME COMPLETO */}
-          <div className="form-group">
-            <label htmlFor="nome">
-              Nome completo *
-            </label>
-
-            <input
-              type="text"
-              id="nome"
-              name="nome"
-              required
-              placeholder="Digite seu nome completo"
-            />
-          </div>
 
           {/* USUÁRIO E CPF */}
           <div className="form-group-row">
@@ -147,10 +139,12 @@ function Cadastro() {
 
               <input
                 type="text"
-                id="usuario"
-                name="usuario"
+                name="nome_usuario"
+                value={form.nome_usuario}
+                onChange={handleChange}
                 placeholder="Escolha um usuário"
               />
+
             </div>
 
             <div className="form-group">
@@ -160,10 +154,14 @@ function Cadastro() {
 
               <input
                 type="text"
-                id="cpf"
                 name="cpf"
+                value={form.cpf}
+                onChange={handleChange}
                 placeholder="000.000.000-00"
+                pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                title="O CPF deve estar no formato 000.000.000-00"
               />
+
             </div>
 
           </div>
@@ -175,14 +173,16 @@ function Cadastro() {
               <label htmlFor="telefone">
                 Telefone *
               </label>
-
               <input
                 type="tel"
-                id="telefone"
                 name="telefone"
+                value={form.telefone}
+                onChange={handleChange}
                 required
-                placeholder="(00) 00000-0000"
+                pattern="\(\d{2}\)\s?\d{4,5}-\d{4}"
+                title="O telefone deve estar no formato (00) 00000-0000 ou (00) 0000-0000"
               />
+
             </div>
 
             <div className="form-group">
@@ -192,11 +192,12 @@ function Cadastro() {
 
               <input
                 type="email"
-                id="email"
                 name="email"
+                value={form.email}
+                onChange={handleChange}
                 required
-                placeholder="seu@email.com"
               />
+
             </div>
 
           </div>
@@ -212,9 +213,14 @@ function Cadastro() {
               type="password"
               id="senha"
               name="senha"
+              value={form.senha}
+              onChange={handleChange}
               required
               placeholder="Crie uma senha forte"
+              pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,}"
+              title="A senha deve ter pelo menos 10 caracteres, incluir letra maiúscula, letra minúscula, número e caractere especial."
             />
+
 
           </div>
 
@@ -236,12 +242,12 @@ function Cadastro() {
 
                 <input
                   type="text"
-                  id="rua"
                   name="rua"
-                  required
-                  placeholder="Ex: Av. Paulista"
+                  value={form.rua}
+                  onChange={handleChange}
+                  pattern="[A-Za-zÀ-ÿ0-9\s,.'-]{3,}"
+                  title="A rua deve conter pelo menos 3 caracteres."
                 />
-
               </div>
               <div className="form-group flex-2 ">
                 <label htmlFor="numero">
@@ -249,11 +255,11 @@ function Cadastro() {
                 </label>
                 <input
                   type="text"
-                  id="numero"
-                  name="numero"
-                  required
-                  placeholder="Ex: 1230"
+                  name="n_casa"
+                  value={form.n_casa}
+                  onChange={handleChange}
                 />
+
               </div>
               <div className="form-group flex-1">
 
@@ -263,10 +269,9 @@ function Cadastro() {
 
                 <input
                   type="text"
-                  id="cep"
                   name="cep"
-                  required
-                  placeholder="00000-000"
+                  value={form.cep}
+                  onChange={handleChange}
                 />
 
               </div>
@@ -284,12 +289,10 @@ function Cadastro() {
 
                 <input
                   type="text"
-                  id="cidade"
                   name="cidade"
-                  required
-                  placeholder="Sua cidade"
+                  value={form.cidade}
+                  onChange={handleChange}
                 />
-
               </div>
 
               <div className="form-group">
@@ -300,10 +303,11 @@ function Cadastro() {
 
                 <input
                   type="text"
-                  id="estado"
                   name="estado"
-                  required
-                  placeholder="Seu estado"
+                  value={form.estado}
+                  onChange={handleChange}
+                  pattern="[A-Za-zÀ-ÿ\s]{2,}"
+                  title="O estado deve conter pelo menos 2 letras."
                 />
 
               </div>
@@ -329,12 +333,11 @@ function Cadastro() {
           </div>
 
           {/* BOTÃO */}
-          <button
-            type="submit"
-            className="btn-finalizar"
-          >
+          <button type="submit" className="btn-finalizar">
             Finalizar Cadastro
           </button>
+
+
 
         </form>
 
