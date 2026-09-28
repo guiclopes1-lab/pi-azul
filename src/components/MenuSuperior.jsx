@@ -8,8 +8,8 @@ function MenuSuperior() {
             </div>
 
             <div>
-                <h1>Nome do Site</h1>
-                <strong>Slogan do site em negrito</strong>
+                <h1>Geek Loot</h1>
+                <strong>Seu lance, Seu tesouro geek</strong>
             </div>
 
             <nav>

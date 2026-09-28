@@ -21,15 +21,15 @@ function Rodape() {
 
                     <div>
                         <p>
-                            <strong>E-mail:</strong> emailaleatorioaqui@gmail.com
+                            <strong>E-mail:</strong> suportegeekloot@gmail.com
                         </p>
 
                         <p>
-                            <strong>Telefone:</strong> (11) 99999-9999
+                            <strong>Telefone:</strong> (11) 94040-4242
                         </p>
 
                         <p>
-                            <strong>Endereço:</strong> Rua xxxxxxxx, nº xxxx, São Carlos-SP
+                            <strong>Endereço:</strong> Rua Alameda dos Naboo, nº 1367, Neo Tokyo, São Paulo-SP
                         </p>
                     </div>
                 </div>
