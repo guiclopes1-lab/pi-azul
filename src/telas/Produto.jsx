@@ -23,6 +23,13 @@ function Produto() {
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
 
+  // Timer
+  const [tempoRestante, setTempoRestante] = useState({
+    horas: "02",
+    minutos: "15",
+    segundos: "30",
+  });
+
   // =========================
   // CARREGAR PRODUTO DO SUPABASE
   // =========================
@@ -59,6 +66,40 @@ function Produto() {
 
     carregarProduto();
   }, [id]);
+
+  // =========================
+  // LÓGICA DO TIMER
+  // =========================
+
+  useEffect(() => {
+    // Caso a tabela 'produtos' no Supabase possua a coluna 'data_fim', utiliza ela.
+    // Caso contrário, cria um tempo inicial padrão (2h 15m 30s a partir de agora).
+    const dataAlvo = produto?.data_fim
+      ? new Date(produto.data_fim).getTime()
+      : new Date().getTime() + (2 * 3600 + 15 * 60 + 30) * 1000;
+
+    const interval = setInterval(() => {
+      const agora = new Date().getTime();
+      const diferenca = dataAlvo - agora;
+
+      if (diferenca <= 0) {
+        clearInterval(interval);
+        setTempoRestante({ horas: "00", minutos: "00", segundos: "00" });
+      } else {
+        const h = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+        setTempoRestante({
+          horas: String(h).padStart(2, "0"),
+          minutos: String(m).padStart(2, "0"),
+          segundos: String(s).padStart(2, "0"),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [produto]);
 
   // Imagens: a coluna "imagem" pode ter uma URL ou várias separadas por vírgula
   const imagens = produto?.imagem
@@ -253,11 +294,11 @@ function Produto() {
             <div className="timer-section">
               <h3>TEMPO RESTANTE</h3>
               <div className="timer">
-                <span className="time-box">02</span>
+                <span className="time-box">{tempoRestante.horas}</span>
                 <span>:</span>
-                <span className="time-box">15</span>
+                <span className="time-box">{tempoRestante.minutos}</span>
                 <span>:</span>
-                <span className="time-box">30</span>
+                <span className="time-box">{tempoRestante.segundos}</span>
               </div>
             </div>
           </div>
