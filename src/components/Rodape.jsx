@@ -10,7 +10,6 @@ function Rodape() {
                     <ul>
                         <li><a href="#">Quem somos?</a></li>
                         <li><a href="#">Como funciona?</a></li>
-                        <li><a href="#">Contato</a></li>
                         <li><a href="#">Termos de uso</a></li>
                         <li><a href="#">Política de privacidade</a></li>
                     </ul>
