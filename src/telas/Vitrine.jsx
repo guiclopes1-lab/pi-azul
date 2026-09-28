@@ -5,7 +5,6 @@ import { supabase } from '../supabase'
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 
-
 function Vitrine() {
     const [produtos, setProdutos] = useState([])
     async function CarregaProduto() {

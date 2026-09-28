@@ -1,47 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./login.css";
-import { supabase } from '../supabase'
+import { supabase } from "../supabase";
 
 function Login() {
 
-  const [Usuarios, setusuarios] = useState([])
-  async function Carregausuarios() {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .select();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const emailLimpo = email.trim().toLowerCase();
+    const senhaLimpa = senha.trim();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: emailLimpo,
+      password: senhaLimpa,
+    });
 
     if (error) {
-      console.error('Erro ao carregar usuarios:', error);
+      console.error("Erro ao fazer login:", error);
+      alert("E-mail ou senha incorretos.");
       return;
     }
 
-    setusuarios(data);
-  }
+    console.log("Login realizado:", data);
 
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    console.log("Login enviado!");
+    window.location.href = "/";
   };
-  useEffect(() => {
-    Carregausuarios();
-  }, []);
 
   return (
     <div className="login-page">
 
-      {/* FUNDO ABSTRATO */}
       <div className="glow-bg"></div>
 
-      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-title">
           LEILÃO
         </div>
       </nav>
 
-      {/* CONTAINER DO LOGIN */}
       <div className="login-container">
 
         <form
@@ -49,7 +47,6 @@ function Login() {
           onSubmit={handleSubmit}
         >
 
-          {/* CABEÇALHO */}
           <div className="center-text">
 
             <h2>
@@ -62,21 +59,24 @@ function Login() {
 
           </div>
 
-          {/* E-MAIL OU USUÁRIO */}
+          {/* EMAIL */}
+
           <div className="form-group">
 
             <label htmlFor="identificador">
-              E-mail ou nome de usuário
+              E-mail
             </label>
 
             <div className="input-wrapper">
 
               <input
-                type="text"
+                type="email"
                 id="identificador"
                 name="identificador"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="seu@email.com ou usuário"
+                placeholder="seu@email.com"
               />
 
             </div>
@@ -84,6 +84,7 @@ function Login() {
           </div>
 
           {/* SENHA */}
+
           <div className="form-group">
 
             <label htmlFor="senha">
@@ -96,6 +97,8 @@ function Login() {
                 type="password"
                 id="senha"
                 name="senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
                 required
                 placeholder="••••••••"
               />
@@ -104,7 +107,8 @@ function Login() {
 
           </div>
 
-          {/* BOTÃO ENTRAR */}
+          {/* BOTÃO */}
+
           <button
             type="submit"
             className="btn-entrar"
@@ -113,12 +117,15 @@ function Login() {
           </button>
 
           {/* CADASTRO */}
+
           <div className="register-link">
+
             Não tem uma conta?{" "}
 
             <a href="/cadastro">
               Cadastre-se
             </a>
+
           </div>
 
         </form>

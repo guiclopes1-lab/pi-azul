@@ -228,6 +228,7 @@
 ========================= */
 
 .btn-entrar {
+  display: block;
   width: 100%;
   max-width: 200px;
 
@@ -240,6 +241,7 @@
   border: 1px solid #3a3838;
   border-radius: var(--radius-md);
 
+  font-family: inherit;
   font-size: 13px;
   font-weight: 600;
 
@@ -269,6 +271,11 @@
 
 .btn-entrar:active {
   transform: translateY(0);
+}
+
+.btn-entrar:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 /* =========================
