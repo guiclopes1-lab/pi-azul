@@ -8,10 +8,20 @@ function CadastroProduto() {
   const [preco, setPreco] = useState("");
   const [incremento, setIncremento] = useState("");
 
+  const [categoria, setCategoria] = useState("");
+  const [menuCategoriaAberto, setMenuCategoriaAberto] = useState(false);
+
   const [imagem, setImagem] = useState(null);
   const [preview, setPreview] = useState("");
 
   const [carregando, setCarregando] = useState(false);
+
+  const opcoesCategoria = ["card", "figure"];
+
+  function escolherCategoria(valor) {
+    setCategoria(valor);
+    setMenuCategoriaAberto(false);
+  }
 
   function selecionarImagem(event) {
     const arquivo = event.target.files[0];
@@ -59,6 +69,8 @@ function CadastroProduto() {
 
   async function cadastrarProduto(event) {
     event.preventDefault();
+
+    const formulario = event.target;
 
     if (carregando) {
       return;
@@ -113,7 +125,7 @@ function CadastroProduto() {
 
             disponibilidade: true,
 
-            categoria: null,
+            categoria: categoria || null,
 
             id_usuario: null
           }
@@ -141,11 +153,13 @@ function CadastroProduto() {
       setDescricao("");
       setPreco("");
       setIncremento("");
+      setCategoria("");
+      setMenuCategoriaAberto(false);
       setImagem(null);
       setPreview("");
 
       // Limpa o input de arquivo
-      event.target.reset();
+      formulario.reset();
 
     } catch (error) {
       console.error("ERRO:", error);
@@ -338,6 +352,59 @@ function CadastroProduto() {
                 disabled={carregando}
                 required
               />
+
+            </div>
+
+          </div>
+
+          {/* CATEGORIAS */}
+
+          <div className="campo">
+
+            <label>
+              Categorias
+            </label>
+
+            <div className="categoria-wrapper">
+
+              <button
+                type="button"
+                className="botao-categorias"
+                onClick={() =>
+                  setMenuCategoriaAberto(!menuCategoriaAberto)
+                }
+                disabled={carregando}
+              >
+
+                <span>
+                  {categoria || "Categorias"}
+                </span>
+
+                <span className="seta-categoria">
+                  {menuCategoriaAberto ? "▲" : "▼"}
+                </span>
+
+              </button>
+
+              {menuCategoriaAberto && (
+                <div className="menu-categorias">
+
+                  {opcoesCategoria.map((opcao) => (
+                    <button
+                      key={opcao}
+                      type="button"
+                      className={
+                        "opcao-categoria" +
+                        (categoria === opcao ? " ativa" : "")
+                      }
+                      onClick={() => escolherCategoria(opcao)}
+                    >
+                      {opcao}
+                    </button>
+                  ))}
+
+                </div>
+              )}
 
             </div>
 
