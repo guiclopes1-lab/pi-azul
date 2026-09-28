@@ -8,10 +8,8 @@ function Rodape() {
                     <h3>Informações</h3>
 
                     <ul>
-                        <li><a href="#">Quem somos?</a></li>
-                        <li><a href="#">Como funciona?</a></li>
-                        <li><a href="#">Termos de uso</a></li>
-                        <li><a href="#">Política de privacidade</a></li>
+                        <li><a href="./ComoFunciona">Quem somos?</a></li>
+                        <li><a href="./ComoFunciona">Como funciona?</a></li>
                     </ul>
                 </div>
 
