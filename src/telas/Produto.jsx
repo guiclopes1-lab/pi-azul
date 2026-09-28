@@ -1,63 +1,90 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import "./Produto.css";
-import { supabase } from '../supabase'
+import { supabase } from "../supabase";
 
 function Produto() {
+  const { id } = useParams();
 
-     const [Produtos, setProdutos] = useState([])
-        async function CarregaProduto() {
-            const { data, error } = await supabase
-                .from('produtos')
-                .select();
+  // Produto vindo do banco
+  const [produto, setProduto] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erroCarregar, setErroCarregar] = useState("");
 
-            if (error) {
-                console.error('Erro ao carregar produtos:', error);
-                return;
-            }
+  // Carrossel
+  const [slideAtual, setSlideAtual] = useState(0);
 
-            setProdutos(data);
-        }
-        useEffect(() => {
-            CarregaProduto();
-        }, []);
-
-  // Lance atual
-  const [lanceAtual, setLanceAtual] = useState(50);
-
-  // Controla a abertura do modal de lance
+  // Lance
+  const [lanceAtual, setLanceAtual] = useState(0);
   const [modalAberto, setModalAberto] = useState(false);
-
-  // Controla a abertura do modal de pagamento Pix
   const [pixAberto, setPixAberto] = useState(false);
-
-  // Valor que será cobrado no Pix (o lance confirmado)
   const [valorPix, setValorPix] = useState(0);
-
-  // Valor digitado pelo usuário
   const [novoLance, setNovoLance] = useState("");
-
-  // Mensagem de erro
   const [erro, setErro] = useState("");
+  const [salvando, setSalvando] = useState(false);
 
   // =========================
-  // VALOR MÍNIMO DO PRÓXIMO LANCE
+  // CARREGAR PRODUTO DO SUPABASE
+  // =========================
+
+  useEffect(() => {
+    async function carregarProduto() {
+      setCarregando(true);
+      setErroCarregar("");
+
+      let query = supabase.from("produtos").select("*");
+
+      if (id) {
+        query = query.eq("id", id);
+      } else {
+        query = query.eq("disponibilidade", true).order("id").limit(1);
+      }
+
+      const { data, error } = await query.maybeSingle();
+
+      if (error) {
+        console.error("Erro ao carregar produto:", error);
+        setErroCarregar("Não foi possível carregar o produto.");
+      } else if (!data) {
+        setErroCarregar("Produto não encontrado.");
+      } else {
+        setProduto(data);
+        // Se ainda não houve lance, começa pelo preço inicial
+        setLanceAtual(Number(data.lance_atual ?? data.preco));
+        setSlideAtual(0);
+      }
+
+      setCarregando(false);
+    }
+
+    carregarProduto();
+  }, [id]);
+
+  // Imagens: a coluna "imagem" pode ter uma URL ou várias separadas por vírgula
+  const imagens = produto?.imagem
+    ? produto.imagem.split(",").map((url) => url.trim()).filter(Boolean)
+    : [];
+
+  const anterior = () =>
+    setSlideAtual((s) => (s === 0 ? imagens.length - 1 : s - 1));
+
+  const proximo = () =>
+    setSlideAtual((s) => (s === imagens.length - 1 ? 0 : s + 1));
+
+  // =========================
+  // REGRAS DO LANCE
   // =========================
 
   const lanceMinimo = lanceAtual + 50;
 
-  // =========================
-  // ABRIR MODAL DE LANCE
-  // =========================
+  const formatarValor = (valor) => Number(valor).toFixed(2).replace(".", ",");
 
   const abrirModal = () => {
+    if (produto && produto.disponibilidade === false) return;
     setModalAberto(true);
     setNovoLance("");
     setErro("");
   };
-
-  // =========================
-  // FECHAR MODAL DE LANCE
-  // =========================
 
   const fecharModal = () => {
     setModalAberto(false);
@@ -65,58 +92,59 @@ function Produto() {
     setErro("");
   };
 
-  // =========================
-  // FECHAR MODAL DE PIX
-  // =========================
-
-  const fecharPix = () => {
-    setPixAberto(false);
-  };
+  const fecharPix = () => setPixAberto(false);
 
   // =========================
-  // CONFIRMAR LANCE -> ABRE O PIX
+  // CONFIRMAR LANCE -> SALVA NO BANCO -> ABRE O PIX
   // =========================
 
-  const confirmarLance = () => {
+  const confirmarLance = async () => {
     const valor = Number(novoLance);
 
-    // Campo vazio
     if (!novoLance) {
       setErro("Digite um valor para o novo lance.");
       return;
     }
 
-    // Valor menor que o permitido
     if (valor < lanceMinimo) {
-      setErro(
-        `O novo lance deve ser de no mínimo R$ ${lanceMinimo
-          .toFixed(2)
-          .replace(".", ",")}.`
-      );
+      setErro(`O novo lance deve ser de no mínimo R$ ${formatarValor(lanceMinimo)}.`);
       return;
     }
 
-    // Atualiza o lance atual
+    setSalvando(true);
+
+    // Garante que ninguém deu um lance maior nesse meio tempo
+    const { data, error } = await supabase
+      .from("produtos")
+      .update({ lance_atual: valor })
+      .eq("id", produto.id)
+      .or(`lance_atual.is.null,lance_atual.lt.${valor}`)
+      .select()
+      .maybeSingle();
+
+    setSalvando(false);
+
+    if (error) {
+      console.error("Erro ao salvar lance:", error);
+      setErro("Erro ao salvar o lance. Tente novamente.");
+      return;
+    }
+
+    if (!data) {
+      setErro("Outro lance maior foi registrado. Atualize a página.");
+      return;
+    }
+
     setLanceAtual(valor);
-
-    // Guarda o valor que vai para o Pix
     setValorPix(valor);
-
-    // Fecha o modal de lance e abre o Pix
     setModalAberto(false);
     setPixAberto(true);
   };
 
   // =========================
-  // FORMATAR VALOR
+  // PIX (payload fictício - troque por um gerado pelo seu backend)
   // =========================
 
-  const formatarValor = (valor) => {
-    return valor.toFixed(2).replace(".", ",");
-  };
-
-  // Código Pix fictício usado para gerar o QR Code.
-  // Troque por um payload Pix real (copia e cola) gerado pelo seu backend.
   const pixCopiaCola = `00020126580014BR.GOV.BCB.PIX0136chave-pix-exemplo5204000053039865406${valorPix.toFixed(
     2
   )}5802BR5913Nome do Leilao6009SAO PAULO62070503***6304ABCD`;
@@ -125,267 +153,152 @@ function Produto() {
     pixCopiaCola
   )}`;
 
+  // =========================
+  // ESTADOS DE CARREGAMENTO / ERRO
+  // =========================
+
+  if (carregando) {
+    return (
+      <div className="body">
+        <main className="content">
+          <p>Carregando produto...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (erroCarregar || !produto) {
+    return (
+      <div className="body">
+        <main className="content">
+          <p>{erroCarregar || "Produto não encontrado."}</p>
+        </main>
+      </div>
+    );
+  }
+
+  const indisponivel = produto.disponibilidade === false;
+
   return (
     <div className="body">
-
-      {/* =========================
-          CONTEÚDO PRINCIPAL
-      ========================= */}
-
       <main className="content">
-
         <div className="product-layout">
 
-          {/* =========================
-              ESQUERDA - CARROSSEL
-          ========================= */}
-
+          {/* ESQUERDA - CARROSSEL */}
           <div className="carousel-section">
-
             <div className="carousel">
-
               <div className="slides">
-
-                <div className="slide slide-1">
-                  Imagem 1
-                </div>
-
-                <div className="slide slide-2">
-                  Imagem 2
-                </div>
-
-                <div className="slide slide-3">
-                  Imagem 3
-                </div>
-
+                {imagens.length > 0 ? (
+                  <img
+                    src={imagens[slideAtual]}
+                    alt={produto.nome}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <div className="slide slide-1">Sem imagem</div>
+                )}
               </div>
 
-              {/* BOTÕES DO CARROSSEL */}
-
-              <div className="carousel-controls">
-
-                <button
-                  className="btn-arrow"
-                  type="button"
-                >
-                  ←
-                </button>
-
-                <button
-                  className="btn-arrow"
-                  type="button"
-                >
-                  →
-                </button>
-
-              </div>
-
+              {imagens.length > 1 && (
+                <div className="carousel-controls">
+                  <button className="btn-arrow" type="button" onClick={anterior}>
+                    ←
+                  </button>
+                  <button className="btn-arrow" type="button" onClick={proximo}>
+                    →
+                  </button>
+                </div>
+              )}
             </div>
-
           </div>
 
-
-          {/* =========================
-              CENTRO - INFORMAÇÕES
-          ========================= */}
-
+          {/* CENTRO - INFORMAÇÕES */}
           <div className="info-section">
+            <h2 className="product-title">{produto.nome}</h2>
 
-            <h2 className="product-title">
-              Nome do item
-            </h2>
+            {produto.categoria && (
+              <p className="product-category">{produto.categoria}</p>
+            )}
 
             <p className="product-desc">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Etiam eget ligula eu lectus lobortis condimentum.
-              Aliquam nonummy auctor massa. Pellentesque habitant morbi
-              tristique senectus et netus et malesuada fames ac turpis
-              egestas. Nulla at risus. Quisque purus magna, auctor et,
-              sagittis ac, posuere eu, lectus. Nam mattis, felis ut
-              adipiscing.
+              {produto.descricao || "Sem descrição disponível."}
             </p>
-
           </div>
 
-
-          {/* =========================
-              DIREITA - ÁREA DE LANCES
-          ========================= */}
-
+          {/* DIREITA - ÁREA DE LANCES */}
           <div className="bid-section">
-
-            {/* LANCE ATUAL */}
-
             <div className="current-bid-display">
-
-              <span>
-                Lance atual
-              </span>
-
-              <strong>
-                R$ {formatarValor(lanceAtual)}
-              </strong>
-
+              <span>Lance atual</span>
+              <strong>R$ {formatarValor(lanceAtual)}</strong>
             </div>
-
-
-            {/* BOTÃO DAR LANCE */}
 
             <button
               className="btn-bid"
               type="button"
               onClick={abrirModal}
+              disabled={indisponivel}
             >
-              dar lance
+              {indisponivel ? "indisponível" : "dar lance"}
             </button>
-
-
-            {/* PRÓXIMO LANCE */}
 
             <button
               className="btn-bid-custom"
               type="button"
               onClick={abrirModal}
+              disabled={indisponivel}
             >
               próximo lance mínimo de R$ {formatarValor(lanceMinimo)}
             </button>
 
-
-            {/* TIMER */}
-
             <div className="timer-section">
-
-              <h3>
-                TEMPO RESTANTE
-              </h3>
-
+              <h3>TEMPO RESTANTE</h3>
               <div className="timer">
-
-                <span className="time-box">
-                  02
-                </span>
-
-                <span>
-                  :
-                </span>
-
-                <span className="time-box">
-                  15
-                </span>
-
-                <span>
-                  :
-                </span>
-
-                <span className="time-box">
-                  30
-                </span>
-
+                <span className="time-box">02</span>
+                <span>:</span>
+                <span className="time-box">15</span>
+                <span>:</span>
+                <span className="time-box">30</span>
               </div>
-
             </div>
-
           </div>
 
         </div>
-
       </main>
 
-
-      {/* =========================
-          MODAL DE LANCE
-      ========================= */}
-
+      {/* MODAL DE LANCE */}
       {modalAberto && (
-
-        <div
-          className="modal-overlay"
-          onClick={fecharModal}
-        >
-
-          <div
-            className="bid-modal"
-            onClick={(event) => event.stopPropagation()}
-          >
-
-            {/* BOTÃO FECHAR */}
-
-            <button
-              className="modal-close"
-              type="button"
-              onClick={fecharModal}
-            >
+        <div className="modal-overlay" onClick={fecharModal}>
+          <div className="bid-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" type="button" onClick={fecharModal}>
               ×
             </button>
 
-
-            {/* TÍTULO */}
-
-            <h2 className="modal-title">
-              Dar lance
-            </h2>
-
-
-            {/* LANCE ATUAL */}
+            <h2 className="modal-title">Dar lance</h2>
 
             <div className="modal-current-bid">
-
-              <span>
-                Lance atual
-              </span>
-
-              <strong>
-                R$ {formatarValor(lanceAtual)}
-              </strong>
-
+              <span>Lance atual</span>
+              <strong>R$ {formatarValor(lanceAtual)}</strong>
             </div>
 
-
-            {/* REGRA */}
-
             <div className="bid-rule">
-
-              <h3>
-                Regra do lance
-              </h3>
-
+              <h3>Regra do lance</h3>
               <p>
                 O novo lance deve ser pelo menos
                 <strong> R$ 50,00 maior </strong>
                 que o lance atual.
               </p>
-
               <div className="minimum-value">
-
-                <span>
-                  Lance mínimo:
-                </span>
-
-                <strong>
-                  R$ {formatarValor(lanceMinimo)}
-                </strong>
-
+                <span>Lance mínimo:</span>
+                <strong>R$ {formatarValor(lanceMinimo)}</strong>
               </div>
-
             </div>
 
-
-            {/* NOVO LANCE */}
-
-            <label
-              className="modal-label"
-              htmlFor="novoLance"
-            >
+            <label className="modal-label" htmlFor="novoLance">
               Digite seu novo lance
             </label>
 
-
             <div className="bid-input">
-
-              <span>
-                R$
-              </span>
-
+              <span>R$</span>
               <input
                 id="novoLance"
                 type="number"
@@ -393,83 +306,39 @@ function Produto() {
                 step="50"
                 placeholder={formatarValor(lanceMinimo)}
                 value={novoLance}
-                onChange={(event) => {
-                  setNovoLance(event.target.value);
+                onChange={(e) => {
+                  setNovoLance(e.target.value);
                   setErro("");
                 }}
               />
-
             </div>
 
-
-            {/* ERRO */}
-
-            {erro && (
-
-              <div className="bid-error">
-                {erro}
-              </div>
-
-            )}
-
-
-            {/* BOTÕES DO MODAL */}
+            {erro && <div className="bid-error">{erro}</div>}
 
             <div className="modal-buttons">
-
-              <button
-                className="modal-cancel"
-                type="button"
-                onClick={fecharModal}
-              >
+              <button className="modal-cancel" type="button" onClick={fecharModal}>
                 Cancelar
               </button>
-
-
               <button
                 className="modal-confirm"
                 type="button"
                 onClick={confirmarLance}
+                disabled={salvando}
               >
-                Confirmar lance
+                {salvando ? "Salvando..." : "Confirmar lance"}
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       )}
 
-
-      {/* =========================
-          MODAL DE PAGAMENTO PIX
-      ========================= */}
-
+      {/* MODAL DE PAGAMENTO PIX */}
       {pixAberto && (
-
-        <div
-          className="modal-overlay"
-          onClick={fecharPix}
-        >
-
-          <div
-            className="pix-modal"
-            onClick={(event) => event.stopPropagation()}
-          >
-
-            {/* BOTÃO FECHAR */}
-
-            <button
-              className="pix-close"
-              type="button"
-              onClick={fecharPix}
-            >
+        <div className="modal-overlay" onClick={fecharPix}>
+          <div className="pix-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="pix-close" type="button" onClick={fecharPix}>
               ×
             </button>
-
-            {/* CABEÇALHO */}
 
             <div className="pix-header">
               <svg className="pix-icon" viewBox="0 0 24 24" width="42" height="42">
@@ -482,24 +351,18 @@ function Produto() {
               <span className="pix-powered">powered by Banco Central</span>
             </div>
 
-            {/* VALOR */}
-
             <p className="pix-value-label">Valor do lance:</p>
             <p className="pix-value">R$ {formatarValor(valorPix)}</p>
-
-            {/* QR CODE */}
 
             <div className="pix-qrcode">
               <img src={qrCodeUrl} alt="QR Code Pix" width="200" height="200" />
             </div>
 
-            {/* CÓDIGO COPIA E COLA */}
-
             <div className="pix-copia-cola">
               <input
                 readOnly
                 value={pixCopiaCola}
-                onFocus={(event) => event.target.select()}
+                onFocus={(e) => e.target.select()}
               />
               <button
                 type="button"
@@ -519,13 +382,9 @@ function Produto() {
               <li>Aponte a câmera para o código acima ou use o "copia e cola".</li>
               <li>Confirme as informações e finalize o pagamento.</li>
             </ol>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }
