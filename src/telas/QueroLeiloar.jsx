@@ -32,6 +32,11 @@ function PublicarProduto() {
       return;
     }
 
+    if (!categoria) {
+      setErro("Selecione uma categoria.");
+      return;
+    }
+
     if (!preco || Number(preco) <= 0) {
       setErro("Digite um preço inicial válido.");
       return;
@@ -61,7 +66,9 @@ function PublicarProduto() {
       .insert({
         nome: nome.trim(),
         descricao: descricao.trim(),
-        categoria: categoria.trim(),
+
+        // categoria escolhida
+        categoria: categoria,
 
         // preço inicial
         preco: Number(preco),
@@ -77,10 +84,7 @@ function PublicarProduto() {
         // produto disponível
         disponibilidade: true,
 
-        // =========================
-        // NOVO:
-        // DATA/HORA DE ENCERRAMENTO
-        // =========================
+        // data/hora de encerramento
         data_fim: dataFim.toISOString(),
       })
       .select()
@@ -102,7 +106,10 @@ function PublicarProduto() {
       )}.`
     );
 
-    // Limpar formulário
+    // =========================
+    // LIMPAR FORMULÁRIO
+    // =========================
+
     setNome("");
     setDescricao("");
     setCategoria("");
@@ -115,6 +122,7 @@ function PublicarProduto() {
   return (
     <div className="publicar-page">
       <main className="publicar-container">
+
         <h1>Publicar produto</h1>
 
         <p className="publicar-subtitulo">
@@ -150,13 +158,23 @@ function PublicarProduto() {
               Categoria
             </label>
 
-            <input
+            <select
               id="categoria"
-              type="text"
-              placeholder="Ex: Eletrônicos"
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
-            />
+            >
+              <option value="">
+                Selecione uma categoria
+              </option>
+
+              <option value="card">
+                Card
+              </option>
+
+              <option value="figure">
+                Figure
+              </option>
+            </select>
           </div>
 
           {/* =========================
@@ -178,10 +196,12 @@ function PublicarProduto() {
           </div>
 
           {/* =========================
-              PREÇO INICIAL
+              PREÇO E INCREMENTO
           ========================= */}
 
           <div className="form-row">
+
+            {/* PREÇO INICIAL */}
 
             <div className="form-group">
               <label htmlFor="preco">
@@ -203,9 +223,7 @@ function PublicarProduto() {
               </div>
             </div>
 
-            {/* =========================
-                INCREMENTO
-            ========================= */}
+            {/* INCREMENTO */}
 
             <div className="form-group">
               <label htmlFor="incremento">

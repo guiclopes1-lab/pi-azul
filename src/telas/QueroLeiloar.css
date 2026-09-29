@@ -67,6 +67,10 @@
   transition: 0.2s ease;
 }
 
+/* =========================
+   INPUTS E SELECT
+========================= */
+
 .form-group input,
 .form-group select {
   height: 52px;
@@ -90,6 +94,24 @@
 .form-group textarea::placeholder {
   color: #64748b;
 }
+
+/* =========================
+   SELECT DE CATEGORIA
+========================= */
+
+.form-group select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-group select option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+/* =========================
+   TEXTO AUXILIAR
+========================= */
 
 .form-group small {
   display: block;
