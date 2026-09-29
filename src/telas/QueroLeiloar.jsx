@@ -1,263 +1,133 @@
-import { useState } from "react";
-import "./QueroLeiloar.css";
+import React, { useState } from "react";
 import { supabase } from "../supabase";
+import "./QueroLeiloar.css";
 
-function CadastroProduto() {
+function PublicarProduto() {
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [preco, setPreco] = useState("");
-  const [incremento, setIncremento] = useState("");
-
   const [categoria, setCategoria] = useState("");
-  const [menuCategoriaAberto, setMenuCategoriaAberto] = useState(false);
+  const [preco, setPreco] = useState("");
+  const [incremento, setIncremento] = useState("50");
+  const [imagem, setImagem] = useState("");
 
-  const [imagem, setImagem] = useState(null);
-  const [preview, setPreview] = useState("");
+  // Duração escolhida pelo vendedor
+  const [duracao, setDuracao] = useState("24");
 
-  const [carregando, setCarregando] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
 
-  const opcoesCategoria = ["card", "figure"];
+  const publicarProduto = async (e) => {
+    e.preventDefault();
 
-  function escolherCategoria(valor) {
-    setCategoria(valor);
-    setMenuCategoriaAberto(false);
-  }
+    setErro("");
+    setSucesso("");
 
-  function selecionarImagem(event) {
-    const arquivo = event.target.files[0];
+    // =========================
+    // VALIDAÇÕES
+    // =========================
 
-    if (!arquivo) {
-      return;
-    }
-
-    // Aceita somente JPG e PNG
-    if (
-      arquivo.type !== "image/jpeg" &&
-      arquivo.type !== "image/png"
-    ) {
-      alert("Selecione uma imagem JPG ou PNG.");
-      return;
-    }
-
-    // Limite de 2 MB
-    if (arquivo.size > 2 * 1024 * 1024) {
-      alert("A imagem deve ter no máximo 2 MB.");
-      return;
-    }
-
-    setImagem(arquivo);
-
-    const url = URL.createObjectURL(arquivo);
-    setPreview(url);
-  }
-
-  function imagemParaBase64(arquivo) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsDataURL(arquivo);
-    });
-  }
-
-  async function cadastrarProduto(event) {
-    event.preventDefault();
-
-    const formulario = event.target;
-
-    if (carregando) {
-      return;
-    }
-
-    // Validações
     if (!nome.trim()) {
-      alert("Digite o nome do produto.");
-      return;
-    }
-
-    if (!descricao.trim()) {
-      alert("Digite a descrição do produto.");
+      setErro("Digite o nome do produto.");
       return;
     }
 
     if (!preco || Number(preco) <= 0) {
-      alert("Digite um valor inicial válido.");
+      setErro("Digite um preço inicial válido.");
       return;
     }
 
-    if (!incremento || Number(incremento) <= 0) {
-      alert("Digite um incremento válido.");
+    if (!duracao || Number(duracao) <= 0) {
+      setErro("Escolha a duração do leilão.");
       return;
     }
 
-    if (!imagem) {
-      alert("Selecione uma imagem do produto.");
+    // =========================
+    // CALCULAR DATA DE FIM
+    // =========================
+
+    const dataFim = new Date(
+      Date.now() + Number(duracao) * 60 * 60 * 1000
+    );
+
+    setSalvando(true);
+
+    // =========================
+    // SALVAR NO SUPABASE
+    // =========================
+
+    const { data, error } = await supabase
+      .from("produtos")
+      .insert({
+        nome: nome.trim(),
+        descricao: descricao.trim(),
+        categoria: categoria.trim(),
+
+        // preço inicial
+        preco: Number(preco),
+
+        // primeiro lance começa no preço
+        lance_atual: Number(preco),
+
+        // incremento mínimo
+        incremento: Number(incremento) || 50,
+
+        imagem: imagem.trim(),
+
+        // produto disponível
+        disponibilidade: true,
+
+        // =========================
+        // NOVO:
+        // DATA/HORA DE ENCERRAMENTO
+        // =========================
+        data_fim: dataFim.toISOString(),
+      })
+      .select()
+      .single();
+
+    setSalvando(false);
+
+    if (error) {
+      console.error("Erro ao publicar produto:", error);
+      setErro("Não foi possível publicar o produto: " + error.message);
       return;
     }
 
-    try {
-      setCarregando(true);
+    console.log("Produto publicado:", data);
 
-      // Converte a imagem para texto
-      const imagemBase64 = await imagemParaBase64(imagem);
+    setSucesso(
+      `Produto publicado! O leilão terminará em ${dataFim.toLocaleString(
+        "pt-BR"
+      )}.`
+    );
 
-      /*
-       * Cadastro na tabela produtos
-       */
-      const { data, error } = await supabase
-        .from("produtos")
-        .insert([
-          {
-            nome: nome.trim(),
-
-            preco: Number(preco),
-
-            imagem: imagemBase64,
-
-            descricao: descricao.trim(),
-
-            disponibilidade: true,
-
-            categoria: categoria || null,
-
-            id_usuario: null
-          }
-        ])
-        .select()
-        .single();
-
-      if (error) {
-        console.error("ERRO SUPABASE:", error);
-
-        alert(
-          "Erro ao cadastrar produto:\n\n" +
-          error.message
-        );
-
-        return;
-      }
-
-      console.log("Produto cadastrado:", data);
-
-      alert("Produto cadastrado com sucesso!");
-
-      // Limpa os campos
-      setNome("");
-      setDescricao("");
-      setPreco("");
-      setIncremento("");
-      setCategoria("");
-      setMenuCategoriaAberto(false);
-      setImagem(null);
-      setPreview("");
-
-      // Limpa o input de arquivo
-      formulario.reset();
-
-    } catch (error) {
-      console.error("ERRO:", error);
-
-      alert(
-        "Ocorreu um erro ao cadastrar o produto."
-      );
-    } finally {
-      setCarregando(false);
-    }
-  }
+    // Limpar formulário
+    setNome("");
+    setDescricao("");
+    setCategoria("");
+    setPreco("");
+    setIncremento("50");
+    setImagem("");
+    setDuracao("24");
+  };
 
   return (
-    <div className="pagina-produto">
+    <div className="publicar-page">
+      <main className="publicar-container">
+        <h1>Publicar produto</h1>
 
-      <div className="card-produto">
+        <p className="publicar-subtitulo">
+          Cadastre o produto e escolha quanto tempo o leilão ficará aberto.
+        </p>
 
-        <h1>Cadastrar produto</h1>
+        <form onSubmit={publicarProduto} className="produto-form">
 
-        <form onSubmit={cadastrarProduto}>
+          {/* =========================
+              NOME
+          ========================= */}
 
-          {/* IMAGEM */}
-
-          <div className="campo-imagens">
-
-            <label>
-              Imagem do produto
-            </label>
-
-            <label className="area-upload">
-
-              <input
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={selecionarImagem}
-                disabled={carregando}
-              />
-
-              {!preview ? (
-                <>
-                  <div className="icone-imagem">
-
-                    <svg
-                      width="28"
-                      height="28"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    >
-
-                      <rect
-                        x="3"
-                        y="3"
-                        width="18"
-                        height="18"
-                        rx="2"
-                      />
-
-                      <circle
-                        cx="8.5"
-                        cy="8.5"
-                        r="1.5"
-                      />
-
-                      <path d="M21 15l-5-5L5 21" />
-
-                    </svg>
-
-                  </div>
-
-                  <span className="texto-upload">
-                    Clique para selecionar uma imagem
-                  </span>
-
-                  <span className="formatos">
-                    PNG ou JPG - máximo 2 MB
-                  </span>
-                </>
-              ) : (
-                <div className="preview-imagens">
-
-                  <img
-                    src={preview}
-                    alt="Preview do produto"
-                  />
-
-                </div>
-              )}
-
-            </label>
-
-          </div>
-
-          {/* NOME */}
-
-          <div className="campo">
-
+          <div className="form-group">
             <label htmlFor="nome">
               Nome do produto
             </label>
@@ -265,175 +135,222 @@ function CadastroProduto() {
             <input
               id="nome"
               type="text"
-              placeholder="Relógio de bolso antigo"
+              placeholder="Ex: iPhone 15 Pro"
               value={nome}
-              onChange={(event) =>
-                setNome(event.target.value)
-              }
-              disabled={carregando}
-              required
+              onChange={(e) => setNome(e.target.value)}
             />
-
           </div>
 
-          {/* DESCRIÇÃO */}
+          {/* =========================
+              CATEGORIA
+          ========================= */}
 
-          <div className="campo">
+          <div className="form-group">
+            <label htmlFor="categoria">
+              Categoria
+            </label>
 
+            <input
+              id="categoria"
+              type="text"
+              placeholder="Ex: Eletrônicos"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+            />
+          </div>
+
+          {/* =========================
+              DESCRIÇÃO
+          ========================= */}
+
+          <div className="form-group">
             <label htmlFor="descricao">
-              Descrição do produto
+              Descrição
             </label>
 
             <textarea
               id="descricao"
-              placeholder="Descreva o estado, a origem e outros detalhes do produto..."
+              placeholder="Descreva o produto..."
               value={descricao}
-              onChange={(event) =>
-                setDescricao(event.target.value)
-              }
-              disabled={carregando}
-              required
+              onChange={(e) => setDescricao(e.target.value)}
+              rows="5"
+            />
+          </div>
+
+          {/* =========================
+              PREÇO INICIAL
+          ========================= */}
+
+          <div className="form-row">
+
+            <div className="form-group">
+              <label htmlFor="preco">
+                Preço inicial
+              </label>
+
+              <div className="money-input">
+                <span>R$</span>
+
+                <input
+                  id="preco"
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0,00"
+                  value={preco}
+                  onChange={(e) => setPreco(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* =========================
+                INCREMENTO
+            ========================= */}
+
+            <div className="form-group">
+              <label htmlFor="incremento">
+                Incremento do lance
+              </label>
+
+              <div className="money-input">
+                <span>R$</span>
+
+                <input
+                  id="incremento"
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={incremento}
+                  onChange={(e) => setIncremento(e.target.value)}
+                />
+              </div>
+            </div>
+
+          </div>
+
+          {/* =========================
+              IMAGEM
+          ========================= */}
+
+          <div className="form-group">
+            <label htmlFor="imagem">
+              Imagem
+            </label>
+
+            <input
+              id="imagem"
+              type="text"
+              placeholder="URL da imagem"
+              value={imagem}
+              onChange={(e) => setImagem(e.target.value)}
             />
 
+            <small>
+              Você pode colocar a URL da imagem.
+            </small>
           </div>
 
-          {/* PREÇO */}
+          {/* =========================
+              DURAÇÃO DO LEILÃO
+          ========================= */}
 
-          <div className="campo">
+          <div className="leilao-box">
 
-            <label htmlFor="valor">
-              Valor inicial do lance
-            </label>
+            <div className="leilao-header">
+              <h2>Duração do leilão</h2>
 
-            <div className="campo-valor">
-
-              <span>R$</span>
-
-              <input
-                id="valor"
-                type="number"
-                min="0.01"
-                step="0.01"
-                placeholder="50.00"
-                value={preco}
-                onChange={(event) =>
-                  setPreco(event.target.value)
-                }
-                disabled={carregando}
-                required
-              />
-
+              <p>
+                Escolha por quanto tempo o produto ficará disponível
+                para receber lances.
+              </p>
             </div>
 
-          </div>
+            <div className="form-group">
+              <label htmlFor="duracao">
+                Tempo do leilão
+              </label>
 
-          {/* INCREMENTO */}
-
-          <div className="campo">
-
-            <label htmlFor="incremento">
-              Incremento mínimo por lance
-            </label>
-
-            <div className="campo-valor">
-
-              <span>R$</span>
-
-              <input
-                id="incremento"
-                type="number"
-                min="0.01"
-                step="0.01"
-                placeholder="5.00"
-                value={incremento}
-                onChange={(event) =>
-                  setIncremento(event.target.value)
-                }
-                disabled={carregando}
-                required
-              />
-
-            </div>
-
-          </div>
-
-          {/* CATEGORIAS */}
-
-          <div className="campo">
-
-            <label>
-              Categorias
-            </label>
-
-            <div className="categoria-wrapper">
-
-              <button
-                type="button"
-                className="botao-categorias"
-                onClick={() =>
-                  setMenuCategoriaAberto(!menuCategoriaAberto)
-                }
-                disabled={carregando}
+              <select
+                id="duracao"
+                value={duracao}
+                onChange={(e) => setDuracao(e.target.value)}
               >
+                <option value="1">
+                  1 hora
+                </option>
 
-                <span>
-                  {categoria || "Categorias"}
-                </span>
+                <option value="6">
+                  6 horas
+                </option>
 
-                <span className="seta-categoria">
-                  {menuCategoriaAberto ? "▲" : "▼"}
-                </span>
+                <option value="12">
+                  12 horas
+                </option>
 
-              </button>
+                <option value="24">
+                  1 dia
+                </option>
 
-              {menuCategoriaAberto && (
-                <div className="menu-categorias">
+                <option value="48">
+                  2 dias
+                </option>
 
-                  {opcoesCategoria.map((opcao) => (
-                    <button
-                      key={opcao}
-                      type="button"
-                      className={
-                        "opcao-categoria" +
-                        (categoria === opcao ? " ativa" : "")
-                      }
-                      onClick={() => escolherCategoria(opcao)}
-                    >
-                      {opcao}
-                    </button>
-                  ))}
+                <option value="72">
+                  3 dias
+                </option>
 
-                </div>
-              )}
+                <option value="168">
+                  7 dias
+                </option>
+              </select>
+            </div>
 
+            <div className="duracao-info">
+              <strong>
+                O leilão começará imediatamente
+              </strong>
+
+              <span>
+                e terminará após o período escolhido.
+              </span>
             </div>
 
           </div>
 
-          {/* BOTÃO */}
+          {/* =========================
+              MENSAGENS
+          ========================= */}
+
+          {erro && (
+            <div className="mensagem erro">
+              {erro}
+            </div>
+          )}
+
+          {sucesso && (
+            <div className="mensagem sucesso">
+              {sucesso}
+            </div>
+          )}
+
+          {/* =========================
+              BOTÃO
+          ========================= */}
 
           <button
             type="submit"
-            className="botao-cadastrar"
-            disabled={carregando}
+            className="btn-publicar"
+            disabled={salvando}
           >
-
-            {carregando
-              ? "Cadastrando..."
-              : "Cadastrar produto"}
-
+            {salvando
+              ? "Publicando..."
+              : "Publicar produto"}
           </button>
 
         </form>
-
-      </div>
-
-      <div className="botao-baixo">
-        ↓
-      </div>
-
+      </main>
     </div>
   );
 }
 
-export default CadastroProduto;
+export default PublicarProduto;
