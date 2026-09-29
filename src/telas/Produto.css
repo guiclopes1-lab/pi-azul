@@ -9,12 +9,42 @@
 }
 
 /* =========================
+   VARIÁVEIS
+========================= */
+
+:root {
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --primary: #1E3A8A;
+  --accent: #60A5FA;
+  --success: #10B981;
+  --title: #F8FAFC;
+  --text: #94A3B8;
+  --border: #334155;
+
+  --font: "Inter", sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --transition: 0.2s ease;
+}
+
+/* =========================
+   FONTE
+========================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* =========================
    CONTEÚDO
 ========================= */
 
 .content {
   width: 100%;
   padding: 40px 45px;
+  background-color: var(--bg);
 }
 
 .product-layout {
@@ -38,19 +68,19 @@
 }
 
 .slides {
-  
   width: 100%;
   height: 390px;
   overflow: hidden;
-  border: 2px solid #c8a96b;
-  border-radius: 8px;
-  background-color: #111214;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 /* Imagem inteira, centralizada, sem esticar nem cortar */
+
 .slides img {
   width: 100%;
   height: 100%;
@@ -65,8 +95,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #c8a96b;
-  color: #111214;
+  background-color: var(--surface);
+  color: var(--title);
   font-size: 30px;
 }
 
@@ -84,17 +114,18 @@
 .btn-arrow {
   width: 90px;
   height: 45px;
-  background-color: #c8a96b;
-  color: #111214;
-  border: none;
-  border-radius: 5px;
+  background-color: var(--primary);
+  color: var(--title);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 20px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .btn-arrow:hover {
-  background-color: #e0c17c;
+  background-color: var(--accent);
+  color: var(--bg);
 }
 
 /* =========================
@@ -106,13 +137,14 @@
 }
 
 .product-title {
-  color: #c8a96b;
+  color: var(--title);
   font-size: 34px;
   margin-bottom: 35px;
+  font-weight: 600;
 }
 
 .product-desc {
-  color: #c8a96b;
+  color: var(--text);
   font-size: 17px;
   line-height: 1.9;
   text-align: justify;
@@ -125,8 +157,9 @@
 .bid-section {
   width: 100%;
   min-height: 690px;
-  background-color: #c8a96b;
-  border-radius: 8px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 100px 28px 30px;
   display: flex;
   flex-direction: column;
@@ -140,9 +173,10 @@
   width: 100%;
   min-height: 70px;
   padding: 15px 18px;
-  background-color: #111214;
-  color: #c8a96b;
-  border-radius: 5px;
+  background-color: var(--bg);
+  color: var(--title);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -151,10 +185,12 @@
 
 .current-bid-display span {
   font-size: 16px;
+  color: var(--text);
 }
 
 .current-bid-display strong {
   font-size: 20px;
+  color: var(--accent);
 }
 
 /* =========================
@@ -164,19 +200,21 @@
 .btn-bid {
   width: 100%;
   height: 60px;
-  background-color: #c8a96b;
-  color: #111214;
-  border: 2px solid #111214;
-  border-radius: 5px;
-  font-family: Georgia, "Times New Roman", serif;
+  background-color: var(--primary);
+  color: var(--title);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .btn-bid:hover {
-  background-color: #e0c17c;
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
 }
 
 /* =========================
@@ -188,18 +226,20 @@
   min-height: 50px;
   margin-top: 18px;
   padding: 8px;
-  background-color: #242424;
-  color: #c8a96b;
-  border: 1px solid white;
-  border-radius: 5px;
-  font-family: Georgia, "Times New Roman", serif;
+  background-color: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
   font-size: 14px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .btn-bid-custom:hover {
-  background-color: #111214;
+  background-color: var(--primary);
+  border-color: var(--accent);
+  color: var(--title);
 }
 
 /* =========================
@@ -209,12 +249,13 @@
 .timer-section {
   margin-top: 100px;
   text-align: center;
-  color: #111214;
+  color: var(--title);
 }
 
 .timer-section h3 {
   font-size: 18px;
   margin-bottom: 15px;
+  font-weight: 500;
 }
 
 .timer {
@@ -224,9 +265,10 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  background-color: #111214;
-  color: #c8a96b;
-  border-radius: 5px;
+  background-color: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-family: monospace;
   font-size: 28px;
 }
@@ -236,7 +278,7 @@
 }
 
 /* =========================
-   MODAL (OVERLAY COMPARTILHADO)
+   MODAL
 ========================= */
 
 .modal-overlay {
@@ -244,7 +286,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(2, 6, 23, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -260,11 +302,11 @@
   position: relative;
   width: 100%;
   max-width: 500px;
-  background-color: #c8a96b;
-  color: #111214;
-  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--title);
+  border-radius: var(--radius-lg);
   padding: 40px;
-  border: 2px solid #c8a96b;
+  border: 1px solid var(--border);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
   animation: modalAparecer 0.2s ease-out;
 }
@@ -274,6 +316,7 @@
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -281,7 +324,7 @@
 }
 
 /* =========================
-   BOTÃO FECHAR (LANCE)
+   BOTÃO FECHAR
 ========================= */
 
 .modal-close {
@@ -292,14 +335,15 @@
   height: 35px;
   background: transparent;
   border: none;
-  color: #111214;
+  color: var(--text);
   font-size: 30px;
   line-height: 30px;
   cursor: pointer;
+  transition: var(--transition);
 }
 
 .modal-close:hover {
-  opacity: 0.6;
+  color: var(--accent);
 }
 
 /* =========================
@@ -307,9 +351,10 @@
 ========================= */
 
 .modal-title {
-  color: #111214;
+  color: var(--title);
   font-size: 32px;
   margin-bottom: 25px;
+  font-weight: 600;
 }
 
 /* =========================
@@ -320,9 +365,10 @@
   width: 100%;
   min-height: 65px;
   padding: 15px;
-  background-color: #111214;
-  color: #c8a96b;
-  border-radius: 5px;
+  background-color: var(--bg);
+  color: var(--title);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -331,10 +377,12 @@
 
 .modal-current-bid span {
   font-size: 15px;
+  color: var(--text);
 }
 
 .modal-current-bid strong {
   font-size: 22px;
+  color: var(--accent);
 }
 
 /* =========================
@@ -343,15 +391,16 @@
 
 .bid-rule {
   width: 100%;
-  background-color: #242424;
-  color: #c8a96b;
-  border-radius: 5px;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 18px;
   margin-bottom: 25px;
 }
 
 .bid-rule h3 {
-  color: #ffffff;
+  color: var(--title);
   font-size: 17px;
   margin-bottom: 8px;
 }
@@ -363,7 +412,7 @@
 }
 
 .bid-rule p strong {
-  color: #ffffff;
+  color: var(--accent);
 }
 
 .minimum-value {
@@ -371,15 +420,16 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid #555;
+  border-top: 1px solid var(--border);
 }
 
 .minimum-value span {
   font-size: 14px;
+  color: var(--text);
 }
 
 .minimum-value strong {
-  color: #ffffff;
+  color: var(--accent);
   font-size: 20px;
 }
 
@@ -389,9 +439,9 @@
 
 .modal-label {
   display: block;
-  color: #111214;
+  color: var(--title);
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 8px;
 }
 
@@ -404,17 +454,22 @@
   height: 58px;
   display: flex;
   align-items: center;
-  background-color: #111214;
-  border: 2px solid #111214;
-  border-radius: 5px;
+  background-color: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.bid-input:focus-within {
+  border-color: var(--accent);
 }
 
 .bid-input span {
-  color: #c8a96b;
+  color: var(--accent);
   font-size: 19px;
-  font-weight: bold;
+  font-weight: 600;
   padding-left: 15px;
 }
 
@@ -425,9 +480,13 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #c8a96b;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--title);
+  font-family: var(--font);
   font-size: 21px;
+}
+
+.bid-input input::placeholder {
+  color: var(--text);
 }
 
 .bid-input input::-webkit-outer-spin-button,
@@ -446,15 +505,15 @@
 ========================= */
 
 .bid-error {
-  color: #8b0000;
+  color: #F87171;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 1.4;
   margin-bottom: 10px;
 }
 
 /* =========================
-   BOTÕES DO MODAL DE LANCE
+   BOTÕES DO MODAL
 ========================= */
 
 .modal-buttons {
@@ -467,37 +526,39 @@
   flex: 1;
   height: 50px;
   background-color: transparent;
-  color: #111214;
-  border: 2px solid #111214;
-  border-radius: 5px;
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .modal-cancel:hover {
-  background-color: #111214;
-  color: #c8a96b;
+  background-color: var(--border);
+  color: var(--title);
 }
 
 .modal-confirm {
   flex: 1;
   height: 50px;
-  background-color: #111214;
-  color: #c8a96b;
-  border: 2px solid #111214;
-  border-radius: 5px;
-  font-family: Georgia, "Times New Roman", serif;
+  background-color: var(--primary);
+  color: var(--title);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .modal-confirm:hover {
-  background-color: #242424;
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
 }
 
 /* =========================
@@ -510,15 +571,20 @@
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
-  background-color: #ffffff;
-  color: #111214;
-  border-radius: 12px;
+  background-color: var(--surface);
+  color: var(--title);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 35px 30px 30px;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
   animation: modalAparecer 0.2s ease-out;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font);
 }
+
+/* =========================
+   FECHAR PIX
+========================= */
 
 .pix-close {
   position: absolute;
@@ -528,15 +594,20 @@
   height: 35px;
   background: transparent;
   border: none;
-  color: #111214;
+  color: var(--text);
   font-size: 28px;
   line-height: 28px;
   cursor: pointer;
+  transition: var(--transition);
 }
 
 .pix-close:hover {
-  opacity: 0.6;
+  color: var(--accent);
 }
+
+/* =========================
+   CABEÇALHO PIX
+========================= */
 
 .pix-header {
   display: flex;
@@ -548,34 +619,43 @@
 
 .pix-brand {
   font-size: 30px;
-  font-weight: bold;
-  color: #6b6b6b;
+  font-weight: 700;
+  color: var(--title);
   letter-spacing: 1px;
 }
 
 .pix-powered {
   font-size: 11px;
-  color: #999;
+  color: var(--text);
 }
+
+/* =========================
+   VALOR PIX
+========================= */
 
 .pix-value-label {
   font-size: 14px;
-  color: #444;
+  color: var(--text);
 }
 
 .pix-value {
   font-size: 26px;
-  font-weight: bold;
-  color: #32bcad;
+  font-weight: 700;
+  color: var(--success);
   margin-bottom: 20px;
 }
+
+/* =========================
+   QR CODE
+========================= */
 
 .pix-qrcode {
   width: 220px;
   margin: 0 auto 20px;
   padding: 8px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
 .pix-qrcode img {
@@ -583,6 +663,10 @@
   height: auto;
   display: block;
 }
+
+/* =========================
+   PIX COPIA E COLA
+========================= */
 
 .pix-copia-cola {
   display: flex;
@@ -595,33 +679,42 @@
   min-width: 0;
   height: 42px;
   padding: 0 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 12px;
-  color: #444;
-  background-color: #f7f7f7;
+  color: var(--title);
+}
+
+.pix-copia-cola input:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 .pix-copia-cola button {
   height: 42px;
   padding: 0 16px;
-  background-color: #32bcad;
+  background-color: var(--success);
   color: #ffffff;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
 
 .pix-copia-cola button:hover {
-  background-color: #279d90;
+  background-color: #059669;
 }
 
+/* =========================
+   INSTRUÇÕES PIX
+========================= */
+
 .pix-instructions {
-  color: #32bcad;
-  font-weight: bold;
+  color: var(--accent);
+  font-weight: 600;
   font-size: 15px;
   margin-bottom: 12px;
 }
@@ -629,7 +722,7 @@
 .pix-steps {
   text-align: left;
   font-size: 13px;
-  color: #555;
+  color: var(--text);
   line-height: 1.7;
   padding-left: 20px;
 }
