@@ -351,7 +351,6 @@ function Produto() {
                   <img
                     src={imagens[slideAtual]}
                     alt={produto.nome}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                 ) : (
                   <div className="slide slide-1">Sem imagem</div>
