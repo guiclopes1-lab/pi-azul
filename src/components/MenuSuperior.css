@@ -146,7 +146,7 @@ header nav ul li a {
 }
 
 header nav ul li a:hover {
-  color: #e0c58b;
+  color: #0ab2db;
 }
 
 header nav ul li a::after {
