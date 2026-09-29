@@ -31,9 +31,7 @@ function ComoFunciona() {
           </h2>
 
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua.
+            Navegue pelos leilões ativos, acompanhe os lances em tempo real e garanta itens colecionáveis exclusivos com total segurança.
           </p>
 
           <div className="cards-grid">
@@ -41,27 +39,21 @@ function ComoFunciona() {
             <article className="card-item">
               <h3>1. Escolha o Colecionável</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Explore o catálogo de itens raros e colecionáveis. Verifique a descrição detalhada, fotos de alta resolução e o estado de conservação do lote.
               </p>
             </article>
 
             <article className="card-item">
               <h3>2. Dê o seu Lance</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Insira o valor desejado respeitando o incremento mínimo. Acompanhe o cronômetro em tempo real e seja notificado caso seu lance seja superado.
               </p>
             </article>
 
             <article className="card-item">
               <h3>3. Finalize a Compra</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Se o seu lance for o vencedor ao término do tempo, conclua o pagamento de forma segura na plataforma e aguarde o envio do seu item.
               </p>
             </article>
 
@@ -77,9 +69,7 @@ function ComoFunciona() {
           </h2>
 
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua.
+            Anuncie seus colecionáveis para milhares de compradores, defina o valor inicial e venda com garantia de recebimento.
           </p>
 
           <div className="cards-grid">
@@ -87,27 +77,21 @@ function ComoFunciona() {
             <article className="card-item">
               <h3>1. Cadastre seu Item</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Adicione fotos nítidas do produto, especifique a categoria, a autenticidade e escreva uma descrição detalhada sobre o estado do item.
               </p>
             </article>
 
             <article className="card-item">
               <h3>2. Defina o Leilão</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Escolha o valor do lance inicial, a duração do leilão e, se desejar, defina um valor mínimo de reserva para garantir o preço de venda ideal.
               </p>
             </article>
 
             <article className="card-item">
               <h3>3. Envie o Produto</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Assim que o pagamento do comprador for confirmado pela plataforma, embale o item com proteção adequada e realize o envio dentro do prazo.
               </p>
             </article>
 
@@ -182,11 +166,12 @@ function ComoFunciona() {
           </h2>
 
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Nossa plataforma une colecionadores de cards,
-            discos de vinil, action figures raros em um ambiente
-            seguro e especializado.
+            O Geek Loot nasceu da paixão pela cultura pop e pelo universo dos colecionáveis. 
+            Somos uma plataforma de leilões especializada em conectar colecionadores e entusiastas 
+            aos itens mais cobiçados do mercado — desde Pokémon Cards raros e graduados, 
+            até Action Figures altamente detalhadas e Funko Pops exclusivos ou fora de linha (vaulted). 
+            Oferecemos um ambiente 100% seguro, com verificação de procedência e transparência em cada lance, 
+            para que você possa expandir a sua coleção com total confiança.
           </p>
 
         </section>
