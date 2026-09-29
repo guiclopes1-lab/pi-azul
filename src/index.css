@@ -4,17 +4,15 @@
   /* =========================
      CORES
   ========================= */
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --primary: #1E3A8A;
+  --accent: #60A5FA;
+  --success: #10B981;
+  --title: #F8FAFC;
+  --text: #94A3B8;
+  --border: #334155;
 
-  --bg: #111214;
-  --surface: #1a1b1d;
-
-  --text: #c8a96e;
-  --text-light: #e7e7e7;
-  --text-muted: #888888;
-  --text-subtle: #666666;
-
-  --gold: #c8a96e;
-  --gold-light: #e0c17c;
 
   /* =========================
      FONTE
