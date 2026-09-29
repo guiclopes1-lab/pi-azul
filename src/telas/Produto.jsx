@@ -3,6 +3,24 @@ import { useParams } from "react-router-dom";
 import "./Produto.css";
 import { supabase } from "../supabase";
 
+// Identifica quem está dando o lance:
+// usa o usuário logado no Supabase; se não houver, um ID salvo no navegador
+async function obterIdLicitante() {
+  try {
+    const { data } = await supabase.auth.getUser();
+    if (data?.user?.id) return data.user.id;
+  } catch (e) {
+    // sem login, segue para o ID local
+  }
+
+  let idLocal = localStorage.getItem("licitante_id");
+  if (!idLocal) {
+    idLocal = crypto.randomUUID();
+    localStorage.setItem("licitante_id", idLocal);
+  }
+  return idLocal;
+}
+
 function Produto() {
   const { id } = useParams();
 
@@ -11,6 +29,9 @@ function Produto() {
   const [carregando, setCarregando] = useState(true);
   const [erroCarregar, setErroCarregar] = useState("");
 
+  // Quem sou eu
+  const [meuId, setMeuId] = useState(null);
+
   // Carrossel
   const [slideAtual, setSlideAtual] = useState(0);
 
@@ -18,17 +39,25 @@ function Produto() {
   const [lanceAtual, setLanceAtual] = useState(0);
   const [modalAberto, setModalAberto] = useState(false);
   const [pixAberto, setPixAberto] = useState(false);
-  const [valorPix, setValorPix] = useState(0);
   const [novoLance, setNovoLance] = useState("");
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
 
   // Timer
+  const [encerrado, setEncerrado] = useState(false);
   const [tempoRestante, setTempoRestante] = useState({
-    horas: "02",
-    minutos: "15",
-    segundos: "30",
+    horas: "--",
+    minutos: "--",
+    segundos: "--",
   });
+
+  // =========================
+  // IDENTIFICAR O USUÁRIO
+  // =========================
+
+  useEffect(() => {
+    obterIdLicitante().then(setMeuId);
+  }, []);
 
   // =========================
   // CARREGAR PRODUTO DO SUPABASE
@@ -56,7 +85,6 @@ function Produto() {
         setErroCarregar("Produto não encontrado.");
       } else {
         setProduto(data);
-        // Se ainda não houve lance, começa pelo preço inicial
         setLanceAtual(Number(data.lance_atual ?? data.preco));
         setSlideAtual(0);
       }
@@ -68,42 +96,92 @@ function Produto() {
   }, [id]);
 
   // =========================
-  // LÓGICA DO TIMER
+  // TIMER (usa data_fim do produto)
   // =========================
 
-  useEffect(() => {
-    // Caso a tabela 'produtos' no Supabase possua a coluna 'data_fim', utiliza ela.
-    // Caso contrário, cria um tempo inicial padrão (2h 15m 30s a partir de agora).
-    const dataAlvo = produto?.data_fim
-      ? new Date(produto.data_fim).getTime()
-      : new Date().getTime() + (2 * 3600 + 15 * 60 + 30) * 1000;
+  const dataFim = produto?.data_fim;
 
-    const interval = setInterval(() => {
-      const agora = new Date().getTime();
-      const diferenca = dataAlvo - agora;
+  useEffect(() => {
+    if (!dataFim) {
+      setEncerrado(false);
+      setTempoRestante({ horas: "--", minutos: "--", segundos: "--" });
+      return;
+    }
+
+    const alvo = new Date(dataFim).getTime();
+
+    // retorna true quando o tempo acabou
+    function atualizar() {
+      const diferenca = alvo - Date.now();
 
       if (diferenca <= 0) {
-        clearInterval(interval);
         setTempoRestante({ horas: "00", minutos: "00", segundos: "00" });
-      } else {
-        const h = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diferenca % (1000 * 60)) / 1000);
-
-        setTempoRestante({
-          horas: String(h).padStart(2, "0"),
-          minutos: String(m).padStart(2, "0"),
-          segundos: String(s).padStart(2, "0"),
-        });
+        setEncerrado(true);
+        return true;
       }
+
+      const h = Math.floor(diferenca / (1000 * 60 * 60));
+      const m = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+      setTempoRestante({
+        horas: String(h).padStart(2, "0"),
+        minutos: String(m).padStart(2, "0"),
+        segundos: String(s).padStart(2, "0"),
+      });
+      setEncerrado(false);
+      return false;
+    }
+
+    if (atualizar()) return;
+
+    const interval = setInterval(() => {
+      if (atualizar()) clearInterval(interval);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [produto]);
+  }, [dataFim]);
 
-  // Imagens: a coluna "imagem" pode ter uma URL ou várias separadas por vírgula
+  // Quando o leilão acaba, busca o resultado final no banco
+  useEffect(() => {
+    if (!encerrado || !produto?.id) return;
+
+    async function recarregar() {
+      const { data } = await supabase
+        .from("produtos")
+        .select("*")
+        .eq("id", produto.id)
+        .maybeSingle();
+
+      if (data) {
+        setProduto(data);
+        setLanceAtual(Number(data.lance_atual ?? data.preco));
+      }
+    }
+
+    recarregar();
+  }, [encerrado]);
+
+  // =========================
+  // VENCEDOR
+  // =========================
+
+  const euVenci =
+    encerrado && !!meuId && !!produto?.id_licitante && produto.id_licitante === meuId;
+
+  const estouVencendo =
+    !encerrado && !!meuId && !!produto?.id_licitante && produto.id_licitante === meuId;
+
+  // Abre a mensagem de vitória + Pix automaticamente para o vencedor
+  useEffect(() => {
+    if (euVenci) setPixAberto(true);
+  }, [euVenci]);
+
+  // Imagens: base64 (data:...) é uma imagem só; senão, URLs separadas por vírgula
   const imagens = produto?.imagem
-    ? produto.imagem.split(",").map((url) => url.trim()).filter(Boolean)
+    ? produto.imagem.startsWith("data:")
+      ? [produto.imagem]
+      : produto.imagem.split(",").map((url) => url.trim()).filter(Boolean)
     : [];
 
   const anterior = () =>
@@ -116,12 +194,15 @@ function Produto() {
   // REGRAS DO LANCE
   // =========================
 
-  const lanceMinimo = lanceAtual + 50;
+  const incremento = Number(produto?.incremento ?? 50);
+  const lanceMinimo = lanceAtual + incremento;
 
   const formatarValor = (valor) => Number(valor).toFixed(2).replace(".", ",");
 
+  const indisponivel = produto?.disponibilidade === false || encerrado;
+
   const abrirModal = () => {
-    if (produto && produto.disponibilidade === false) return;
+    if (indisponivel) return;
     setModalAberto(true);
     setNovoLance("");
     setErro("");
@@ -136,11 +217,16 @@ function Produto() {
   const fecharPix = () => setPixAberto(false);
 
   // =========================
-  // CONFIRMAR LANCE -> SALVA NO BANCO -> ABRE O PIX
+  // CONFIRMAR LANCE -> SALVA NO BANCO (sem Pix)
   // =========================
 
   const confirmarLance = async () => {
     const valor = Number(novoLance);
+
+    if (!meuId) {
+      setErro("Aguarde um instante e tente novamente.");
+      return;
+    }
 
     if (!novoLance) {
       setErro("Digite um valor para o novo lance.");
@@ -154,39 +240,65 @@ function Produto() {
 
     setSalvando(true);
 
-    // Garante que ninguém deu um lance maior nesse meio tempo
-    const { data, error } = await supabase
+    // Só salva se o leilão ainda está aberto e ninguém deu lance maior
+    let query = supabase
       .from("produtos")
-      .update({ lance_atual: valor })
+      .update({ lance_atual: valor, id_licitante: meuId })
       .eq("id", produto.id)
-      .or(`lance_atual.is.null,lance_atual.lt.${valor}`)
-      .select()
-      .maybeSingle();
+      .or(`lance_atual.is.null,lance_atual.lt.${valor}`);
 
-    setSalvando(false);
+    if (produto.data_fim) {
+      query = query.gt("data_fim", new Date().toISOString());
+    }
+
+    const { data, error } = await query.select().maybeSingle();
 
     if (error) {
+      setSalvando(false);
       console.error("Erro ao salvar lance:", error);
-      setErro("Erro ao salvar o lance. Tente novamente.");
+      setErro("Erro ao salvar o lance: " + error.message);
       return;
     }
 
     if (!data) {
-      setErro("Outro lance maior foi registrado. Atualize a página.");
+      // Nenhuma linha atualizada: descobre o motivo
+      const { data: atual } = await supabase
+        .from("produtos")
+        .select("lance_atual, data_fim")
+        .eq("id", produto.id)
+        .maybeSingle();
+
+      setSalvando(false);
+
+      if (atual?.data_fim && new Date(atual.data_fim).getTime() <= Date.now()) {
+        setErro("O leilão já terminou.");
+      } else if (
+        atual &&
+        atual.lance_atual !== null &&
+        Number(atual.lance_atual) >= valor
+      ) {
+        setLanceAtual(Number(atual.lance_atual));
+        setErro("Outro lance maior foi registrado. Tente um valor maior.");
+      } else {
+        setErro(
+          "Não foi possível salvar o lance. Verifique a policy de UPDATE da tabela produtos no Supabase."
+        );
+      }
       return;
     }
 
+    setSalvando(false);
+    setProduto(data);
     setLanceAtual(valor);
-    setValorPix(valor);
     setModalAberto(false);
-    setPixAberto(true);
   };
 
   // =========================
-  // PIX (payload fictício - troque por um gerado pelo seu backend)
+  // PIX (só aparece para o vencedor, depois que o tempo acaba)
+  // payload fictício - troque por um gerado pelo seu backend
   // =========================
 
-  const pixCopiaCola = `00020126580014BR.GOV.BCB.PIX0136chave-pix-exemplo5204000053039865406${valorPix.toFixed(
+  const pixCopiaCola = `00020126580014BR.GOV.BCB.PIX0136chave-pix-exemplo5204000053039865406${lanceAtual.toFixed(
     2
   )}5802BR5913Nome do Leilao6009SAO PAULO62070503***6304ABCD`;
 
@@ -218,7 +330,13 @@ function Produto() {
     );
   }
 
-  const indisponivel = produto.disponibilidade === false;
+  const estiloAviso = {
+    padding: "10px 12px",
+    borderRadius: "8px",
+    margin: "12px 0",
+    fontWeight: 600,
+    textAlign: "center",
+  };
 
   return (
     <div className="body">
@@ -269,27 +387,62 @@ function Produto() {
           {/* DIREITA - ÁREA DE LANCES */}
           <div className="bid-section">
             <div className="current-bid-display">
-              <span>Lance atual</span>
+              <span>{encerrado ? "Lance vencedor" : "Lance atual"}</span>
               <strong>R$ {formatarValor(lanceAtual)}</strong>
             </div>
 
-            <button
-              className="btn-bid"
-              type="button"
-              onClick={abrirModal}
-              disabled={indisponivel}
-            >
-              {indisponivel ? "indisponível" : "dar lance"}
-            </button>
+            {estouVencendo && (
+              <div style={{ ...estiloAviso, background: "#e6f7ee", color: "#1a7f4b" }}>
+                Você está com o maior lance!
+              </div>
+            )}
 
-            <button
-              className="btn-bid-custom"
-              type="button"
-              onClick={abrirModal}
-              disabled={indisponivel}
-            >
-              próximo lance mínimo de R$ {formatarValor(lanceMinimo)}
-            </button>
+            {encerrado && !produto.id_licitante && (
+              <div style={{ ...estiloAviso, background: "#f0f0f0", color: "#555" }}>
+                Leilão encerrado sem lances.
+              </div>
+            )}
+
+            {encerrado && produto.id_licitante && !euVenci && (
+              <div style={{ ...estiloAviso, background: "#f0f0f0", color: "#555" }}>
+                Leilão encerrado. Outro participante venceu.
+              </div>
+            )}
+
+            {euVenci && (
+              <button
+                className="btn-bid"
+                type="button"
+                onClick={() => setPixAberto(true)}
+              >
+                pagar agora
+              </button>
+            )}
+
+            {!euVenci && (
+              <button
+                className="btn-bid"
+                type="button"
+                onClick={abrirModal}
+                disabled={indisponivel}
+              >
+                {encerrado
+                  ? "leilão encerrado"
+                  : indisponivel
+                  ? "indisponível"
+                  : "dar lance"}
+              </button>
+            )}
+
+            {!indisponivel && (
+              <button
+                className="btn-bid-custom"
+                type="button"
+                onClick={abrirModal}
+              >
+                próximo lance mínimo de R$ {formatarValor(lanceMinimo)}
+              </button>
+            )}
 
             <div className="timer-section">
               <h3>TEMPO RESTANTE</h3>
@@ -325,7 +478,7 @@ function Produto() {
               <h3>Regra do lance</h3>
               <p>
                 O novo lance deve ser pelo menos
-                <strong> R$ 50,00 maior </strong>
+                <strong> R$ {formatarValor(incremento)} maior </strong>
                 que o lance atual.
               </p>
               <div className="minimum-value">
@@ -344,7 +497,7 @@ function Produto() {
                 id="novoLance"
                 type="number"
                 min={lanceMinimo}
-                step="50"
+                step="0.01"
                 placeholder={formatarValor(lanceMinimo)}
                 value={novoLance}
                 onChange={(e) => {
@@ -373,13 +526,20 @@ function Produto() {
         </div>
       )}
 
-      {/* MODAL DE PAGAMENTO PIX */}
-      {pixAberto && (
+      {/* MODAL DO VENCEDOR + PIX (só o vencedor, só depois de encerrado) */}
+      {pixAberto && euVenci && (
         <div className="modal-overlay" onClick={fecharPix}>
           <div className="pix-modal" onClick={(e) => e.stopPropagation()}>
             <button className="pix-close" type="button" onClick={fecharPix}>
               ×
             </button>
+
+            <h2 style={{ textAlign: "center", marginBottom: "4px" }}>
+              🎉 Parabéns! Você ganhou o leilão!
+            </h2>
+            <p style={{ textAlign: "center", marginTop: 0 }}>
+              Produto: <strong>{produto.nome}</strong>
+            </p>
 
             <div className="pix-header">
               <svg className="pix-icon" viewBox="0 0 24 24" width="42" height="42">
@@ -392,8 +552,8 @@ function Produto() {
               <span className="pix-powered">powered by Banco Central</span>
             </div>
 
-            <p className="pix-value-label">Valor do lance:</p>
-            <p className="pix-value">R$ {formatarValor(valorPix)}</p>
+            <p className="pix-value-label">Valor a pagar:</p>
+            <p className="pix-value">R$ {formatarValor(lanceAtual)}</p>
 
             <div className="pix-qrcode">
               <img src={qrCodeUrl} alt="QR Code Pix" width="200" height="200" />
