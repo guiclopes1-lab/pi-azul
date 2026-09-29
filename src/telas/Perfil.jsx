@@ -23,55 +23,81 @@ function Perfil() {
   // Busca dados do usuário logado e seus produtos
   async function carregaDados() {
     try {
-      // 1. Obter usuário autenticado
+      // 1. Tentar obter usuário autenticado via Supabase Auth
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
 
-      if (authError || !authUser) {
-        // Fallback caso não use Supabase Auth nativo
-        const { data: dataUsuarios } = await supabase.from("usuarios").select().limit(1);
-        if (dataUsuarios && dataUsuarios.length > 0) {
-          const u = dataUsuarios[0];
-          setUsuarioAtual(u);
-          carregarProdutosDoUsuario(u.id);
+      if (!authError && authUser) {
+        // Tenta buscar na tabela 'usuarios' pelo e-mail do usuário autenticado
+        const { data: userDataByEmail } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("email", authUser.email)
+          .maybeSingle();
+
+        if (userDataByEmail) {
+          setUsuarioAtual(userDataByEmail);
+          setNome(userDataByEmail.nome_usuario || "");
+          setEmail(userDataByEmail.email || "");
+          carregarProdutosDoUsuario(userDataByEmail.id);
+          return;
         }
-        return;
+
+        // Tenta buscar pelo ID caso seja compatível
+        const { data: userDataById } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("id", authUser.id)
+          .maybeSingle();
+
+        if (userDataById) {
+          setUsuarioAtual(userDataById);
+          setNome(userDataById.nome_usuario || "");
+          setEmail(userDataById.email || "");
+          carregarProdutosDoUsuario(userDataById.id);
+          return;
+        }
       }
 
-      // 2. Busca dados completos do usuário no banco
-      const { data: userData, error: userError } = await supabase
+      // Fallback: Busca o primeiro usuário cadastrado na tabela 'usuarios'
+      const { data: dataUsuarios, error: errorUsuarios } = await supabase
         .from("usuarios")
         .select("*")
-        .eq("id", authUser.id)
-        .single();
+        .limit(1);
 
-      if (userError) {
-        console.error("Erro ao carregar perfil do usuário:", userError);
+      if (errorUsuarios) {
+        console.error("Erro ao carregar usuários da tabela 'usuarios':", errorUsuarios);
         return;
       }
 
-      setUsuarioAtual(userData);
-      setNome(userData.nome_usuario || "");
-      setEmail(userData.email || "");
-
-      // 3. Busca produtos vinculados a ESTE usuário
-      carregarProdutosDoUsuario(userData.id);
-
+      if (dataUsuarios && dataUsuarios.length > 0) {
+        const u = dataUsuarios[0];
+        setUsuarioAtual(u);
+        setNome(u.nome_usuario || "");
+        setEmail(u.email || "");
+        carregarProdutosDoUsuario(u.id);
+      }
     } catch (err) {
-      console.error("Erro inesperado:", err);
+      console.error("Erro inesperado ao carregar dados do perfil:", err);
     }
   }
 
   // Função auxiliar para buscar os produtos filtrados por id_usuario
   async function carregarProdutosDoUsuario(userId) {
+    if (!userId) return;
     const { data: dataProdutos, error: errorProdutos } = await supabase
+      .from("usuarios")
+      .select("*")
+      .eq("id", userId);
+
+    const { data: prods, error: errProds } = await supabase
       .from("produtos")
       .select("*")
       .eq("id_usuario", userId);
 
-    if (errorProdutos) {
-      console.error("Erro ao carregar produtos:", errorProdutos);
+    if (errProds) {
+      console.error("Erro ao carregar produtos do usuário:", errProds);
     } else {
-      setProdutos(dataProdutos || []);
+      setProdutos(prods || []);
     }
   }
 
@@ -83,7 +109,10 @@ function Perfil() {
   const handleAvatarUpload = async (event) => {
     try {
       const file = event.target.files?.[0];
-      if (!file || !usuarioAtual?.id) return;
+      if (!file || !usuarioAtual?.id) {
+        console.error("Nenhum arquivo selecionado ou usuário não identificado.");
+        return;
+      }
 
       const fileExt = file.name.split(".").pop();
       const fileName = `${usuarioAtual.id}-${Date.now()}.${fileExt}`;
@@ -94,7 +123,7 @@ function Perfil() {
         .upload(fileName, file, { cacheControl: "3600", upsert: true });
 
       if (uploadError) {
-        console.error("Erro no upload da foto:", uploadError);
+        console.error("Erro no upload da foto de perfil para o bucket 'avatars':", uploadError);
         alert(`Erro ao fazer upload da foto: ${uploadError.message}`);
         return;
       }
@@ -114,7 +143,7 @@ function Perfil() {
         .select();
 
       if (updateError) {
-        console.error("Erro ao salvar avatar_url no banco:", updateError);
+        console.error("Erro ao atualizar avatar_url na tabela 'usuarios':", updateError);
         alert(`Erro ao salvar URL da foto: ${updateError.message}`);
         return;
       }
@@ -145,40 +174,68 @@ function Perfil() {
 
   const handleSalvarPerfil = async (e) => {
     e.preventDefault();
+
     if (!usuarioAtual || !usuarioAtual.id) {
+      console.error("Tentativa de salvar perfil sem usuarioAtual.id definido:", usuarioAtual);
       alert("Erro: ID do usuário não foi identificado.");
       return;
     }
 
     setCarregando(true);
 
+    // Monta o objeto com os campos correspondentes à tabela 'usuarios'
     const payload = {
-      nome_usuario: nome,
-      email: email,
+      nome_usuario: nome.trim(),
+      email: email.trim().toLowerCase(),
     };
 
-    if (senha) {
-      payload.senha = senha;
+    // Apenas atualiza a senha caso o campo tenha sido preenchido
+    if (senha && senha.trim() !== "") {
+      payload.senha = senha.trim();
     }
 
-    // Executa a atualização no Supabase
-    const { data, error } = await supabase
-      .from("usuarios")
-      .update(payload)
-      .eq("id", usuarioAtual.id)
-      .select();
+    try {
+      console.log("Executando update na tabela 'usuarios' para o id:", usuarioAtual.id, "Payload:", payload);
 
-    setCarregando(false);
+      // Executa a atualização no Supabase filtrando pela chave primária 'id'
+      const { data, error } = await supabase
+        .from("usuarios")
+        .update(payload)
+        .eq("id", usuarioAtual.id)
+        .select();
 
-    if (error) {
-      console.error("Erro ao atualizar perfil:", error);
-      alert(`Erro ao atualizar perfil: ${error.message}`);
-    } else if (!data || data.length === 0) {
-      alert("A alteração não foi gravada. Verifique se as permissões (RLS) da tabela 'usuarios' no Supabase permitem atualização.");
-    } else {
-      alert("Perfil atualizado com sucesso!");
-      setUsuarioAtual(data[0]);
+      if (error) {
+        console.error("Erro ao atualizar perfil na tabela 'usuarios':", error);
+        alert(`Erro ao atualizar perfil no banco de dados: ${error.message}`);
+        setCarregando(false);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        console.error(
+          "Nenhum registro foi atualizado na tabela 'usuarios'. Verifique se a RLS permite UPDATE na tabela 'usuarios' e se o id coincide com o banco de dados:",
+          { id: usuarioAtual.id, payload }
+        );
+        alert("A alteração não foi gravada. Verifique se as permissões (RLS) da tabela 'usuarios' no Supabase permitem atualização.");
+        setCarregando(false);
+        return;
+      }
+
+      const usuarioAtualizado = data[0];
+      console.log("Perfil atualizado com sucesso no Supabase:", usuarioAtualizado);
+
+      // Atualiza o estado da tela imediatamente com os dados retornados do Supabase
+      setUsuarioAtual(usuarioAtualizado);
+      setNome(usuarioAtualizado.nome_usuario || "");
+      setEmail(usuarioAtualizado.email || "");
+      setSenha("");
       setModalAberto(false);
+      alert("Perfil atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro inesperado ao salvar perfil:", err);
+      alert("Erro inesperado ao salvar perfil.");
+    } finally {
+      setCarregando(false);
     }
   };
 
