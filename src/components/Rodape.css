@@ -52,7 +52,7 @@ footer input {
     width: 100%;
     padding: 10px 12px;
 
-    border: 1px solid rgba(200, 169, 110, 0.3);
+    border: 1px solid rgba(110, 186, 200, 0.3);
     border-radius: 4px;
 
     background-color: transparent;
@@ -60,7 +60,7 @@ footer input {
 }
 
 footer input::placeholder {
-    color: rgba(200, 169, 110, 0.6);
+    color: #0ab2db;
 }
 
 footer button {
