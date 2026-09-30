@@ -1,11 +1,9 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./cadastro.css";
 import { supabase } from '../supabase'
 
 function Cadastro() {
-  const [carregando, setCarregando] = useState(false);
-  const [Usuarios, setusuarios] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
     nome_usuario: "",
     cpf: "",
@@ -18,81 +16,111 @@ function Cadastro() {
     cidade: "",
     n_casa: "",
   });
+
+  function traduzirErroAuth(message) {
+    if (
+      message.includes("security purposes") ||
+      message.includes("rate limit") ||
+      message.includes("too many requests")
+    ) {
+      return "Muitas tentativas em pouco tempo. Aguarde alguns segundos e tente novamente.";
+    }
+    if (message.includes("already registered") || message.includes("User already registered")) {
+      return "Este e-mail já está cadastrado. Tente fazer login.";
+    }
+    if (message.includes("Password should be") || message.includes("weak password")) {
+      return "Senha fraca. Use pelo menos 10 caracteres com maiúscula, minúscula, número e símbolo.";
+    }
+    if (message.includes("invalid email") || message.includes("Unable to validate email")) {
+      return "Endereço de e-mail inválido.";
+    }
+    return `Erro ao criar conta: ${message}`;
+  }
   async function criarlogin() {
-    // Limpa os dados antes de enviar
-    const nomeUsuario = form.nome_usuario.trim();
-    const email = form.email.trim().toLowerCase();
-    const rua = form.rua.trim();
-    const cidade = form.cidade.trim();
-    const estado = form.estado.trim();
+    // Proteção contra múltiplos cliques
+    if (isLoading) return;
+    setIsLoading(true);
 
-    const cpf = form.cpf.replace(/\D/g, "");
-    const telefone = form.telefone.replace(/\D/g, "");
-    const cep = form.cep.replace(/\D/g, "");
+    try {
+      // Limpa os dados antes de enviar
+      const nomeUsuario = form.nome_usuario.trim();
+      const email = form.email.trim().toLowerCase();
+      const rua = form.rua.trim();
+      const cidade = form.cidade.trim();
+      const estado = form.estado.trim();
 
-    // 1. Cria a conta no Supabase Auth
-    const { data: authData, error: authError } =
-      await supabase.auth.signUp({
-        email: email,
-        password: form.senha,
-      });
+      const cpf = form.cpf.replace(/\D/g, "");
+      const telefone = form.telefone.replace(/\D/g, "");
+      const cep = form.cep.replace(/\D/g, "");
 
-    // Trata erro do Auth
-    if (authError) {
-      console.log("STATUS:", authError.status);
-      console.log("CODE:", authError.code);
-      console.log("MESSAGE:", authError.message);
-      console.log("ERRO COMPLETO:", authError);
+      // 1. Cria a conta no Supabase Auth
+      //    Os metadados são passados para o trigger handle_new_user() no banco
+      const { data: authData, error: authError } =
+        await supabase.auth.signUp({
+          email: email,
+          password: form.senha,
+          options: {
+            data: {
+              nome_usuario: nomeUsuario,
+              cpf: cpf,
+              telefone: telefone,
+              cep: cep,
+            },
+          },
+        });
 
-      if (authError.status === 429) {
-        alert(
-          "Muitas tentativas de cadastro foram realizadas. " +
-          "Aguarde alguns minutos antes de tentar novamente."
-        );
-      } else {
-        alert(authError.message);
+      if (authError) {
+        console.error("Erro Auth:", authError);
+        alert(traduzirErroAuth(authError.message));
+        return;
       }
 
-      return;
+      // 2. Pega o UUID do usuário gerado pelo Supabase Auth
+      // Se user for null sem erro, o e-mail já existe mas não foi confirmado
+      const userId = authData.user?.id;
+      if (!userId) {
+        alert(
+          "Este e-mail já está cadastrado mas ainda não foi confirmado. " +
+          "Verifique sua caixa de entrada ou tente fazer login."
+        );
+        return;
+      }
+
+      // 3. Salva os dados completos na tabela pública 'usuarios'
+      //    O id agora é uuid — compatível com auth.users(id)
+      //    A senha NÃO é inserida aqui: ela fica criptografada no Supabase Auth
+      const { data, error } = await supabase
+        .from("usuarios")
+        .insert([
+          {
+            id: userId,          // uuid do Auth — tipo compatível após migração
+            nome_usuario: nomeUsuario,
+            cpf: cpf,
+            telefone: telefone,
+            email: email,
+            cep: cep,
+            rua: rua,
+            estado: estado,
+            cidade: cidade,
+            n_casa: form.n_casa.trim(),
+          },
+        ])
+        .select();
+
+      if (error) {
+        console.error("Erro ao salvar usuário:", error);
+        alert(`Erro ao salvar dados: ${error.message}`);
+        return;
+      }
+
+      console.log("Usuário criado:", data);
+      alert("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
+
+    } finally {
+      // Sempre libera o botão, mesmo se ocorrer um erro inesperado
+      setIsLoading(false);
     }
-
-    // 2. Pega o ID do usuário
-    const userId = authData.user?.id;
-
-    if (!userId) {
-      alert("Não foi possível obter o usuário criado.");
-      return;
-    }
-
-    // 3. Salva os dados na tabela usuarios
-    const { data, error } = await supabase
-      .from("usuarios")
-      .insert([
-        {
-          id: userId,
-          nome_usuario: nomeUsuario,
-          cpf: cpf,
-          telefone: telefone,
-          email: email,
-          cep: cep,
-          rua: rua,
-          estado: estado,
-          cidade: cidade,
-          n_casa: form.n_casa.trim(),
-        },
-      ])
-      .select();
-
-    if (error) {
-      console.error("Erro ao salvar usuário:", error);
-      alert(error.message);
-      return;
-    }
-
-    console.log("Usuário criado:", data);
-    alert("Cadastro realizado com sucesso!");
   }
-
   function formatarCPF(value) {
     return value
       .replace(/\D/g, "")
@@ -145,20 +173,11 @@ function Cadastro() {
     }));
   }
 
+
   async function handleSubmit(event) {
     event.preventDefault();
-
-    if (carregando) return;
-
-    setCarregando(true);
-
-    try {
-      await criarlogin();
-    } finally {
-      setCarregando(false);
-    }
+    await criarlogin();
   }
-
 
 
   return (
@@ -242,7 +261,7 @@ function Cadastro() {
                 onChange={handleChange}
                 required
                 placeholder=" (00) 00000-0000"
-                pattern="^\(\d{2}\)\s?\d{4,5}-\d{4}$"
+                pattern="\(\d{2}\)\s?\d{4, 5}-\d{4}"
                 title="O telefone deve estar no formato (00) 00000-0000 ou (00) 0000-0000"
               />
 
@@ -405,11 +424,11 @@ function Cadastro() {
           <button
             type="submit"
             className="btn-finalizar"
-            disabled={carregando}
+            disabled={isLoading}
+            style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? "not-allowed" : "pointer" }}
           >
-            {carregando ? "Criando conta..." : "Finalizar Cadastro"}
+            {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
           </button>
-
 
 
 

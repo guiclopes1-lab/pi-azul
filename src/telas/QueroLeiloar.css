@@ -1,14 +1,97 @@
-* {
-  box-sizing: border-box;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* =========================
+     CORES
+  ========================= */
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --primary: #1E3A8A;
+  --accent: #60A5FA;
+  --success: #10B981;
+  --title: #F8FAFC;
+  --text: #94A3B8;
+  --border: #334155;
+  --border-gold: #68583d;
+
+  /* =========================
+     FONTE
+  ========================= */
+  --font: "Inter", sans-serif;
+
+  /* =========================
+     ARREDONDAMENTO
+  ========================= */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* =========================
+     TRANSIÇÃO
+  ========================= */
+  --transition: 0.2s ease;
 }
+
+/* =========================
+   RESET GLOBAL
+========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================
+   HTML / BODY
+========================= */
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================
+   FORMULÁRIOS
+========================= */
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* =====================================================
+   PÁGINA: PUBLICAR PRODUTO
+===================================================== */
 
 .publicar-page {
   min-height: 100vh;
   width: 100%;
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg);
+  color: var(--title);
   padding: 40px 20px;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font);
 }
 
 .publicar-container {
@@ -17,15 +100,18 @@
   margin: 0 auto;
 }
 
+/* margem padrão do h1 que o reset global removeu */
 .publicar-container h1 {
   font-size: 36px;
   font-weight: 600;
+  margin-top: 0.67em;
   margin-bottom: 10px;
 }
 
 .publicar-subtitulo {
-  color: #94a3b8;
+  color: var(--text);
   font-size: 16px;
+  margin-top: 16px;
   margin-bottom: 35px;
 }
 
@@ -34,9 +120,9 @@
 ========================= */
 
 .produto-form {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 35px;
 }
 
@@ -47,7 +133,7 @@
 
 .form-group label {
   display: block;
-  color: #f8fafc;
+  color: var(--title);
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 8px;
@@ -57,14 +143,14 @@
 .form-group textarea,
 .form-group select {
   width: 100%;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  background: #0f172a;
-  color: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--title);
   font-family: inherit;
   font-size: 16px;
   outline: none;
-  transition: 0.2s ease;
+  transition: var(--transition);
 }
 
 /* =========================
@@ -86,7 +172,7 @@
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #60a5fa;
+  border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.1);
 }
 
@@ -105,8 +191,8 @@
 }
 
 .form-group select option {
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg);
+  color: var(--title);
 }
 
 /* =========================
@@ -139,20 +225,20 @@
   height: 52px;
   display: flex;
   align-items: center;
-  background: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  transition: 0.2s ease;
+  transition: var(--transition);
 }
 
 .money-input:focus-within {
-  border-color: #60a5fa;
+  border-color: var(--accent);
 }
 
 .money-input span {
   padding-left: 15px;
-  color: #60a5fa;
+  color: var(--accent);
   font-size: 16px;
   font-weight: 600;
 }
@@ -176,8 +262,8 @@
   margin-top: 10px;
   margin-bottom: 25px;
   padding: 25px;
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 10px;
 }
 
@@ -185,16 +271,20 @@
   margin-bottom: 22px;
 }
 
+/* margem padrão do h2 que o reset global removeu */
 .leilao-header h2 {
-  color: #f8fafc;
+  color: var(--title);
   font-size: 21px;
+  margin-top: 0.83em;
   margin-bottom: 7px;
 }
 
+/* margem padrão do p que o reset global removeu */
 .leilao-header p {
-  color: #94a3b8;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.5;
+  margin-top: 1em;
 }
 
 .leilao-box select {
@@ -207,18 +297,18 @@
   gap: 4px;
   margin-top: 10px;
   padding: 14px;
-  border-radius: 8px;
-  background: #1e293b;
-  border: 1px solid #334155;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .duracao-info strong {
-  color: #60a5fa;
+  color: var(--accent);
   font-size: 14px;
 }
 
 .duracao-info span {
-  color: #94a3b8;
+  color: var(--text);
   font-size: 13px;
 }
 
@@ -228,7 +318,7 @@
 
 .mensagem {
   padding: 14px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 20px;
   font-size: 14px;
   font-weight: 600;
@@ -253,21 +343,21 @@
 .btn-publicar {
   width: 100%;
   height: 58px;
-  border: 2px solid #1e3a8a;
-  border-radius: 8px;
-  background: #1e3a8a;
-  color: #f8fafc;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--title);
   font-family: inherit;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: var(--transition);
 }
 
 .btn-publicar:hover {
-  background: #60a5fa;
-  border-color: #60a5fa;
-  color: #0f172a;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
 }
 
 .btn-publicar:disabled {
