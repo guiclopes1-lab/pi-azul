@@ -174,6 +174,19 @@ function PublicarProduto() {
               <option value="figure">
                 Figure
               </option>
+
+              <option value="card">
+                action figure
+              </option>
+
+              <option value="card">
+                Card pokemon
+              </option>
+
+              <option value="card">
+                funko pop
+              </option>
+
             </select>
           </div>
 
