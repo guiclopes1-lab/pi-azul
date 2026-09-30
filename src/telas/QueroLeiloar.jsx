@@ -167,13 +167,6 @@ function PublicarProduto() {
                 Selecione uma categoria
               </option>
 
-              <option value="card">
-                Card
-              </option>
-
-              <option value="figure">
-                Figure
-              </option>
 
               <option value="card">
                 action figure
