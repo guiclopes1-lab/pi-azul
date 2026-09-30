@@ -4,6 +4,7 @@ import "./cadastro.css";
 import { supabase } from '../supabase'
 
 function Cadastro() {
+  const [carregando, setCarregando] = useState(false);
   const [Usuarios, setusuarios] = useState([])
   const [form, setForm] = useState({
     nome_usuario: "",
@@ -17,21 +18,7 @@ function Cadastro() {
     cidade: "",
     n_casa: "",
   });
-
-  async function Carregausuarios() {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .select();
-
-    if (error) {
-      console.error('Erro ao carregar usuarios:', error);
-      return;
-    }
-
-    setusuarios(data || []);
-  }
   async function criarlogin() {
-
     // Limpa os dados antes de enviar
     const nomeUsuario = form.nome_usuario.trim();
     const email = form.email.trim().toLowerCase();
@@ -50,9 +37,22 @@ function Cadastro() {
         password: form.senha,
       });
 
+    // Trata erro do Auth
     if (authError) {
-      console.error("Erro ao criar conta:", authError);
-      alert(authError.message);
+      console.log("STATUS:", authError.status);
+      console.log("CODE:", authError.code);
+      console.log("MESSAGE:", authError.message);
+      console.log("ERRO COMPLETO:", authError);
+
+      if (authError.status === 429) {
+        alert(
+          "Muitas tentativas de cadastro foram realizadas. " +
+          "Aguarde alguns minutos antes de tentar novamente."
+        );
+      } else {
+        alert(authError.message);
+      }
+
       return;
     }
 
@@ -64,7 +64,7 @@ function Cadastro() {
       return;
     }
 
-    // 3. Salva os dados limpos na tabela usuarios
+    // 3. Salva os dados na tabela usuarios
     const { data, error } = await supabase
       .from("usuarios")
       .insert([
@@ -92,6 +92,7 @@ function Cadastro() {
     console.log("Usuário criado:", data);
     alert("Cadastro realizado com sucesso!");
   }
+
   function formatarCPF(value) {
     return value
       .replace(/\D/g, "")
@@ -144,15 +145,22 @@ function Cadastro() {
     }));
   }
 
-
   async function handleSubmit(event) {
     event.preventDefault();
-    await criarlogin();
+
+    if (carregando) return;
+
+    setCarregando(true);
+
+    try {
+      await criarlogin();
+    } finally {
+      setCarregando(false);
+    }
   }
 
-  useEffect(() => {
-    Carregausuarios();
-  }, []);
+
+
   return (
     <div className="cadastro-page">
 
@@ -234,7 +242,7 @@ function Cadastro() {
                 onChange={handleChange}
                 required
                 placeholder=" (00) 00000-0000"
-                pattern="\(\d{2}\)\s?\d{4, 5}-\d{4}"
+                pattern="^\(\d{2}\)\s?\d{4,5}-\d{4}$"
                 title="O telefone deve estar no formato (00) 00000-0000 ou (00) 0000-0000"
               />
 
@@ -394,9 +402,14 @@ function Cadastro() {
           </div>
 
           {/* BOTÃO */}
-          <button type="submit" className="btn-finalizar">
-            Finalizar Cadastro
+          <button
+            type="submit"
+            className="btn-finalizar"
+            disabled={carregando}
+          >
+            {carregando ? "Criando conta..." : "Finalizar Cadastro"}
           </button>
+
 
 
 
