@@ -48,17 +48,6 @@ function PublicarProduto() {
     }
 
     // =========================
-    // VERIFICAR USUÁRIO AUTENTICADO
-    // =========================
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      setErro("Você precisa estar logado para publicar um produto.");
-      return;
-    }
-
-    // =========================
     // CALCULAR DATA DE FIM
     // =========================
 
@@ -97,9 +86,6 @@ function PublicarProduto() {
 
         // data/hora de encerramento
         data_fim: dataFim.toISOString(),
-
-        // UUID do vendedor — compatível com FK uuid após migração
-        id_usuario: user.id,
       })
       .select()
       .single();

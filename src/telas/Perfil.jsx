@@ -23,32 +23,58 @@ function Perfil() {
   // Busca dados do usuário logado e seus produtos
   async function carregaDados() {
     try {
-      // Obtém o usuário autenticado via Supabase Auth
+      // 1. Tentar obter usuário autenticado via Supabase Auth
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
 
-      if (authError || !authUser) {
-        console.error("Usuário não autenticado:", authError);
-        return;
+      if (!authError && authUser) {
+        // Tenta buscar na tabela 'usuarios' pelo e-mail do usuário autenticado
+        const { data: userDataByEmail } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("email", authUser.email)
+          .maybeSingle();
+
+        if (userDataByEmail) {
+          setUsuarioAtual(userDataByEmail);
+          setNome(userDataByEmail.nome_usuario || "");
+          setEmail(userDataByEmail.email || "");
+          carregarProdutosDoUsuario(userDataByEmail.id);
+          return;
+        }
+
+        // Tenta buscar pelo ID caso seja compatível
+        const { data: userDataById } = await supabase
+          .from("usuarios")
+          .select("*")
+          .eq("id", authUser.id)
+          .maybeSingle();
+
+        if (userDataById) {
+          setUsuarioAtual(userDataById);
+          setNome(userDataById.nome_usuario || "");
+          setEmail(userDataById.email || "");
+          carregarProdutosDoUsuario(userDataById.id);
+          return;
+        }
       }
 
-      // Busca o perfil na tabela 'usuarios' pelo UUID do Auth
-      // Após a migração, usuarios.id é uuid — busca direta sem fallbacks
-      const { data: perfil, error: perfilError } = await supabase
+      // Fallback: Busca o primeiro usuário cadastrado na tabela 'usuarios'
+      const { data: dataUsuarios, error: errorUsuarios } = await supabase
         .from("usuarios")
         .select("*")
-        .eq("id", authUser.id)  // uuid === uuid ✔️
-        .single();
+        .limit(1);
 
-      if (perfilError) {
-        console.error("Erro ao carregar perfil:", perfilError);
+      if (errorUsuarios) {
+        console.error("Erro ao carregar usuários da tabela 'usuarios':", errorUsuarios);
         return;
       }
 
-      if (perfil) {
-        setUsuarioAtual(perfil);
-        setNome(perfil.nome_usuario || "");
-        setEmail(perfil.email || "");
-        carregarProdutosDoUsuario(perfil.id);
+      if (dataUsuarios && dataUsuarios.length > 0) {
+        const u = dataUsuarios[0];
+        setUsuarioAtual(u);
+        setNome(u.nome_usuario || "");
+        setEmail(u.email || "");
+        carregarProdutosDoUsuario(u.id);
       }
     } catch (err) {
       console.error("Erro inesperado ao carregar dados do perfil:", err);
@@ -157,32 +183,25 @@ function Perfil() {
 
     setCarregando(true);
 
+    // Monta o objeto com os campos correspondentes à tabela 'usuarios'
+    const payload = {
+      nome_usuario: nome.trim(),
+      email: email.trim().toLowerCase(),
+    };
+
+    // Apenas atualiza a senha caso o campo tenha sido preenchido
+    if (senha && senha.trim() !== "") {
+      payload.senha = senha.trim();
+    }
+
     try {
-      // Atualiza senha via Supabase Auth (nunca na tabela pública)
-      if (senha && senha.trim() !== "") {
-        const { error: senhaError } = await supabase.auth.updateUser({
-          password: senha.trim(),
-        });
-        if (senhaError) {
-          console.error("Erro ao atualizar senha no Auth:", senhaError);
-          alert(`Erro ao atualizar senha: ${senhaError.message}`);
-          setCarregando(false);
-          return;
-        }
-      }
-
-      // Atualiza nome e email na tabela pública 'usuarios'
-      const payload = {
-        nome_usuario: nome.trim(),
-        email: email.trim().toLowerCase(),
-      };
-
       console.log("Executando update na tabela 'usuarios' para o id:", usuarioAtual.id, "Payload:", payload);
 
+      // Executa a atualização no Supabase filtrando pela chave primária 'id'
       const { data, error } = await supabase
         .from("usuarios")
         .update(payload)
-        .eq("id", usuarioAtual.id)   // uuid === uuid ✔️
+        .eq("id", usuarioAtual.id)
         .select();
 
       if (error) {
@@ -194,7 +213,7 @@ function Perfil() {
 
       if (!data || data.length === 0) {
         console.error(
-          "Nenhum registro foi atualizado na tabela 'usuarios'. Verifique se a RLS permite UPDATE:",
+          "Nenhum registro foi atualizado na tabela 'usuarios'. Verifique se a RLS permite UPDATE na tabela 'usuarios' e se o id coincide com o banco de dados:",
           { id: usuarioAtual.id, payload }
         );
         alert("A alteração não foi gravada. Verifique se as permissões (RLS) da tabela 'usuarios' no Supabase permitem atualização.");
@@ -205,6 +224,7 @@ function Perfil() {
       const usuarioAtualizado = data[0];
       console.log("Perfil atualizado com sucesso no Supabase:", usuarioAtualizado);
 
+      // Atualiza o estado da tela imediatamente com os dados retornados do Supabase
       setUsuarioAtual(usuarioAtualizado);
       setNome(usuarioAtualizado.nome_usuario || "");
       setEmail(usuarioAtualizado.email || "");

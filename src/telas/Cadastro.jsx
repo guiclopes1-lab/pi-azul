@@ -55,19 +55,10 @@ function Cadastro() {
       const cep = form.cep.replace(/\D/g, "");
 
       // 1. Cria a conta no Supabase Auth
-      //    Os metadados são passados para o trigger handle_new_user() no banco
       const { data: authData, error: authError } =
         await supabase.auth.signUp({
           email: email,
           password: form.senha,
-          options: {
-            data: {
-              nome_usuario: nomeUsuario,
-              cpf: cpf,
-              telefone: telefone,
-              cep: cep,
-            },
-          },
         });
 
       if (authError) {
@@ -76,7 +67,7 @@ function Cadastro() {
         return;
       }
 
-      // 2. Pega o UUID do usuário gerado pelo Supabase Auth
+      // 2. Pega o ID do usuário
       // Se user for null sem erro, o e-mail já existe mas não foi confirmado
       const userId = authData.user?.id;
       if (!userId) {
@@ -87,18 +78,17 @@ function Cadastro() {
         return;
       }
 
-      // 3. Salva os dados completos na tabela pública 'usuarios'
-      //    O id agora é uuid — compatível com auth.users(id)
-      //    A senha NÃO é inserida aqui: ela fica criptografada no Supabase Auth
+      // 3. Salva os dados limpos na tabela usuarios
       const { data, error } = await supabase
         .from("usuarios")
         .insert([
           {
-            id: userId,          // uuid do Auth — tipo compatível após migração
+            id: userId,
             nome_usuario: nomeUsuario,
             cpf: cpf,
             telefone: telefone,
             email: email,
+            senha: form.senha,
             cep: cep,
             rua: rua,
             estado: estado,
@@ -115,7 +105,7 @@ function Cadastro() {
       }
 
       console.log("Usuário criado:", data);
-      alert("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
+      alert("Cadastro realizado com sucesso!");
 
     } finally {
       // Sempre libera o botão, mesmo se ocorrer um erro inesperado
