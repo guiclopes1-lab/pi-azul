@@ -43,7 +43,7 @@
   margin-bottom: 24px;
   padding: 24px;
 
-  background: linear-gradient(180deg, #1E293B 0%, #172033 100%);
+  background: var(--surface);
 
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -99,7 +99,7 @@
 }
 
 .card-item:hover {
-  background: #16213A;
+  background: var(--surface-light);
 
   border-color: var(--accent);
 
@@ -131,7 +131,7 @@
   margin-bottom: 24px;
   padding: 24px;
 
-  background: linear-gradient(180deg, #1E293B 0%, #172033 100%);
+  background: var(--surface);
 
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -186,7 +186,7 @@
 }
 
 .lista-regras li:hover {
-  background: #16213A;
+  background: var(--surface-light);
 }
 
 /* =========================
@@ -197,7 +197,7 @@
   margin-bottom: 32px;
   padding: 24px;
 
-  background: linear-gradient(180deg, #1E293B 0%, #172033 100%);
+  background: var(--surface);
 
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -230,7 +230,6 @@
   text-align: center;
 }
 
-/* Botão verde (Cadastrar / Dar Lance) */
 .container-acao .btn-acao {
   padding: 10px 24px;
 
@@ -245,12 +244,14 @@
 
   cursor: pointer;
 
-  transition: background var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .container-acao .btn-acao:hover {
-  background: #059669;
-  border-color: #059669;
+  background: var(--success-hover);
+  border-color: var(--success-hover);
 }
 
 /* =========================

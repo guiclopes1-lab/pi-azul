@@ -4,15 +4,32 @@
   /* =========================
      CORES
   ========================= */
-  --bg: #0F172A;
-  --surface: #1E293B;
-  --primary: #1E3A8A;
-  --accent: #60A5FA;
-  --success: #10B981;
-  --title: #F8FAFC;
-  --text: #94A3B8;
+
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-light: #273449;
+
+  --primary: #1e3a8a;
+  --accent: #60a5fa;
+
+  --success: #10b981;
+  --success-hover: #059669;
+
+  --title: #f8fafc;
+  --text: #94a3b8;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
   --border: #334155;
 
+  --input-border: #ffffff;
+  --input-placeholder: #444444;
+
+  --button-bg: #2e2c2c;
+  --button-border: #3a3838;
+
+  --button-hover-bg: #e5e5e5;
+  --button-hover-text: #111111;
 
   /* =========================
      FONTE
@@ -24,13 +41,6 @@
      BORDAS
   ========================= */
 
-  --border: #403a30;
-  --border-gold: #68583d;
-
-  /* =========================
-     ARREDONDAMENTO
-  ========================= */
-
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -40,18 +50,6 @@
   ========================= */
 
   --transition: 0.2s ease;
-}
-
-/* =========================
-   RESET GLOBAL
-========================= */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 /* =========================

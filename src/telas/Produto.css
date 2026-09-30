@@ -9,33 +9,6 @@
 }
 
 /* =========================
-   VARIÁVEIS
-========================= */
-
-:root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --primary: #1e3a8a;
-  --accent: #60a5fa;
-  --success: #10b981;
-  --title: #f8fafc;
-  --text: #94a3b8;
-  --border: #334155;
-
-  --font: "Inter", sans-serif;
-
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-
-  --transition: 0.2s ease;
-}
-
-/* =========================
-   FONTE
-========================= */
-
-/* =========================
    CONTEÚDO
 ========================= */
 
@@ -76,8 +49,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/* Imagem inteira, centralizada, sem esticar nem cortar */
 
 .slides img {
   width: 100%;
@@ -284,7 +255,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(2, 6, 23, 0.85);
+
+  /* antes: rgba(2, 6, 23, 0.85) */
+  background-color: color-mix(in srgb, var(--bg) 85%, transparent);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,7 +279,9 @@
   border-radius: var(--radius-lg);
   padding: 40px;
   border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--bg) 70%, transparent);
+
   animation: modalAparecer 0.2s ease-out;
 }
 
@@ -575,7 +551,9 @@
   border-radius: var(--radius-lg);
   padding: 35px 30px 30px;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--bg) 70%, transparent);
+
   animation: modalAparecer 0.2s ease-out;
   font-family: var(--font);
 }
@@ -703,7 +681,7 @@
 }
 
 .pix-copia-cola button:hover {
-  background-color: #059669;
+  background-color: color-mix(in srgb, var(--success) 85%, var(--bg));
 }
 
 /* =========================

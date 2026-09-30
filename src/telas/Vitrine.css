@@ -1,18 +1,24 @@
-/* ================================
-   Navbar
-================================ */
+/* =====================================================
+   NAVBAR
+===================================================== */
+
 .navbar {
-  background-color: var(--bg);
-  color: var(--text);
+  position: relative;
+
   display: flex;
   flex-direction: column;
-  position: relative;
-  padding-top: 20px;
+
   height: 180px;
-  /* Formato retangular */
+  padding-top: 20px;
+
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* Botões de Autenticação - Canto superior direito */
+/* =========================
+   AUTENTICAÇÃO
+========================= */
+
 .auth-buttons {
   position: absolute;
   top: 20px;
@@ -20,16 +26,21 @@
 }
 
 .auth-buttons .btn-auth {
-  color: var(--text);
-  text-decoration: none;
+  display: inline-block;
+
   margin-left: 10px;
   padding: 8px 16px;
+
+  color: var(--text);
   border: 1px solid var(--text);
-  border-radius: 4px;
-  font-weight: bold;
+  border-radius: var(--radius-sm);
+
+  font-weight: 600;
+  text-decoration: none;
+
   transition:
-    background-color 0.3s,
-    color 0.3s;
+    background-color var(--transition),
+    color var(--transition);
 }
 
 .auth-buttons .btn-auth:hover {
@@ -37,172 +48,237 @@
   color: var(--bg);
 }
 
-/* Branding - Centro da Navbar */
+/* =========================
+   BRANDING
+========================= */
+
 .site-branding {
-  text-align: center;
   margin-top: 20px;
+  text-align: center;
+}
+
+.site-branding h1 {
+  margin-bottom: 5px;
+  font-size: 2.5rem;
+}
+
+.site-branding strong {
+  color: var(--text);
+  font-size: 1.2rem;
 }
 
 .site-slogan {
   text-align: center;
 }
 
-.site-branding h1 {
-  font-size: 2.5rem;
-  margin-bottom: 5px;
-}
+/* =========================
+   NAVEGAÇÃO
+========================= */
 
-.site-branding strong {
-  font-size: 1.2rem;
-  color: var(--text);
-}
-
-/* Links de navegação - Centralizados na parte inferior da navbar */
 .navbar-bottom {
-  margin-top: auto;
-  /* Empurra para a parte inferior */
-  margin-bottom: 15px;
   display: flex;
   justify-content: center;
+
+  margin-top: auto;
+  margin-bottom: 15px;
 }
 
 .nav-links {
-  list-style: none;
   display: flex;
   gap: 40px;
+
+  list-style: none;
 }
 
 .nav-links li a {
   color: var(--text);
-  text-decoration: none;
+
   font-size: 1.1rem;
-  font-weight: bold;
-  transition: opacity 0.3s;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: opacity var(--transition);
 }
 
 .nav-links li a:hover {
   opacity: 0.8;
 }
 
-/* ================================
-   Área de Leilões (Main)
-================================ */
+/* =====================================================
+   ÁREA DE LEILÕES
+===================================================== */
+
 .auction-area {
+  width: 100%;
   max-width: 1200px;
+
   margin: 40px auto;
   padding: 0 20px;
 }
+
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(4, 380px);
-  column-gap: 30px;
-  row-gap: 40px;
+
+  grid-template-columns: repeat(4, minmax(0, 380px));
   justify-content: center;
+
+  gap: 40px 30px;
 }
 
-/* Estilo do Card */
+/* =========================
+   CARD
+========================= */
+
 .card {
-  width: 380px;
-  background-color: var(--bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  width: 100%;
+
   display: flex;
   flex-direction: column;
-  position: relative;
 
-  border: 1px solid var(--text);
-}
-
-/* Container e Imagem do Card com 350x350px */
-.img-container {
-  width: 380px;
-  height: 380px;
   overflow: hidden;
 
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================
+   IMAGEM
+========================= */
+
+.img-container {
   position: relative;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
 }
 
 .card-img {
+  display: block;
+
   width: 100%;
   height: 100%;
-
-  display: block;
 
   object-fit: cover;
 }
 
-/* Box de informações abaixo da imagem */
+/* =========================
+   INFORMAÇÕES DO CARD
+========================= */
+
 .card-info {
   width: 100%;
-  padding: 20px;
-  background-color: var(--bg);
-  border-top: 1px solid var(--text);
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  padding: 20px;
+
+  background: var(--bg);
+  border-top: 1px solid var(--border);
 }
+
+/* =========================
+   CATEGORIA
+========================= */
 
 .category {
-  background-color: var(--text);
-  color: var(--bg);
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
   margin-bottom: 10px;
+  padding: 6px 12px;
+
+  background: var(--text);
+  color: var(--bg);
+
+  border-radius: 999px;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
+
+/* =========================
+   NOME DO PRODUTO
+========================= */
 
 .product-name {
-  font-size: 1.3rem;
-  color: var(--text);
   margin-bottom: 12px;
+
+  color: var(--text);
+
+  font-size: 1.3rem;
 }
+
+/* =========================
+   LANCE INICIAL
+========================= */
 
 .starting-bid {
-  font-size: 1.2rem;
-  color: var(--text);
-  font-weight: bold;
   margin-bottom: 20px;
+
+  color: var(--text);
+
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
-/* Botão "Veja mais" */
+/* =========================
+   BOTÃO VEJA MAIS
+========================= */
+
 .btn-more {
-  display: inline-block;
-  text-align: center;
-  background-color: var(--text);
-  color: var(--bg);
-  text-decoration: none;
-  padding: 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  margin-top: auto;
-  /* Empurra o botão para o final do card-info */
-  transition: opacity 0.3s;
   width: 100%;
+
+  display: inline-block;
+
+  margin-top: auto;
+  padding: 12px;
+
+  background: var(--text);
+  color: var(--bg);
+
+  border-radius: var(--radius-sm);
+
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+
+  transition: opacity var(--transition);
 }
 
 .btn-more:hover {
   opacity: 0.8;
 }
 
-/* ================================
-   Footer
-================================ */
+/* =====================================================
+   FOOTER
+===================================================== */
+
 .site-footer {
-  background-color: var(--bg);
-  color: var(--text);
-  padding: 50px 20px;
   margin-top: 40px;
-  border-top: 1px solid var(--text);
+  padding: 50px 20px;
+
+  background: var(--bg);
+  color: var(--text);
+
+  border-top: 1px solid var(--border);
 }
 
 .footer-container {
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+
   display: flex;
   flex-wrap: wrap;
+
+  margin: 0 auto;
+
   justify-content: space-between;
   gap: 40px;
 }
@@ -213,9 +289,11 @@
 }
 
 .footer-section h3 {
-  font-size: 1.3rem;
   margin-bottom: 20px;
+
   color: var(--text);
+
+  font-size: 1.3rem;
   text-transform: uppercase;
 }
 
@@ -229,22 +307,37 @@
 
 .footer-section ul li a {
   color: var(--text);
-  text-decoration: none;
+
   font-size: 1rem;
-  transition: opacity 0.3s;
+  text-decoration: none;
+
+  transition:
+    opacity var(--transition),
+    color var(--transition);
 }
 
 .footer-section ul li a:hover {
   opacity: 0.8;
+  color: var(--title);
   text-decoration: underline;
 }
 
+/* =========================
+   NOTIFICAÇÕES
+========================= */
+
 .notification-box p {
   margin-bottom: 15px;
-  font-size: 0.95rem;
+
   color: var(--text);
+
+  font-size: 0.95rem;
   line-height: 1.4;
 }
+
+/* =========================
+   NEWSLETTER
+========================= */
 
 .newsletter-form {
   display: flex;
@@ -254,25 +347,102 @@
 
 .newsletter-form input {
   padding: 12px;
-  border: 1px solid var(--text);
-  background-color: var(--bg);
+
+  background: var(--bg);
   color: var(--text);
-  border-radius: 4px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
   font-size: 1rem;
+}
+
+.newsletter-form input:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 .newsletter-form button {
   padding: 12px;
-  background-color: var(--text);
+
+  background: var(--text);
   color: var(--bg);
-  border: none;
-  border-radius: 4px;
+
+  border: 0;
+  border-radius: var(--radius-sm);
+
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
+
   cursor: pointer;
-  transition: opacity 0.3s;
+
+  transition:
+    background-color var(--transition),
+    color var(--transition);
 }
 
 .newsletter-form button:hover {
-  opacity: 0.8;
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 1200px) {
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 380px));
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    height: auto;
+    min-height: 180px;
+    padding: 20px;
+  }
+
+  .auth-buttons {
+    position: static;
+
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 20px;
+  }
+
+  .auth-buttons .btn-auth {
+    margin: 0 5px;
+  }
+
+  .site-branding {
+    margin-top: 0;
+  }
+
+  .site-branding h1 {
+    font-size: 2rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auction-area {
+    padding: 0 14px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+  }
+
+  .footer-section {
+    width: 100%;
+    min-width: 0;
+  }
 }

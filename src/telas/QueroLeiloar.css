@@ -1,97 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-:root {
-  /* =========================
-     CORES
-  ========================= */
-  --bg: #0F172A;
-  --surface: #1E293B;
-  --primary: #1E3A8A;
-  --accent: #60A5FA;
-  --success: #10B981;
-  --title: #F8FAFC;
-  --text: #94A3B8;
-  --border: #334155;
-  --border-gold: #68583d;
-
-  /* =========================
-     FONTE
-  ========================= */
-  --font: "Inter", sans-serif;
-
-  /* =========================
-     ARREDONDAMENTO
-  ========================= */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-
-  /* =========================
-     TRANSIÇÃO
-  ========================= */
-  --transition: 0.2s ease;
-}
-
-/* =========================
-   RESET GLOBAL
-========================= */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* =========================
-   HTML / BODY
-========================= */
-
-html,
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-}
-
-body {
-  min-height: 100vh;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* =========================
-   LINKS
-========================= */
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* =========================
-   FORMULÁRIOS
-========================= */
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-}
-
 /* =====================================================
    PÁGINA: PUBLICAR PRODUTO
 ===================================================== */
 
 .publicar-page {
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  padding: 40px 20px;
   background: var(--bg);
   color: var(--title);
-  padding: 40px 20px;
-  font-family: var(--font);
 }
 
 .publicar-container {
@@ -100,19 +16,20 @@ textarea {
   margin: 0 auto;
 }
 
-/* margem padrão do h1 que o reset global removeu */
+/* =========================
+   CABEÇALHO
+========================= */
+
 .publicar-container h1 {
+  margin: 0 0 10px;
   font-size: 36px;
   font-weight: 600;
-  margin-top: 0.67em;
-  margin-bottom: 10px;
 }
 
 .publicar-subtitulo {
+  margin: 0 0 35px;
   color: var(--text);
   font-size: 16px;
-  margin-top: 16px;
-  margin-bottom: 35px;
 }
 
 /* =========================
@@ -120,10 +37,10 @@ textarea {
 ========================= */
 
 .produto-form {
+  padding: 35px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 35px;
 }
 
 .form-group {
@@ -133,10 +50,10 @@ textarea {
 
 .form-group label {
   display: block;
+  margin-bottom: 8px;
   color: var(--title);
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: 8px;
 }
 
 .form-group input,
@@ -153,10 +70,6 @@ textarea {
   transition: var(--transition);
 }
 
-/* =========================
-   INPUTS E SELECT
-========================= */
-
 .form-group input,
 .form-group select {
   height: 52px;
@@ -164,9 +77,9 @@ textarea {
 }
 
 .form-group textarea {
+  min-height: 120px;
   padding: 15px;
   resize: vertical;
-  min-height: 120px;
 }
 
 .form-group input:focus,
@@ -178,11 +91,11 @@ textarea {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 /* =========================
-   SELECT DE CATEGORIA
+   SELECT
 ========================= */
 
 .form-group select {
@@ -201,9 +114,9 @@ textarea {
 
 .form-group small {
   display: block;
-  color: #64748b;
-  font-size: 13px;
   margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 /* =========================
@@ -212,23 +125,27 @@ textarea {
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
 /* =========================
-   VALOR
+   CAMPO DE VALOR
 ========================= */
 
 .money-input {
   width: 100%;
   height: 52px;
+
   display: flex;
   align-items: center;
+
+  overflow: hidden;
+
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  overflow: hidden;
+
   transition: var(--transition);
 }
 
@@ -244,10 +161,13 @@ textarea {
 }
 
 .money-input input {
+  width: 100%;
   height: 100%;
-  border: none;
+  padding: 0 8px;
+
+  border: 0;
   border-radius: 0;
-  padding-left: 8px;
+  background: transparent;
 }
 
 .money-input input:focus {
@@ -259,47 +179,50 @@ textarea {
 ========================= */
 
 .leilao-box {
-  margin-top: 10px;
-  margin-bottom: 25px;
+  margin: 10px 0 25px;
   padding: 25px;
+
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .leilao-header {
   margin-bottom: 22px;
 }
 
-/* margem padrão do h2 que o reset global removeu */
 .leilao-header h2 {
+  margin: 0 0 7px;
   color: var(--title);
   font-size: 21px;
-  margin-top: 0.83em;
-  margin-bottom: 7px;
 }
 
-/* margem padrão do p que o reset global removeu */
 .leilao-header p {
+  margin: 0;
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
-  margin-top: 1em;
 }
 
 .leilao-box select {
   cursor: pointer;
 }
 
+/* =========================
+   INFORMAÇÕES DA DURAÇÃO
+========================= */
+
 .duracao-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
   margin-top: 10px;
   padding: 14px;
-  border-radius: var(--radius-md);
+
   background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .duracao-info strong {
@@ -317,23 +240,25 @@ textarea {
 ========================= */
 
 .mensagem {
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
   margin-bottom: 20px;
+  padding: 14px 16px;
+
+  border-radius: var(--radius-md);
+
   font-size: 14px;
   font-weight: 600;
 }
 
 .mensagem.erro {
-  color: #fecaca;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--error-light);
+  background: color-mix(in srgb, var(--error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error) 30%, transparent);
 }
 
 .mensagem.sucesso {
   color: #a7f3d0;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
 }
 
 /* =========================
@@ -343,14 +268,19 @@ textarea {
 .btn-publicar {
   width: 100%;
   height: 58px;
+
   border: 2px solid var(--primary);
   border-radius: var(--radius-md);
+
   background: var(--primary);
   color: var(--title);
+
   font-family: inherit;
   font-size: 17px;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
