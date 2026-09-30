@@ -5,7 +5,7 @@ import Login from "./telas/Login";
 import Cadastro from "./telas/Cadastro";
 import ComoFunciona from "./telas/ComoFunciona";
 import Perfil from "./telas/Perfil";
-import Vitrine from "./telas/Vitrine";
+import Index from "./telas/Index";
 import QueroLeiloar from "./telas/QueroLeiloar"
 import { supabase } from './supabase'
 
@@ -30,7 +30,7 @@ function AppContent() {
       {!esconderMenuERodape && <MenuSuperior />}
 
       <Routes>
-        <Route path="/" element={<Vitrine />} />
+        <Route path="/" element={<Index />} />
         <Route path="/" element={<Login />} />
         <Route path="/produto/:id" element={<Produto />} />
         <Route path="/login" element={<Login />} />
