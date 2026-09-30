@@ -233,7 +233,8 @@ function Cadastro() {
                 value={form.telefone}
                 onChange={handleChange}
                 required
-                pattern="\(\d{2}\)\s?\d{4,5}-\d{4}"
+                placeholder=" (00) 00000-0000"
+                pattern="\(\d{2}\)\s?\d{4, 5}-\d{4}"
                 title="O telefone deve estar no formato (00) 00000-0000 ou (00) 0000-0000"
               />
 
@@ -250,6 +251,7 @@ function Cadastro() {
                 value={form.email}
                 onChange={handleChange}
                 required
+                placeholder="Ex: Email@email.com"
               />
 
             </div>
@@ -299,6 +301,7 @@ function Cadastro() {
                   name="rua"
                   value={form.rua}
                   onChange={handleChange}
+                  placeholder="Sebatião de abreu sampaio"
                   pattern="[\p{L}0-9\s,.'\-]{3,}"
                   title="A rua deve conter pelo menos 3 caracteres."
                 />
@@ -312,6 +315,7 @@ function Cadastro() {
                   name="n_casa"
                   value={form.n_casa}
                   onChange={handleChange}
+                  placeholder="1046"
                 />
 
               </div>
@@ -326,6 +330,7 @@ function Cadastro() {
                   name="cep"
                   value={form.cep}
                   onChange={handleChange}
+                  placeholder="387"
                 />
 
               </div>
@@ -346,6 +351,7 @@ function Cadastro() {
                   name="cidade"
                   value={form.cidade}
                   onChange={handleChange}
+                  placeholder="Anta Gorda"
                 />
               </div>
 
@@ -360,6 +366,7 @@ function Cadastro() {
                   name="estado"
                   value={form.estado}
                   onChange={handleChange}
+                  placeholder="Minas Gerais"
                   pattern="[A-Za-zÀ-ÿ\s]{2,}"
                   title="O estado deve conter pelo menos 2 letras."
                 />
