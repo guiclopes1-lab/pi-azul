@@ -31,7 +31,7 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/produto/:id" element={<Produto />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />

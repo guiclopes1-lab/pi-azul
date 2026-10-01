@@ -14,7 +14,8 @@ function MenuSuperior() {
             </div>
 
             <div>
-                <h1> <a href="./">Geek Loot</a></h1>
+                <h1><a href="/">Geek Loot</a></h1>
+
                 <strong>Seu lance, Seu tesouro geek</strong>
             </div>
 

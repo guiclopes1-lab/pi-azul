@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./login.css";
+import "./Login.css";
 import { supabase } from "../supabase";
 
 function Login() {
@@ -79,7 +79,7 @@ function Login() {
 
       <nav className="navbar">
         <div className="nav-title">
-          LEILÃO
+          Geek Loot
         </div>
       </nav>
 
