@@ -16,6 +16,14 @@ function Perfil() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  // Novos estados para o endereço
+  const [rua, setRua] = useState("");
+  const [cep, setCep] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [nCasa, setNCasa] = useState("");
+
   const [carregando, setCarregando] = useState(false);
 
   // =========================
@@ -37,10 +45,7 @@ function Perfil() {
           .maybeSingle();
 
         if (userDataByEmail) {
-          setUsuarioAtual(userDataByEmail);
-          setNome(userDataByEmail.nome_usuario || "");
-          setEmail(userDataByEmail.email || "");
-
+          preencherDadosUsuario(userDataByEmail);
           carregarProdutosDoUsuario(userDataByEmail.id);
           return;
         }
@@ -52,15 +57,11 @@ function Perfil() {
           .maybeSingle();
 
         if (userDataById) {
-          setUsuarioAtual(userDataById);
-          setNome(userDataById.nome_usuario || "");
-          setEmail(userDataById.email || "");
-
+          preencherDadosUsuario(userDataById);
           carregarProdutosDoUsuario(userDataById.id);
           return;
         }
       } else {
-        // Se não houver sessão ativa, limpa os estados para evitar o fallback indevido
         setUsuarioAtual(null);
         setProdutos([]);
         return;
@@ -78,16 +79,23 @@ function Perfil() {
 
       if (dataUsuarios && dataUsuarios.length > 0) {
         const usuario = dataUsuarios[0];
-
-        setUsuarioAtual(usuario);
-        setNome(usuario.nome_usuario || "");
-        setEmail(usuario.email || "");
-
+        preencherDadosUsuario(usuario);
         carregarProdutosDoUsuario(usuario.id);
       }
     } catch (err) {
       console.error("Erro inesperado ao carregar perfil:", err);
     }
+  }
+
+  function preencherDadosUsuario(usuario) {
+    setUsuarioAtual(usuario);
+    setNome(usuario.nome_usuario || "");
+    setEmail(usuario.email || "");
+    setRua(usuario.rua || "");
+    setCep(usuario.cep || "");
+    setCidade(usuario.cidade || "");
+    setEstado(usuario.estado || "");
+    setNCasa(usuario.n_casa || "");
   }
 
   // =========================
@@ -180,8 +188,7 @@ function Perfil() {
 
   const handleAbrirModal = () => {
     if (usuarioAtual) {
-      setNome(usuarioAtual.nome_usuario || "");
-      setEmail(usuarioAtual.email || "");
+      preencherDadosUsuario(usuarioAtual);
       setSenha("");
     }
     setModalAberto(true);
@@ -205,16 +212,32 @@ function Perfil() {
 
     setCarregando(true);
 
-    const payload = {
-      nome_usuario: nome.trim(),
-      email: email.trim().toLowerCase(),
-    };
-
-    if (senha.trim() !== "") {
-      payload.senha = senha.trim();
-    }
-
     try {
+      // 1. Se o usuário informou uma nova senha, atualiza via Supabase Auth
+      if (senha.trim() !== "") {
+        const { error: authError } = await supabase.auth.updateUser({
+          password: senha.trim(),
+        });
+
+        if (authError) {
+          console.error("Erro ao atualizar senha no Supabase Auth:", authError);
+          alert(`Erro ao atualizar senha: ${authError.message}`);
+          setCarregando(false);
+          return;
+        }
+      }
+
+      // 2. Monta o payload sem a propriedade 'senha' para a tabela 'usuarios'
+      const payload = {
+        nome_usuario: nome.trim(),
+        email: email.trim().toLowerCase(),
+        rua: rua.trim(),
+        cep: cep.trim(),
+        cidade: cidade.trim(),
+        estado: estado.trim(),
+        n_casa: nCasa.trim(),
+      };
+
       const { data, error } = await supabase
         .from("usuarios")
         .update(payload)
@@ -236,9 +259,7 @@ function Perfil() {
 
       const usuarioAtualizado = data[0];
 
-      setUsuarioAtual(usuarioAtualizado);
-      setNome(usuarioAtualizado.nome_usuario || "");
-      setEmail(usuarioAtualizado.email || "");
+      preencherDadosUsuario(usuarioAtualizado);
       setSenha("");
 
       setModalAberto(false);
@@ -491,6 +512,67 @@ function Perfil() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+              </div>
+
+              {/* ENDEREÇO */}
+              <div className="form-row" style={{ display: "flex", gap: "10px" }}>
+                <div className="form-group" style={{ flex: 3 }}>
+                  <label htmlFor="rua">Rua</label>
+                  <input
+                    type="text"
+                    id="rua"
+                    value={rua}
+                    onChange={(e) => setRua(e.target.value)}
+                    placeholder="Nome da rua/avenida"
+                  />
+                </div>
+
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="nCasa">Número</label>
+                  <input
+                    type="text"
+                    id="nCasa"
+                    value={nCasa}
+                    onChange={(e) => setNCasa(e.target.value)}
+                    placeholder="123"
+                  />
+                </div>
+              </div>
+
+              <div className="form-row" style={{ display: "flex", gap: "10px" }}>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="cep">CEP</label>
+                  <input
+                    type="text"
+                    id="cep"
+                    value={cep}
+                    onChange={(e) => setCep(e.target.value)}
+                    placeholder="00000-000"
+                  />
+                </div>
+
+                <div className="form-group" style={{ flex: 2 }}>
+                  <label htmlFor="cidade">Cidade</label>
+                  <input
+                    type="text"
+                    id="cidade"
+                    value={cidade}
+                    onChange={(e) => setCidade(e.target.value)}
+                    placeholder="Sua cidade"
+                  />
+                </div>
+
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="estado">Estado (UF)</label>
+                  <input
+                    type="text"
+                    id="estado"
+                    value={estado}
+                    onChange={(e) => setEstado(e.target.value)}
+                    placeholder="Ex: SP"
+                    maxLength={2}
+                  />
+                </div>
               </div>
 
               <div className="form-group">
