@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./login.css";
+import "./Login.css";
 import { supabase } from "../supabase";
 
 function Login() {

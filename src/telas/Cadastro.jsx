@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./cadastro.css";
+import "./Cadastro.css";
 import { supabase } from "../supabase";
 
 function Cadastro() {
