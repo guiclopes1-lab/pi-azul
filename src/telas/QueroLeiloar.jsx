@@ -72,7 +72,7 @@ function PublicarProduto() {
       console.log("USUÁRIO AUTH:", user.id);
 
       // =========================
-      // 2. BUSCAR USUÁRIO NA TABELA
+      // 2. BUSCAR ID NA TABELA usuarios
       // =========================
 
       const { data: usuario, error: usuarioError } = await supabase
@@ -99,7 +99,7 @@ function PublicarProduto() {
         return;
       }
 
-      console.log("ID DO USUÁRIO NA TABELA usuarios:", usuario.id);
+      console.log("ID NA TABELA usuarios:", usuario.id);
 
       // =========================
       // 3. CALCULAR DATA DE FIM
@@ -116,7 +116,7 @@ function PublicarProduto() {
       const { data, error } = await supabase
         .from("produtos")
         .insert({
-          // ID DA TABELA usuarios
+          // ESTE É O PONTO IMPORTANTE
           id_usuario: usuario.id,
 
           nome: nome.trim(),
@@ -143,7 +143,7 @@ function PublicarProduto() {
       }
 
       console.log("PRODUTO PUBLICADO:", data);
-      console.log("PRODUTO PERTENCE AO USUÁRIO:", usuario.id);
+      console.log("DONO DO PRODUTO:", usuario.id);
 
       // =========================
       // 5. SUCESSO
@@ -175,6 +175,7 @@ function PublicarProduto() {
       setSalvando(false);
     }
   };
+
 
   return (
     <div className="publicar-page">

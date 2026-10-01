@@ -771,3 +771,35 @@
     flex-direction: column;
   }
 }
+/* =========================
+   AVISO DO VENDEDOR
+========================= */
+
+.seller-warning {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  background-color: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* =========================
+   BOTÃO DESABILITADO DO VENDEDOR
+========================= */
+
+.seller-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+.seller-disabled:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--title);
+}
