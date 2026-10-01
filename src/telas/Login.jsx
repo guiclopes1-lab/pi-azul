@@ -3,7 +3,6 @@ import "./login.css";
 import { supabase } from "../supabase";
 
 function Login() {
-
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -12,9 +11,11 @@ function Login() {
     if (message.includes("Invalid login credentials")) {
       return "E-mail ou senha incorretos.";
     }
+
     if (message.includes("Email not confirmed")) {
       return "Por favor, confirme seu e-mail antes de fazer login.";
     }
+
     return `Erro ao fazer login: ${message}`;
   }
 
@@ -22,12 +23,12 @@ function Login() {
     event.preventDefault();
 
     if (isLoading) return;
+
     setIsLoading(true);
 
     try {
       const emailLimpo = email.trim().toLowerCase();
       const senhaLimpa = senha;
-
 
       // LOGIN
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -45,26 +46,25 @@ function Login() {
       }
 
       console.log("LOGIN REALIZADO:", data);
+      console.log("ID DO USUÁRIO:", data.user.id);
 
       // CONSULTA NO BANCO
       const { data: usuario, error: dbError } = await supabase
         .from("usuarios")
         .select("*")
-        .eq("auth_user_id", user.id)
+        .eq("auth_user_id", data.user.id)
         .single();
-
 
       if (dbError) {
         console.error("ERRO BANCO:", dbError);
-        alert(`Erro ao buscar usuários: ${dbError.message}`);
+        alert(`Erro ao buscar usuário: ${dbError.message}`);
         return;
       }
 
-      console.log("USUARIOS:", usuarios);
+      console.log("USUARIO:", usuario);
 
       // LOGIN + CONSULTA OK
       window.location.href = "/";
-
     } catch (err) {
       console.error("ERRO INESPERADO:", err);
       alert("Ocorreu um erro inesperado.");
@@ -73,10 +73,8 @@ function Login() {
     }
   };
 
-
   return (
     <div className="login-page">
-
       <div className="glow-bg"></div>
 
       <nav className="navbar">
@@ -86,14 +84,11 @@ function Login() {
       </nav>
 
       <div className="login-container">
-
         <form
           className="login-form"
           onSubmit={handleSubmit}
         >
-
           <div className="center-text">
-
             <h2>
               Acessar Conta
             </h2>
@@ -101,19 +96,14 @@ function Login() {
             <p className="subtitle">
               Bem-vindo de volta. Insira seus dados.
             </p>
-
           </div>
 
-          {/* EMAIL */}
-
           <div className="form-group">
-
             <label htmlFor="identificador">
               E-mail
             </label>
 
             <div className="input-wrapper">
-
               <input
                 type="email"
                 id="identificador"
@@ -123,21 +113,15 @@ function Login() {
                 required
                 placeholder="seu@email.com"
               />
-
             </div>
-
           </div>
 
-          {/* SENHA */}
-
           <div className="form-group">
-
             <label htmlFor="senha">
               Senha
             </label>
 
             <div className="input-wrapper">
-
               <input
                 type="password"
                 id="senha"
@@ -147,38 +131,30 @@ function Login() {
                 required
                 placeholder="••••••••"
               />
-
             </div>
-
           </div>
-
-          {/* BOTÃO */}
 
           <button
             type="submit"
             className="btn-entrar"
             disabled={isLoading}
-            style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? "not-allowed" : "pointer" }}
+            style={{
+              opacity: isLoading ? 0.7 : 1,
+              cursor: isLoading ? "not-allowed" : "pointer"
+            }}
           >
             {isLoading ? "Entrando..." : "Entrar"}
           </button>
 
-          {/* CADASTRO */}
-
           <div className="register-link">
-
             Não tem uma conta?{" "}
 
             <a href="/cadastro">
               Cadastre-se
             </a>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }
