@@ -79,7 +79,7 @@ function Login() {
 
       <nav className="navbar">
         <div className="nav-title">
-          LEILÃO
+          Geek Loot
         </div>
       </nav>
 
