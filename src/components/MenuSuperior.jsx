@@ -18,6 +18,9 @@ function MenuSuperior() {
                 <strong>Seu lance, Seu tesouro geek</strong>
             </div>
 
+            <br />
+
+
             <nav>
                 <ul>
 
