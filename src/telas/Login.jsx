@@ -47,9 +47,12 @@ function Login() {
       console.log("LOGIN REALIZADO:", data);
 
       // CONSULTA NO BANCO
-      const { data: usuarios, error: dbError } = await supabase
+      const { data: usuario, error: dbError } = await supabase
         .from("usuarios")
-        .select("*");
+        .select("*")
+        .eq("auth_user_id", user.id)
+        .single();
+
 
       if (dbError) {
         console.error("ERRO BANCO:", dbError);

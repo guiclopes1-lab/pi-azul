@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./cadastro.css";
-import { supabase } from '../supabase'
+import { supabase } from "../supabase";
 
 function Cadastro() {
   const [isLoading, setIsLoading] = useState(false);
+
   const [form, setForm] = useState({
     nome_usuario: "",
     cpf: "",
@@ -17,100 +18,129 @@ function Cadastro() {
     n_casa: "",
   });
 
-  function traduzirErroAuth(message) {
+  function traduzirErroAuth(message = "") {
+    const erro = message.toLowerCase();
+
     if (
-      message.includes("security purposes") ||
-      message.includes("rate limit") ||
-      message.includes("too many requests")
+      erro.includes("rate limit") ||
+      erro.includes("too many requests") ||
+      erro.includes("security purposes")
     ) {
-      return "Muitas tentativas em pouco tempo. Aguarde alguns segundos e tente novamente.";
+      return "Muitas tentativas de cadastro. Aguarde alguns minutos antes de tentar novamente.";
     }
-    if (message.includes("already registered") || message.includes("User already registered")) {
+
+    if (
+      erro.includes("already registered") ||
+      erro.includes("user already registered")
+    ) {
       return "Este e-mail já está cadastrado. Tente fazer login.";
     }
-    if (message.includes("Password should be") || message.includes("weak password")) {
+
+    if (
+      erro.includes("password should be") ||
+      erro.includes("weak password")
+    ) {
       return "Senha fraca. Use pelo menos 10 caracteres com maiúscula, minúscula, número e símbolo.";
     }
-    if (message.includes("invalid email") || message.includes("Unable to validate email")) {
+
+    if (
+      erro.includes("invalid email") ||
+      erro.includes("unable to validate email")
+    ) {
       return "Endereço de e-mail inválido.";
     }
+
     return `Erro ao criar conta: ${message}`;
   }
+
   async function criarlogin() {
-    // Proteção contra múltiplos cliques
     if (isLoading) return;
+
     setIsLoading(true);
 
     try {
-      // Limpa os dados antes de enviar
       const nomeUsuario = form.nome_usuario.trim();
       const email = form.email.trim().toLowerCase();
       const rua = form.rua.trim();
       const cidade = form.cidade.trim();
       const estado = form.estado.trim();
+      const numeroCasa = form.n_casa.trim();
 
       const cpf = form.cpf.replace(/\D/g, "");
       const telefone = form.telefone.replace(/\D/g, "");
       const cep = form.cep.replace(/\D/g, "");
 
-      // 1. Cria a conta no Supabase Auth
+      // 1. Cria o usuário no Supabase Auth
       const { data: authData, error: authError } =
         await supabase.auth.signUp({
-          email: email,
+          email,
           password: form.senha,
         });
 
       if (authError) {
-        console.error("Erro Auth:", authError);
         alert(traduzirErroAuth(authError.message));
         return;
       }
 
-      // 2. Pega o ID do usuário
-      // Se user for null sem erro, o e-mail já existe mas não foi confirmado
       const userId = authData.user?.id;
+
       if (!userId) {
-        alert(
-          "Este e-mail já está cadastrado mas ainda não foi confirmado. " +
-          "Verifique sua caixa de entrada ou tente fazer login."
-        );
+        alert("Não foi possível obter o usuário criado.");
         return;
       }
 
-      // 3. Salva os dados limpos na tabela usuarios
-      const { data, error } = await supabase
+      // 2. Salva os dados do usuário na tabela usuarios
+      const { error: dbError } = await supabase
         .from("usuarios")
         .insert([
           {
-            id: userId,
+            auth_user_id: userId,
             nome_usuario: nomeUsuario,
-            cpf: cpf,
-            telefone: telefone,
-            email: email,
-            senha: form.senha,
-            cep: cep,
-            rua: rua,
-            estado: estado,
-            cidade: cidade,
-            n_casa: form.n_casa.trim(),
+            cpf,
+            telefone,
+            email,
+            cep,
+            rua,
+            estado,
+            cidade,
+            n_casa: numeroCasa,
           },
-        ])
-        .select();
+        ]);
 
-      if (error) {
-        console.error("Erro ao salvar usuário:", error);
-        alert(`Erro ao salvar dados: ${error.message}`);
+      if (dbError) {
+        console.error("Erro ao salvar usuário:", dbError);
+
+        alert(`Erro ao salvar os dados do usuário: ${dbError.message}`);
         return;
       }
 
-      console.log("Usuário criado:", data);
-      alert("Cadastro realizado com sucesso!");
+      // 3. Cadastro concluído
+      alert(
+        "Cadastro realizado com sucesso! " +
+        "Verifique seu e-mail para confirmar a conta."
+      );
 
+      // Limpa o formulário após o cadastro
+      setForm({
+        nome_usuario: "",
+        cpf: "",
+        telefone: "",
+        email: "",
+        senha: "",
+        cep: "",
+        rua: "",
+        estado: "",
+        cidade: "",
+        n_casa: "",
+      });
+    } catch (error) {
+      console.error("Erro inesperado:", error);
+      alert("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
-      // Sempre libera o botão, mesmo se ocorrer um erro inesperado
       setIsLoading(false);
     }
   }
+
   function formatarCPF(value) {
     return value
       .replace(/\D/g, "")
@@ -140,6 +170,7 @@ function Cadastro() {
       .slice(0, 8)
       .replace(/(\d{5})(\d)/, "$1-$2");
   }
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -163,12 +194,10 @@ function Cadastro() {
     }));
   }
 
-
   async function handleSubmit(event) {
     event.preventDefault();
     await criarlogin();
   }
-
 
   return (
     <div className="cadastro-page">
@@ -188,8 +217,6 @@ function Cadastro() {
           onSubmit={handleSubmit}
         >
 
-
-
           {/* TÍTULO */}
           <div className="center-text">
             <h2>Criar Conta</h2>
@@ -198,7 +225,6 @@ function Cadastro() {
               Campos com * são obrigatórios
             </p>
           </div>
-
 
           {/* USUÁRIO E CPF */}
           <div className="form-group-row">
@@ -215,7 +241,6 @@ function Cadastro() {
                 onChange={handleChange}
                 placeholder="Escolha um usuário"
               />
-
             </div>
 
             <div className="form-group">
@@ -232,7 +257,6 @@ function Cadastro() {
                 pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
                 title="O CPF deve estar no formato 000.000.000-00"
               />
-
             </div>
 
           </div>
@@ -244,17 +268,17 @@ function Cadastro() {
               <label htmlFor="telefone">
                 Telefone *
               </label>
+
               <input
                 type="tel"
                 name="telefone"
                 value={form.telefone}
                 onChange={handleChange}
                 required
-                placeholder=" (00) 00000-0000"
-                pattern="\(\d{2}\)\s?\d{4, 5}-\d{4}"
+                placeholder="(00) 00000-0000"
+                pattern="\([0-9]{2}\) ?[0-9]{4,5}-[0-9]{4}"
                 title="O telefone deve estar no formato (00) 00000-0000 ou (00) 0000-0000"
               />
-
             </div>
 
             <div className="form-group">
@@ -270,7 +294,6 @@ function Cadastro() {
                 required
                 placeholder="Ex: Email@email.com"
               />
-
             </div>
 
           </div>
@@ -294,7 +317,6 @@ function Cadastro() {
               title="A senha deve ter pelo menos 10 caracteres, incluir letra maiúscula, letra minúscula, número e caractere especial."
             />
 
-
           </div>
 
           {/* ENDEREÇO */}
@@ -304,7 +326,7 @@ function Cadastro() {
               Endereço completo *
             </legend>
 
-            {/* RUA E CEP */}
+            {/* RUA, NÚMERO E CEP */}
             <div className="form-group-row">
 
               <div className="form-group flex-2">
@@ -322,11 +344,15 @@ function Cadastro() {
                   pattern="[\p{L}0-9\s,.'\-]{3,}"
                   title="A rua deve conter pelo menos 3 caracteres."
                 />
+
               </div>
-              <div className="form-group flex-2 ">
+
+              <div className="form-group flex-2">
+
                 <label htmlFor="numero">
                   Número
                 </label>
+
                 <input
                   type="text"
                   name="n_casa"
@@ -336,6 +362,7 @@ function Cadastro() {
                 />
 
               </div>
+
               <div className="form-group flex-1">
 
                 <label htmlFor="cep">
@@ -347,7 +374,7 @@ function Cadastro() {
                   name="cep"
                   value={form.cep}
                   onChange={handleChange}
-                  placeholder="387"
+                  placeholder="00000-000"
                 />
 
               </div>
@@ -370,6 +397,7 @@ function Cadastro() {
                   onChange={handleChange}
                   placeholder="Anta Gorda"
                 />
+
               </div>
 
               <div className="form-group">
@@ -415,12 +443,13 @@ function Cadastro() {
             type="submit"
             className="btn-finalizar"
             disabled={isLoading}
-            style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? "not-allowed" : "pointer" }}
+            style={{
+              opacity: isLoading ? 0.7 : 1,
+              cursor: isLoading ? "not-allowed" : "pointer",
+            }}
           >
             {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
           </button>
-
-
 
         </form>
 
