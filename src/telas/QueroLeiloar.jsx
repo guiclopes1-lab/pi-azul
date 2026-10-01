@@ -10,7 +10,6 @@ function PublicarProduto() {
   const [incremento, setIncremento] = useState("50");
   const [imagem, setImagem] = useState("");
 
-  // Duração escolhida pelo vendedor
   const [duracao, setDuracao] = useState("24");
 
   const [salvando, setSalvando] = useState(false);
@@ -47,113 +46,136 @@ function PublicarProduto() {
       return;
     }
 
-    // =========================
-    // CALCULAR DATA DE FIM
-    // =========================
-
-    const dataFim = new Date(
-      Date.now() + Number(duracao) * 60 * 60 * 1000
-    );
-
     setSalvando(true);
 
-    // =========================
-    // OBTER USUÁRIO ATUAL
-    // =========================
+    try {
+      // =========================
+      // 1. PEGAR USUÁRIO LOGADO
+      // =========================
 
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError || !authData?.user) {
-      setErro("Você precisa estar logado para publicar um produto.");
-      setSalvando(false);
-      return;
-    }
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    let userId = null;
-    const { data: userDataByEmail } = await supabase
-      .from("usuarios")
-      .select("id")
-      .eq("email", authData.user.email)
-      .maybeSingle();
+      if (authError) {
+        console.error("Erro ao obter usuário:", authError);
+        setErro("Não foi possível identificar sua conta.");
+        return;
+      }
 
-    if (userDataByEmail) {
-      userId = userDataByEmail.id;
-    } else {
-      const { data: userDataById } = await supabase
+      if (!user) {
+        setErro("Você precisa estar logado para publicar um produto.");
+        return;
+      }
+
+      console.log("USUÁRIO AUTH:", user.id);
+
+      // =========================
+      // 2. BUSCAR ID NA TABELA usuarios
+      // =========================
+
+      const { data: usuario, error: usuarioError } = await supabase
         .from("usuarios")
         .select("id")
-        .eq("id", authData.user.id)
-        .maybeSingle();
-      if (userDataById) userId = userDataById.id;
-    }
+        .eq("auth_user_id", user.id)
+        .single();
 
-    if (!userId) {
-      setErro("Usuário não encontrado. Faça login novamente.");
+      if (usuarioError) {
+        console.error("Erro ao buscar usuário:", usuarioError);
+
+        setErro(
+          "Seu cadastro não foi encontrado na tabela de usuários."
+        );
+
+        return;
+      }
+
+      if (!usuario) {
+        setErro(
+          "Seu cadastro não foi encontrado na tabela de usuários."
+        );
+
+        return;
+      }
+
+      console.log("ID NA TABELA usuarios:", usuario.id);
+
+      // =========================
+      // 3. CALCULAR DATA DE FIM
+      // =========================
+
+      const dataFim = new Date(
+        Date.now() + Number(duracao) * 60 * 60 * 1000
+      );
+
+      // =========================
+      // 4. CRIAR PRODUTO
+      // =========================
+
+      const { data, error } = await supabase
+        .from("produtos")
+        .insert({
+          // ESTE É O PONTO IMPORTANTE
+          id_usuario: usuario.id,
+
+          nome: nome.trim(),
+          descricao: descricao.trim(),
+          categoria: categoria,
+          preco: Number(preco),
+          lance_atual: Number(preco),
+          incremento: Number(incremento) || 50,
+          imagem: imagem.trim(),
+          disponibilidade: true,
+          data_fim: dataFim.toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Erro ao publicar produto:", error);
+
+        setErro(
+          "Não foi possível publicar o produto: " + error.message
+        );
+
+        return;
+      }
+
+      console.log("PRODUTO PUBLICADO:", data);
+      console.log("DONO DO PRODUTO:", usuario.id);
+
+      // =========================
+      // 5. SUCESSO
+      // =========================
+
+      setSucesso(
+        `Produto publicado! O leilão terminará em ${dataFim.toLocaleString(
+          "pt-BR"
+        )}.`
+      );
+
+      // =========================
+      // 6. LIMPAR FORMULÁRIO
+      // =========================
+
+      setNome("");
+      setDescricao("");
+      setCategoria("");
+      setPreco("");
+      setIncremento("50");
+      setImagem("");
+      setDuracao("24");
+
+    } catch (error) {
+      console.error("Erro inesperado:", error);
+      setErro("Ocorreu um erro inesperado. Tente novamente.");
+
+    } finally {
       setSalvando(false);
-      return;
     }
-
-    // =========================
-    // SALVAR NO SUPABASE
-    // =========================
-
-    const { data, error } = await supabase
-      .from("produtos")
-      .insert({
-        id_usuario: userId,
-        nome: nome.trim(),
-        descricao: descricao.trim(),
-
-        // categoria escolhida
-        categoria: categoria,
-
-        // preço inicial
-        preco: Number(preco),
-
-        // primeiro lance começa no preço
-        lance_atual: Number(preco),
-
-        // incremento mínimo
-        incremento: Number(incremento) || 50,
-
-        imagem: imagem.trim(),
-
-        // produto disponível
-        disponibilidade: true,
-
-        // data/hora de encerramento
-        data_fim: dataFim.toISOString(),
-      })
-      .select()
-      .single();
-
-    setSalvando(false);
-
-    if (error) {
-      console.error("Erro ao publicar produto:", error);
-      setErro("Não foi possível publicar o produto: " + error.message);
-      return;
-    }
-
-    console.log("Produto publicado:", data);
-
-    setSucesso(
-      `Produto publicado! O leilão terminará em ${dataFim.toLocaleString(
-        "pt-BR"
-      )}.`
-    );
-
-    // =========================
-    // LIMPAR FORMULÁRIO
-    // =========================
-
-    setNome("");
-    setDescricao("");
-    setCategoria("");
-    setPreco("");
-    setIncremento("50");
-    setImagem("");
-    setDuracao("24");
   };
+
 
   return (
     <div className="publicar-page">
@@ -166,10 +188,6 @@ function PublicarProduto() {
         </p>
 
         <form onSubmit={publicarProduto} className="produto-form">
-
-          {/* =========================
-              NOME
-          ========================= */}
 
           <div className="form-group">
             <label htmlFor="nome">
@@ -185,10 +203,6 @@ function PublicarProduto() {
             />
           </div>
 
-          {/* =========================
-              CATEGORIA
-          ========================= */}
-
           <div className="form-group">
             <label htmlFor="categoria">
               Categoria
@@ -203,22 +217,15 @@ function PublicarProduto() {
                 Selecione uma categoria
               </option>
 
-            
               <option value="card">
                 CARD
               </option>
 
-              
               <option value="figure">
-                FIGURE  
+                FIGURE
               </option>
-
             </select>
           </div>
-
-          {/* =========================
-              DESCRIÇÃO
-          ========================= */}
 
           <div className="form-group">
             <label htmlFor="descricao">
@@ -234,13 +241,7 @@ function PublicarProduto() {
             />
           </div>
 
-          {/* =========================
-              PREÇO E INCREMENTO
-          ========================= */}
-
           <div className="form-row">
-
-            {/* PREÇO INICIAL */}
 
             <div className="form-group">
               <label htmlFor="preco">
@@ -261,8 +262,6 @@ function PublicarProduto() {
                 />
               </div>
             </div>
-
-            {/* INCREMENTO */}
 
             <div className="form-group">
               <label htmlFor="incremento">
@@ -285,10 +284,6 @@ function PublicarProduto() {
 
           </div>
 
-          {/* =========================
-              IMAGEM
-          ========================= */}
-
           <div className="form-group">
             <label htmlFor="imagem">
               Imagem
@@ -306,10 +301,6 @@ function PublicarProduto() {
               Você pode colocar a URL da imagem.
             </small>
           </div>
-
-          {/* =========================
-              DURAÇÃO DO LEILÃO
-          ========================= */}
 
           <div className="leilao-box">
 
@@ -374,10 +365,6 @@ function PublicarProduto() {
 
           </div>
 
-          {/* =========================
-              MENSAGENS
-          ========================= */}
-
           {erro && (
             <div className="mensagem erro">
               {erro}
@@ -389,10 +376,6 @@ function PublicarProduto() {
               {sucesso}
             </div>
           )}
-
-          {/* =========================
-              BOTÃO
-          ========================= */}
 
           <button
             type="submit"
