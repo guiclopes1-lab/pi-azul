@@ -205,7 +205,7 @@ function Cadastro() {
       {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-title">
-          LEILÃO
+          Geek Loot
         </div>
       </nav>
 
@@ -439,7 +439,9 @@ function Cadastro() {
           </div>
 
           {/* BOTÃO */}
-          <button
+          
+          <a href="./login.jsx"><button
+          
             type="submit"
             className="btn-finalizar"
             disabled={isLoading}
@@ -449,7 +451,8 @@ function Cadastro() {
             }}
           >
             {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
-          </button>
+            
+          </button></a>
 
         </form>
 
