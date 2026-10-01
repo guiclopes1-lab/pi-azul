@@ -58,12 +58,48 @@ function PublicarProduto() {
     setSalvando(true);
 
     // =========================
+    // OBTER USUÁRIO ATUAL
+    // =========================
+
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData?.user) {
+      setErro("Você precisa estar logado para publicar um produto.");
+      setSalvando(false);
+      return;
+    }
+
+    let userId = null;
+    const { data: userDataByEmail } = await supabase
+      .from("usuarios")
+      .select("id")
+      .eq("email", authData.user.email)
+      .maybeSingle();
+
+    if (userDataByEmail) {
+      userId = userDataByEmail.id;
+    } else {
+      const { data: userDataById } = await supabase
+        .from("usuarios")
+        .select("id")
+        .eq("id", authData.user.id)
+        .maybeSingle();
+      if (userDataById) userId = userDataById.id;
+    }
+
+    if (!userId) {
+      setErro("Usuário não encontrado. Faça login novamente.");
+      setSalvando(false);
+      return;
+    }
+
+    // =========================
     // SALVAR NO SUPABASE
     // =========================
 
     const { data, error } = await supabase
       .from("produtos")
       .insert({
+        id_usuario: userId,
         nome: nome.trim(),
         descricao: descricao.trim(),
 
