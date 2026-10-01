@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import "./perfil.css";
+import "./Perfil.css";
 import { supabase } from "../supabase";
 
 const DEFAULT_AVATAR =
