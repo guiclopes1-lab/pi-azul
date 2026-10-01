@@ -59,6 +59,11 @@ function Perfil() {
           carregarProdutosDoUsuario(userDataById.id);
           return;
         }
+      } else {
+        // Se não houver sessão ativa, limpa os estados para evitar o fallback indevido
+        setUsuarioAtual(null);
+        setProdutos([]);
+        return;
       }
 
       const { data: dataUsuarios, error: errorUsuarios } = await supabase
@@ -257,6 +262,8 @@ function Perfil() {
 
       if (error) throw error;
 
+      setUsuarioAtual(null);
+      setProdutos([]);
       window.location.href = "/";
     } catch (err) {
       console.error("Erro ao sair:", err);
