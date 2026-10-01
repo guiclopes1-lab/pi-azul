@@ -589,6 +589,8 @@ function Produto() {
               </p>
             )}
 
+            <br /><br />
+
             <p className="product-desc">
               {produto.descricao ||
                 "Sem descrição disponível."}
