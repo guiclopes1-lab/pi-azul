@@ -173,7 +173,7 @@ function PublicarProduto() {
               </option>
 
               
-              <option value="card">
+              <option value="figure">
                 FIGURE  
               </option>
 
