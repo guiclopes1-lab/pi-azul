@@ -9,7 +9,6 @@ function PublicarProduto() {
   const [preco, setPreco] = useState("");
   const [incremento, setIncremento] = useState("50");
   const [imagem, setImagem] = useState("");
-
   const [duracao, setDuracao] = useState("24");
 
   const [salvando, setSalvando] = useState(false);
@@ -59,33 +58,44 @@ function PublicarProduto() {
       } = await supabase.auth.getUser();
 
       if (authError) {
-        console.error("Erro ao obter usuário:", authError);
-        setErro("Não foi possível identificar sua conta.");
+        console.error("ERRO AUTH:", authError);
+
+        setErro(
+          "Sua sessão não está ativa. Faça login novamente."
+        );
+
         return;
       }
 
       if (!user) {
-        setErro("Você precisa estar logado para publicar um produto.");
+        setErro(
+          "Você precisa estar logado para publicar um produto."
+        );
+
         return;
       }
 
-      console.log("USUÁRIO AUTH:", user.id);
+      console.log("AUTH USER ID:", user.id);
+      console.log("AUTH EMAIL:", user.email);
 
       // =========================
-      // 2. BUSCAR ID NA TABELA usuarios
+      // 2. BUSCAR USUÁRIO DA TABELA
       // =========================
-
       const { data: usuario, error: usuarioError } = await supabase
         .from("usuarios")
         .select("id")
         .eq("auth_user_id", user.id)
         .single();
 
+
       if (usuarioError) {
-        console.error("Erro ao buscar usuário:", usuarioError);
+        console.error(
+          "ERRO AO BUSCAR USUARIO:",
+          usuarioError
+        );
 
         setErro(
-          "Seu cadastro não foi encontrado na tabela de usuários."
+          "Sua conta do sistema não está vinculada ao Supabase Auth."
         );
 
         return;
@@ -93,13 +103,14 @@ function PublicarProduto() {
 
       if (!usuario) {
         setErro(
-          "Seu cadastro não foi encontrado na tabela de usuários."
+          "Seu cadastro não foi encontrado na tabela usuarios."
         );
 
         return;
       }
 
-      console.log("ID NA TABELA usuarios:", usuario.id);
+      console.log("USUARIO BANCO:", usuario);
+      console.log("ID USUARIO:", usuario.id);
 
       // =========================
       // 3. CALCULAR DATA DE FIM
@@ -113,37 +124,51 @@ function PublicarProduto() {
       // 4. CRIAR PRODUTO
       // =========================
 
-      const { data, error } = await supabase
+      const {
+        data: produto,
+        error: produtoError,
+      } = await supabase
         .from("produtos")
         .insert({
-          // ESTE É O PONTO IMPORTANTE
           id_usuario: usuario.id,
 
           nome: nome.trim(),
           descricao: descricao.trim(),
           categoria: categoria,
+
           preco: Number(preco),
           lance_atual: Number(preco),
+
           incremento: Number(incremento) || 50,
+
           imagem: imagem.trim(),
+
           disponibilidade: true,
+
           data_fim: dataFim.toISOString(),
         })
         .select()
         .single();
 
-      if (error) {
-        console.error("Erro ao publicar produto:", error);
+      if (produtoError) {
+        console.error(
+          "ERRO AO CRIAR PRODUTO:",
+          produtoError
+        );
 
         setErro(
-          "Não foi possível publicar o produto: " + error.message
+          "Não foi possível publicar o produto: " +
+          produtoError.message
         );
 
         return;
       }
 
-      console.log("PRODUTO PUBLICADO:", data);
-      console.log("DONO DO PRODUTO:", usuario.id);
+      console.log("PRODUTO CRIADO:", produto);
+      console.log(
+        "PRODUTO PERTENCE AO USUARIO:",
+        usuario.id
+      );
 
       // =========================
       // 5. SUCESSO
@@ -168,14 +193,19 @@ function PublicarProduto() {
       setDuracao("24");
 
     } catch (error) {
-      console.error("Erro inesperado:", error);
-      setErro("Ocorreu um erro inesperado. Tente novamente.");
+      console.error(
+        "ERRO INESPERADO:",
+        error
+      );
+
+      setErro(
+        "Ocorreu um erro inesperado. Tente novamente."
+      );
 
     } finally {
       setSalvando(false);
     }
   };
-
 
   return (
     <div className="publicar-page">
@@ -187,7 +217,10 @@ function PublicarProduto() {
           Cadastre o produto e escolha quanto tempo o leilão ficará aberto.
         </p>
 
-        <form onSubmit={publicarProduto} className="produto-form">
+        <form
+          onSubmit={publicarProduto}
+          className="produto-form"
+        >
 
           <div className="form-group">
             <label htmlFor="nome">
@@ -323,33 +356,13 @@ function PublicarProduto() {
                 value={duracao}
                 onChange={(e) => setDuracao(e.target.value)}
               >
-                <option value="1">
-                  1 hora
-                </option>
-
-                <option value="6">
-                  6 horas
-                </option>
-
-                <option value="12">
-                  12 horas
-                </option>
-
-                <option value="24">
-                  1 dia
-                </option>
-
-                <option value="48">
-                  2 dias
-                </option>
-
-                <option value="72">
-                  3 dias
-                </option>
-
-                <option value="168">
-                  7 dias
-                </option>
+                <option value="1">1 hora</option>
+                <option value="6">6 horas</option>
+                <option value="12">12 horas</option>
+                <option value="24">1 dia</option>
+                <option value="48">2 dias</option>
+                <option value="72">3 dias</option>
+                <option value="168">7 dias</option>
               </select>
             </div>
 
