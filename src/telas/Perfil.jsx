@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import "./perfil.css";
 import { supabase } from "../supabase";
 
@@ -28,7 +29,6 @@ function Perfil() {
         error: authError,
       } = await supabase.auth.getUser();
 
-      // Usuário autenticado
       if (!authError && authUser) {
         const { data: userDataByEmail } = await supabase
           .from("usuarios")
@@ -45,7 +45,6 @@ function Perfil() {
           return;
         }
 
-        // Tenta pelo ID
         const { data: userDataById } = await supabase
           .from("usuarios")
           .select("*")
@@ -62,17 +61,13 @@ function Perfil() {
         }
       }
 
-      // Fallback
       const { data: dataUsuarios, error: errorUsuarios } = await supabase
         .from("usuarios")
         .select("*")
         .limit(1);
 
       if (errorUsuarios) {
-        console.error(
-          "Erro ao carregar usuários:",
-          errorUsuarios
-        );
+        console.error("Erro ao carregar usuários:", errorUsuarios);
         return;
       }
 
@@ -86,10 +81,7 @@ function Perfil() {
         carregarProdutosDoUsuario(usuario.id);
       }
     } catch (err) {
-      console.error(
-        "Erro inesperado ao carregar perfil:",
-        err
-      );
+      console.error("Erro inesperado ao carregar perfil:", err);
     }
   }
 
@@ -107,11 +99,7 @@ function Perfil() {
       .order("id", { ascending: false });
 
     if (error) {
-      console.error(
-        "Erro ao carregar produtos:",
-        error
-      );
-
+      console.error("Erro ao carregar produtos:", error);
       setProdutos([]);
       return;
     }
@@ -131,12 +119,9 @@ function Perfil() {
     try {
       const file = event.target.files?.[0];
 
-      if (!file || !usuarioAtual?.id) {
-        return;
-      }
+      if (!file || !usuarioAtual?.id) return;
 
       const fileExt = file.name.split(".").pop();
-
       const fileName = `${usuarioAtual.id}-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
@@ -147,15 +132,8 @@ function Perfil() {
         });
 
       if (uploadError) {
-        console.error(
-          "Erro no upload:",
-          uploadError
-        );
-
-        alert(
-          `Erro ao fazer upload da foto: ${uploadError.message}`
-        );
-
+        console.error("Erro no upload:", uploadError);
+        alert(`Erro ao fazer upload da foto: ${uploadError.message}`);
         return;
       }
 
@@ -174,15 +152,8 @@ function Perfil() {
         .select();
 
       if (updateError) {
-        console.error(
-          "Erro ao atualizar foto:",
-          updateError
-        );
-
-        alert(
-          `Erro ao salvar foto: ${updateError.message}`
-        );
-
+        console.error("Erro ao atualizar foto:", updateError);
+        alert(`Erro ao salvar foto: ${updateError.message}`);
         return;
       }
 
@@ -190,19 +161,11 @@ function Perfil() {
         setUsuarioAtual(data[0]);
       } else {
         setUsuarioAtual((prev) =>
-          prev
-            ? {
-                ...prev,
-                avatar_url: publicUrl,
-              }
-            : null
+          prev ? { ...prev, avatar_url: publicUrl } : null
         );
       }
     } catch (err) {
-      console.error(
-        "Erro inesperado no upload:",
-        err
-      );
+      console.error("Erro inesperado no upload:", err);
     }
   };
 
@@ -216,7 +179,6 @@ function Perfil() {
       setEmail(usuarioAtual.email || "");
       setSenha("");
     }
-
     setModalAberto(true);
   };
 
@@ -255,15 +217,8 @@ function Perfil() {
         .select();
 
       if (error) {
-        console.error(
-          "Erro ao atualizar perfil:",
-          error
-        );
-
-        alert(
-          `Erro ao atualizar perfil: ${error.message}`
-        );
-
+        console.error("Erro ao atualizar perfil:", error);
+        alert(`Erro ao atualizar perfil: ${error.message}`);
         return;
       }
 
@@ -271,7 +226,6 @@ function Perfil() {
         alert(
           "Nenhum dado foi atualizado. Verifique as permissões do Supabase."
         );
-
         return;
       }
 
@@ -286,11 +240,7 @@ function Perfil() {
 
       alert("Perfil atualizado com sucesso!");
     } catch (err) {
-      console.error(
-        "Erro inesperado:",
-        err
-      );
-
+      console.error("Erro inesperado:", err);
       alert("Erro inesperado ao salvar perfil.");
     } finally {
       setCarregando(false);
@@ -305,17 +255,11 @@ function Perfil() {
     try {
       const { error } = await supabase.auth.signOut();
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       window.location.href = "/";
     } catch (err) {
-      console.error(
-        "Erro ao sair:",
-        err
-      );
-
+      console.error("Erro ao sair:", err);
       alert("Erro ao encerrar sessão.");
     }
   };
@@ -326,22 +270,12 @@ function Perfil() {
 
   const enderecoFormatado = usuarioAtual ? (
     <>
-      {usuarioAtual.rua
-        ? `${usuarioAtual.rua}, `
-        : "Rua não informada, "}
-
+      {usuarioAtual.rua ? `${usuarioAtual.rua}, ` : "Rua não informada, "}
       {usuarioAtual.n_casa || "S/N"}
-
       <br />
-
       {usuarioAtual.cidade || "Cidade não informada"}
-
-      {usuarioAtual.estado
-        ? ` / ${usuarioAtual.estado}`
-        : ""}
-
+      {usuarioAtual.estado ? ` / ${usuarioAtual.estado}` : ""}
       <br />
-
       CEP: {usuarioAtual.cep || "00000-000"}
     </>
   ) : (
@@ -354,20 +288,11 @@ function Perfil() {
 
   return (
     <main className="profile-container">
-
-      {/* =========================
-          PERFIL
-      ========================= */}
-
+      {/* PERFIL */}
       <section className="profile-header">
-
         <div className="avatar-container">
-
           <img
-            src={
-              usuarioAtual?.avatar_url ||
-              DEFAULT_AVATAR
-            }
+            src={usuarioAtual?.avatar_url || DEFAULT_AVATAR}
             alt="Foto de perfil"
             className="profile-img"
           />
@@ -384,9 +309,7 @@ function Perfil() {
             type="button"
             className="btn-change-photo"
             title="Alterar foto"
-            onClick={() =>
-              fileInputRef.current?.click()
-            }
+            onClick={() => fileInputRef.current?.click()}
           >
             <svg
               width="17"
@@ -397,30 +320,19 @@ function Perfil() {
               strokeWidth="2"
             >
               <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-
-              <circle
-                cx="12"
-                cy="13"
-                r="3"
-              />
+              <circle cx="12" cy="13" r="3" />
             </svg>
           </button>
-
         </div>
 
         <div className="profile-details">
-
           <h1 className="user-name">
-            {usuarioAtual?.nome_usuario ||
-              "Carregando..."}
+            {usuarioAtual?.nome_usuario || "Carregando..."}
           </h1>
 
           <div className="info-box">
-
             <div className="info-group">
-
               <span className="info-label">
-
                 <svg
                   className="info-icon"
                   viewBox="0 0 24 24"
@@ -429,27 +341,19 @@ function Perfil() {
                   strokeWidth="2"
                 >
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
-
                 E-mail
-
               </span>
-
               <p className="info-value">
-                {usuarioAtual?.email ||
-                  "email@exemplo.com"}
+                {usuarioAtual?.email || "email@exemplo.com"}
               </p>
-
             </div>
 
             <hr className="divider" />
 
             <div className="info-group">
-
               <span className="info-label">
-
                 <svg
                   className="info-icon"
                   viewBox="0 0 24 24"
@@ -458,28 +362,15 @@ function Perfil() {
                   strokeWidth="2"
                 >
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-
-                  <circle
-                    cx="12"
-                    cy="10"
-                    r="3"
-                  />
+                  <circle cx="12" cy="10" r="3" />
                 </svg>
-
                 Endereço Cadastrado
-
               </span>
-
-              <p className="info-value">
-                {enderecoFormatado}
-              </p>
-
+              <p className="info-value">{enderecoFormatado}</p>
             </div>
-
           </div>
 
           <div className="actions">
-
             <button
               type="button"
               className="btn btn-primary"
@@ -495,146 +386,74 @@ function Perfil() {
             >
               Sair
             </button>
-
           </div>
-
         </div>
-
       </section>
 
-
-      {/* =========================
-          PRODUTOS
-      ========================= */}
-
+      {/* PRODUTOS */}
       <section className="products-section">
-
         <div className="products-header">
-
-          <h2 className="section-title">
-            Seus Produtos Cadastrados
-          </h2>
-
+          <h2 className="section-title">Seus Produtos Cadastrados</h2>
           <span className="products-count">
-            {produtos.length} produto
-            {produtos.length !== 1 ? "s" : ""}
+            {produtos.length} produto{produtos.length !== 1 ? "s" : ""}
           </span>
-
         </div>
 
         {produtos.length === 0 ? (
-
           <div className="empty-products">
-
-            <div className="empty-icon">
-              📦
-            </div>
-
-            <h3>
-              Nenhum produto cadastrado
-            </h3>
-
-            <p>
-              Você ainda não cadastrou nenhum produto.
-            </p>
-
+            <div className="empty-icon">📦</div>
+            <h3>Nenhum produto cadastrado</h3>
+            <p>Você ainda não cadastrou nenhum produto.</p>
           </div>
-
         ) : (
-
           <div className="products-grid">
-
             {produtos.map((produto) => (
-
-              <article
+              <Link
+                to={`/produto/${produto.id}`}
                 key={produto.id}
                 className="product-card"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-
                 <div className="product-image-container">
-
                   <img
-                    src={
-                      produto.imagem ||
-                      "https://picsum.photos/400/300"
-                    }
-                    alt={
-                      produto.nome ||
-                      "Produto"
-                    }
+                    src={produto.imagem || "https://picsum.photos/400/300"}
+                    alt={produto.nome || "Produto"}
                     className="product-img"
                   />
-
                 </div>
 
                 <div className="product-info">
-
-                  <h3 className="product-title">
-                    {produto.nome}
-                  </h3>
+                  <h3 className="product-title">{produto.nome}</h3>
 
                   <p className="product-price">
-
                     {produto.lance_atual
-                      ? `R$ ${Number(
-                          produto.lance_atual
-                        ).toFixed(2)}`
-                      : `R$ ${Number(
-                          produto.preco || 0
-                        ).toFixed(2)}`}
-
+                      ? `R$ ${Number(produto.lance_atual).toFixed(2)}`
+                      : `R$ ${Number(produto.preco || 0).toFixed(2)}`}
                   </p>
 
                   {produto.descricao && (
-
                     <p className="product-description">
                       {produto.descricao}
                     </p>
-
                   )}
 
                   <span className="product-tag">
                     <span>🏷</span>
                     Preço
                   </span>
-
                 </div>
-
-              </article>
-
+              </Link>
             ))}
-
           </div>
-
         )}
-
       </section>
 
-
-      {/* =========================
-          MODAL EDITAR PERFIL
-      ========================= */}
-
+      {/* MODAL EDITAR PERFIL */}
       {modalAberto && (
-
-        <div
-          className="modal-overlay"
-          onClick={handleFecharModal}
-        >
-
-          <div
-            className="modal-content"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
-
+        <div className="modal-overlay" onClick={handleFecharModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-
-              <h2>
-                Editar Perfil
-              </h2>
-
+              <h2>Editar Perfil</h2>
               <button
                 type="button"
                 className="modal-close"
@@ -642,70 +461,43 @@ function Perfil() {
               >
                 &times;
               </button>
-
             </div>
 
-            <form
-              onSubmit={handleSalvarPerfil}
-              className="modal-form"
-            >
-
+            <form onSubmit={handleSalvarPerfil} className="modal-form">
               <div className="form-group">
-
-                <label htmlFor="nome_usuario">
-                  Nome de Usuário
-                </label>
-
+                <label htmlFor="nome_usuario">Nome de Usuário</label>
                 <input
                   type="text"
                   id="nome_usuario"
                   value={nome}
-                  onChange={(e) =>
-                    setNome(e.target.value)
-                  }
+                  onChange={(e) => setNome(e.target.value)}
                   required
                 />
-
               </div>
 
               <div className="form-group">
-
-                <label htmlFor="email">
-                  E-mail
-                </label>
-
+                <label htmlFor="email">E-mail</label>
                 <input
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-
               </div>
 
               <div className="form-group">
-
-                <label htmlFor="senha">
-                  Nova Senha (opcional)
-                </label>
-
+                <label htmlFor="senha">Nova Senha (opcional)</label>
                 <input
                   type="password"
                   id="senha"
                   placeholder="Deixe em branco para manter a atual"
                   value={senha}
-                  onChange={(e) =>
-                    setSenha(e.target.value)
-                  }
+                  onChange={(e) => setSenha(e.target.value)}
                 />
-
               </div>
 
               <div className="modal-actions">
-
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -720,21 +512,13 @@ function Perfil() {
                   className="btn btn-primary"
                   disabled={carregando}
                 >
-                  {carregando
-                    ? "Salvando..."
-                    : "Salvar Alterações"}
+                  {carregando ? "Salvando..." : "Salvar Alterações"}
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       )}
-
     </main>
   );
 }
