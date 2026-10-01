@@ -239,6 +239,18 @@ function Perfil() {
     }
   };
 
+  const handleSair = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      // Redireciona para a página inicial após sair (ajuste a rota se necessário)
+      window.location.href = "/"; 
+    } catch (err) {
+      console.error("Erro ao sair:", err);
+      alert("Erro ao encerrar sessão.");
+    }
+  };
+
   const enderecoFormatado = usuarioAtual ? (
     <>
       {usuarioAtual.rua ? `${usuarioAtual.rua}, ` : "Rua não informada, "}
@@ -331,7 +343,7 @@ function Perfil() {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={() => supabase.auth.signOut()}
+              onClick={handleSair}
             >
               Sair
             </button>
