@@ -188,19 +188,27 @@
 /* =========================
    CATEGORIA
 ========================= */
-
 .category {
   margin-bottom: 10px;
   padding: 6px 12px;
 
-  background: var(--text);
-  color: var(--bg);
+  color: #ffffff;
 
   border-radius: 999px;
 
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+/* FIGURE = vermelho */
+.category-figure {
+  background-color: var(--category-figure);
+}
+
+/* CARD = laranja */
+.category-card {
+  background-color: var(--category-card);
 }
 
 /* =========================
@@ -231,7 +239,6 @@
 /* =========================
    BOTÃO VEJA MAIS
 ========================= */
-
 .btn-more {
   width: 100%;
 
@@ -240,8 +247,8 @@
   margin-top: auto;
   padding: 12px;
 
-  background: var(--text);
-  color: var(--bg);
+  background: var(--btn-more-bg);
+  color: var(--btn-more-text);
 
   border-radius: var(--radius-sm);
 
@@ -255,6 +262,7 @@
 .btn-more:hover {
   opacity: 0.8;
 }
+
 /* =========================
    PAGINAÇÃO
 ========================= */

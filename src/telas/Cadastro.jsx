@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Cadastro.css";
 import { supabase } from "../supabase";
 
 function Cadastro() {
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     nome_usuario: "",
     cpf: "",
@@ -117,8 +118,10 @@ function Cadastro() {
       // 3. Cadastro concluído
       alert(
         "Cadastro realizado com sucesso! " +
-        "Verifique seu e-mail para confirmar a conta."
+        "Agora faça login para acessar sua conta."
       );
+
+      navigate("/login");
 
       // Limpa o formulário após o cadastro
       setForm({
@@ -439,9 +442,7 @@ function Cadastro() {
           </div>
 
           {/* BOTÃO */}
-          
-          <a href="./login.jsx"><button
-          
+          <button
             type="submit"
             className="btn-finalizar"
             disabled={isLoading}
@@ -451,8 +452,8 @@ function Cadastro() {
             }}
           >
             {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
-            
-          </button></a>
+          </button>
+
 
         </form>
 
