@@ -312,7 +312,7 @@ function Cadastro() {
               value={form.senha}
               onChange={handleChange}
               required
-              placeholder="Crie uma senha forte"
+              placeholder="Mínimo 10 caracteres e símbolos (!@#$)"
               pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,}"
               title="A senha deve ter pelo menos 10 caracteres, incluir letra maiúscula, letra minúscula, número e caractere especial."
             />

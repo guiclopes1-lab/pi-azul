@@ -457,7 +457,7 @@ function Perfil() {
 
         {leiloesParticipando.length === 0 ? (
           <div className="empty-products">
-            <div className="empty-icon">🎯</div>
+            <div className="empty-icon"></div>
             <h3>Nenhuma participação ativa</h3>
             <p>Você não está participando de nenhum leilão no momento.</p>
           </div>
@@ -489,7 +489,7 @@ function Perfil() {
                   </p>
 
                   <span className="product-tag active-tag" style={{ color: "#3b82f6", borderColor: "#3b82f6" }}>
-                    <span>📈</span>
+                    <span></span>
                     Na disputa
                   </span>
                 </div>
@@ -510,7 +510,7 @@ function Perfil() {
 
         {leiloesAtivos.length === 0 ? (
           <div className="empty-products">
-            <div className="empty-icon">⏳</div>
+            <div className="empty-icon"></div>
             <h3>Nenhum leilão ativo</h3>
             <p>Nenhum leilão ativo no momento.</p>
           </div>
@@ -542,7 +542,7 @@ function Perfil() {
                   </p>
 
                   <span className="product-tag active-tag">
-                    <span>🔥</span>
+                    <span></span>
                     Ativo
                   </span>
                 </div>
