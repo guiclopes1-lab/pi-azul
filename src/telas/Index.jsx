@@ -1,28 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
-import './Vitrine.css'
-import { supabase } from '../supabase'
-import { useState, useEffect } from 'react';
+import './Vitrine.css';
+import { supabase } from '../supabase';
 import { Link } from "react-router-dom";
 
 function Vitrine() {
-    const [produtos, setProdutos] = useState([])
+    const [produtos, setProdutos] = useState([]);
+    const [pagina, setPagina] = useState(1);
+    const [totalProdutos, setTotalProdutos] = useState(0);
+
+    const produtosPorPagina = 20;
+
     async function CarregaProduto() {
-        const { data, error } = await supabase
+        const inicio = (pagina - 1) * produtosPorPagina;
+        const fim = inicio + produtosPorPagina - 1;
+
+        const { data, error, count } = await supabase
             .from('produtos')
-            .select();
+            .select('*', { count: 'exact' })
+            .range(inicio, fim);
 
         if (error) {
             console.error('Erro ao carregar produtos:', error);
             return;
         }
 
-        setProdutos(data);
+        setProdutos(data || []);
+        setTotalProdutos(count || 0);
     }
+
     useEffect(() => {
         CarregaProduto();
-    }, []);
+    }, [pagina]);
 
+    const totalPaginas = Math.ceil(totalProdutos / produtosPorPagina);
 
     return (
         <div>
@@ -57,6 +68,7 @@ function Vitrine() {
                                     })
                                     : "R$ 0,00"}
                             </p>
+
                             <Link
                                 to={`/produto/${produto.id}`}
                                 className="btn-more"
@@ -64,16 +76,35 @@ function Vitrine() {
                                 Veja mais
                             </Link>
 
-
                         </div>
-
                     </div>
                 ))}
-
             </div>
 
+            {/* PAGINAÇÃO */}
+            <div className="pagination">
 
+                <button
+                    onClick={() => setPagina(pagina - 1)}
+                    disabled={pagina === 1}
+                >
+                    Anterior
+                </button>
+
+                <span>
+                    Página {pagina} de {totalPaginas}
+                </span>
+
+                <button
+                    onClick={() => setPagina(pagina + 1)}
+                    disabled={pagina === totalPaginas}
+                >
+                    Próxima
+                </button>
+
+            </div>
         </div>
-    )
+    );
 }
+
 export default Vitrine;
