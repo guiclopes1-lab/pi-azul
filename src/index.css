@@ -30,7 +30,15 @@
 
   --button-hover-bg: #e5e5e5;
   --button-hover-text: #111111;
+  --btn-more-bg: #f97316;
+  --btn-more-text: #ffffff;
+  --btn-more-border: #f97316;
 
+  --btn-more-hover-bg: #ea580c;
+  --btn-more-hover-text: #ffffff;
+  --btn-more-hover-border: #ea580c;
+  --category-figure: #ef4444;
+  --category-card: #f97316;
   /* =========================
      FONTE
   ========================= */

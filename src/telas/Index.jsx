@@ -51,7 +51,14 @@ function Vitrine() {
 
                         <div className="card-info">
 
-                            <p className="category">
+                            <p
+                                className={`category ${produto.categoria?.toLowerCase() === "figure"
+                                        ? "category-figure"
+                                        : produto.categoria?.toLowerCase() === "card"
+                                            ? "category-card"
+                                            : ""
+                                    }`}
+                            >
                                 {produto.categoria}
                             </p>
 

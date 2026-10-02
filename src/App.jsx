@@ -33,7 +33,6 @@ function AppContent() {
         <Route path="/" element={<Vitrine />} />
         <Route path="/login" element={<Login />} />
         <Route path="/produto/:id" element={<Produto />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/comofunciona" element={<ComoFunciona />} />
         <Route path="/perfil" element={<Perfil />} />
