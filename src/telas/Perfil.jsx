@@ -7,7 +7,8 @@ const DEFAULT_AVATAR =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0aec0'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
 
 function Perfil() {
-  const [produtos, setProdutos] = useState([]);
+  const [leiloesAtivos, setLeiloesAtivos] = useState([]);
+  const [leiloesParticipando, setLeiloesParticipando] = useState([]);
   const [usuarioAtual, setUsuarioAtual] = useState(null);
 
   const fileInputRef = useRef(null);
@@ -46,7 +47,8 @@ function Perfil() {
 
         if (userDataByEmail) {
           preencherDadosUsuario(userDataByEmail);
-          carregarProdutosDoUsuario(userDataByEmail.id);
+          carregarLeiloesAtivos(userDataByEmail.id);
+          carregarLeiloesParticipando(authUser.id);
           return;
         }
 
@@ -58,12 +60,14 @@ function Perfil() {
 
         if (userDataById) {
           preencherDadosUsuario(userDataById);
-          carregarProdutosDoUsuario(userDataById.id);
+          carregarLeiloesAtivos(userDataById.id);
+          carregarLeiloesParticipando(authUser.id);
           return;
         }
       } else {
         setUsuarioAtual(null);
-        setProdutos([]);
+        setLeiloesAtivos([]);
+        setLeiloesParticipando([]);
         return;
       }
 
@@ -80,7 +84,10 @@ function Perfil() {
       if (dataUsuarios && dataUsuarios.length > 0) {
         const usuario = dataUsuarios[0];
         preencherDadosUsuario(usuario);
-        carregarProdutosDoUsuario(usuario.id);
+        carregarLeiloesAtivos(usuario.id);
+        
+        let licitanteId = localStorage.getItem("licitante_id");
+        carregarLeiloesParticipando(licitanteId || usuario.id);
       }
     } catch (err) {
       console.error("Erro inesperado ao carregar perfil:", err);
@@ -99,25 +106,45 @@ function Perfil() {
   }
 
   // =========================
-  // CARREGAR PRODUTOS
+  // CARREGAR PRODUTOS E LEILÕES
   // =========================
 
-  async function carregarProdutosDoUsuario(userId) {
+  async function carregarLeiloesParticipando(userId) {
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from("produtos")
+      .select("*")
+      .eq("id_licitante", userId.toString())
+      .eq("disponibilidade", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao carregar leilões que participa:", error);
+      setLeiloesParticipando([]);
+      return;
+    }
+
+    setLeiloesParticipando(data || []);
+  }
+
+  async function carregarLeiloesAtivos(userId) {
     if (!userId) return;
 
     const { data, error } = await supabase
       .from("produtos")
       .select("*")
       .eq("id_usuario", userId)
+      .eq("disponibilidade", true)
       .order("id", { ascending: false });
 
     if (error) {
-      console.error("Erro ao carregar produtos:", error);
-      setProdutos([]);
+      console.error("Erro ao carregar leilões ativos:", error);
+      setLeiloesAtivos([]);
       return;
     }
 
-    setProdutos(data || []);
+    setLeiloesAtivos(data || []);
   }
 
   useEffect(() => {
@@ -284,7 +311,8 @@ function Perfil() {
       if (error) throw error;
 
       setUsuarioAtual(null);
-      setProdutos([]);
+      setLeiloesAtivos([]);
+      setLeiloesParticipando([]);
       window.location.href = "/";
     } catch (err) {
       console.error("Erro ao sair:", err);
@@ -418,56 +446,104 @@ function Perfil() {
         </div>
       </section>
 
-      {/* PRODUTOS */}
-      <section className="products-section">
+      {/* LEILÕES PARTICIPANDO */}
+      <section className="products-section participating-auctions-section" style={{ marginBottom: "24px" }}>
         <div className="products-header">
-          <h2 className="section-title">Seus Produtos Cadastrados</h2>
+          <h2 className="section-title">Leilões que Participo</h2>
           <span className="products-count">
-            {produtos.length} produto{produtos.length !== 1 ? "s" : ""}
+            {leiloesParticipando.length} leil{leiloesParticipando.length !== 1 ? "ões" : "ão"}
           </span>
         </div>
 
-        {produtos.length === 0 ? (
+        {leiloesParticipando.length === 0 ? (
           <div className="empty-products">
-            <div className="empty-icon">📦</div>
-            <h3>Nenhum produto cadastrado</h3>
-            <p>Você ainda não cadastrou nenhum produto.</p>
+            <div className="empty-icon">🎯</div>
+            <h3>Nenhuma participação ativa</h3>
+            <p>Você não está participando de nenhum leilão no momento.</p>
           </div>
         ) : (
           <div className="products-grid">
-            {produtos.map((produto) => (
+            {leiloesParticipando.map((leilao) => (
               <Link
-                to={`/produto/${produto.id}`}
-                key={produto.id}
-                className="product-card"
+                to={`/produto/${leilao.id}`}
+                key={leilao.id}
+                className="product-card active-auction-card"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <div className="product-image-container">
                   <img
-                    src={produto.imagem || "https://picsum.photos/400/300"}
-                    alt={produto.nome || "Produto"}
+                    src={leilao.imagem || "https://picsum.photos/400/300"}
+                    alt={leilao.nome || "Produto"}
                     className="product-img"
                   />
+                  <div className="status-badge" style={{ backgroundColor: "#3b82f6" }}>Maior Lance!</div>
                 </div>
 
                 <div className="product-info">
-                  <h3 className="product-title">{produto.nome}</h3>
+                  <h3 className="product-title">{leilao.nome}</h3>
 
                   <p className="product-price">
-                    {produto.lance_atual
-                      ? `R$ ${Number(produto.lance_atual).toFixed(2)}`
-                      : `R$ ${Number(produto.preco || 0).toFixed(2)}`}
+                    {leilao.lance_atual
+                      ? `R$ ${Number(leilao.lance_atual).toFixed(2)}`
+                      : `R$ ${Number(leilao.preco || 0).toFixed(2)}`}
                   </p>
 
-                  {produto.descricao && (
-                    <p className="product-description">
-                      {produto.descricao}
-                    </p>
-                  )}
+                  <span className="product-tag active-tag" style={{ color: "#3b82f6", borderColor: "#3b82f6" }}>
+                    <span>📈</span>
+                    Na disputa
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
 
-                  <span className="product-tag">
-                    <span>🏷</span>
-                    Preço
+      {/* LEILÕES ATIVOS */}
+      <section className="products-section active-auctions-section">
+        <div className="products-header">
+          <h2 className="section-title">Meus Leilões Ativos</h2>
+          <span className="products-count">
+            {leiloesAtivos.length} leil{leiloesAtivos.length !== 1 ? "ões" : "ão"}
+          </span>
+        </div>
+
+        {leiloesAtivos.length === 0 ? (
+          <div className="empty-products">
+            <div className="empty-icon">⏳</div>
+            <h3>Nenhum leilão ativo</h3>
+            <p>Nenhum leilão ativo no momento.</p>
+          </div>
+        ) : (
+          <div className="products-grid">
+            {leiloesAtivos.map((leilao) => (
+              <Link
+                to={`/produto/${leilao.id}`}
+                key={leilao.id}
+                className="product-card active-auction-card"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div className="product-image-container">
+                  <img
+                    src={leilao.imagem || "https://picsum.photos/400/300"}
+                    alt={leilao.nome || "Produto"}
+                    className="product-img"
+                  />
+                  <div className="status-badge">Em Andamento</div>
+                </div>
+
+                <div className="product-info">
+                  <h3 className="product-title">{leilao.nome}</h3>
+
+                  <p className="product-price">
+                    {leilao.lance_atual
+                      ? `R$ ${Number(leilao.lance_atual).toFixed(2)}`
+                      : `R$ ${Number(leilao.preco || 0).toFixed(2)}`}
+                  </p>
+
+                  <span className="product-tag active-tag">
+                    <span>🔥</span>
+                    Ativo
                   </span>
                 </div>
               </Link>

@@ -414,6 +414,7 @@
 .product-image-container {
   width: 100%;
   height: 220px;
+  position: relative;
 
   padding: 10px;
 
@@ -507,6 +508,42 @@
   font-weight: 700;
 }
 
+
+/* =========================
+   LEILÕES ATIVOS (STYLES)
+========================= */
+
+.active-auctions-section {
+  border-color: var(--accent);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+}
+
+.active-auction-card {
+  border: 2px solid var(--accent);
+}
+
+.active-auction-card:hover {
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #10b981;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.active-tag {
+  color: #ef4444;
+  border-color: #ef4444;
+}
 
 /* =========================
    SEM PRODUTOS
