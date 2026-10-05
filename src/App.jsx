@@ -5,7 +5,7 @@ import Login from "./telas/Login";
 import Cadastro from "./telas/Cadastro";
 import ComoFunciona from "./telas/ComoFunciona";
 import Perfil from "./telas/Perfil";
-import Vitrine from "./telas/index"
+import Vitrine from "./telas/Index"
 import QueroLeiloar from "./telas/QueroLeiloar"
 import { supabase } from './supabase'
 
