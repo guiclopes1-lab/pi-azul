@@ -783,6 +783,7 @@ function Produto() {
 
             <h2 className="product-title">
               {produto.nome}
+              <br /><br /><br />
             </h2>
 
             {produto.categoria && (
