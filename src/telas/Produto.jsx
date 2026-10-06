@@ -28,21 +28,31 @@ async function obterIdLicitante() {
 function Produto() {
   const { id } = useParams();
 
-  // Produto vindo do banco
+  // =========================
+  // PRODUTO
+  // =========================
+
   const [produto, setProduto] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erroCarregar, setErroCarregar] = useState("");
 
-  // Quem sou eu
-  const [meuId, setMeuId] = useState(null);
+  // =========================
+  // USUÁRIO
+  // =========================
 
-  // Verifica se sou o dono do produto
+  const [meuId, setMeuId] = useState(null);
   const [souDono, setSouDono] = useState(false);
 
-  // Carrossel
+  // =========================
+  // CARROSSEL
+  // =========================
+
   const [slideAtual, setSlideAtual] = useState(0);
 
-  // Lance
+  // =========================
+  // LANCE
+  // =========================
+
   const [lanceAtual, setLanceAtual] = useState(0);
   const [modalAberto, setModalAberto] = useState(false);
   const [pixAberto, setPixAberto] = useState(false);
@@ -50,7 +60,10 @@ function Produto() {
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
 
-  // Timer
+  // =========================
+  // TIMER
+  // =========================
+
   const [encerrado, setEncerrado] = useState(false);
 
   const [tempoRestante, setTempoRestante] = useState({
@@ -76,7 +89,9 @@ function Produto() {
       setCarregando(true);
       setErroCarregar("");
 
-      let query = supabase.from("produtos").select("*");
+      let query = supabase
+        .from("produtos")
+        .select("*");
 
       if (id) {
         query = query.eq("id", id);
@@ -87,16 +102,31 @@ function Produto() {
           .limit(1);
       }
 
-      const { data, error } = await query.maybeSingle();
+      const { data, error } =
+        await query.maybeSingle();
 
       if (error) {
-        console.error("Erro ao carregar produto:", error);
-        setErroCarregar("Não foi possível carregar o produto.");
+        console.error(
+          "Erro ao carregar produto:",
+          error
+        );
+
+        setErroCarregar(
+          "Não foi possível carregar o produto."
+        );
       } else if (!data) {
-        setErroCarregar("Produto não encontrado.");
+        setErroCarregar(
+          "Produto não encontrado."
+        );
       } else {
         setProduto(data);
-        setLanceAtual(Number(data.lance_atual ?? data.preco));
+
+        setLanceAtual(
+          Number(
+            data.lance_atual ?? data.preco ?? 0
+          )
+        );
+
         setSlideAtual(0);
       }
 
@@ -127,15 +157,21 @@ function Produto() {
           return;
         }
 
-        // Busca o usuário logado na tabela usuarios
-        const { data: usuario, error } = await supabase
+        const {
+          data: usuario,
+          error,
+        } = await supabase
           .from("usuarios")
           .select("id")
           .eq("email", user.email)
           .maybeSingle();
 
         if (error) {
-          console.error("Erro ao verificar dono:", error);
+          console.error(
+            "Erro ao verificar dono:",
+            error
+          );
+
           setSouDono(false);
           return;
         }
@@ -145,13 +181,17 @@ function Produto() {
           return;
         }
 
-        // Compara o dono do produto com o usuário logado
         const dono =
-          String(usuario.id) === String(produto.id_usuario);
+          String(usuario.id) ===
+          String(produto.id_usuario);
 
         setSouDono(dono);
       } catch (error) {
-        console.error("Erro ao verificar proprietário:", error);
+        console.error(
+          "Erro ao verificar proprietário:",
+          error
+        );
+
         setSouDono(false);
       }
     }
@@ -178,10 +218,12 @@ function Produto() {
       return;
     }
 
-    const alvo = new Date(dataFim).getTime();
+    const alvo =
+      new Date(dataFim).getTime();
 
     function atualizar() {
-      const diferenca = alvo - Date.now();
+      const diferenca =
+        alvo - Date.now();
 
       if (diferenca <= 0) {
         setTempoRestante({
@@ -196,22 +238,37 @@ function Produto() {
       }
 
       const h = Math.floor(
-        diferenca / (1000 * 60 * 60)
+        diferenca /
+          (1000 * 60 * 60)
       );
 
       const m = Math.floor(
-        (diferenca % (1000 * 60 * 60)) /
+        (diferenca %
+          (1000 * 60 * 60)) /
           (1000 * 60)
       );
 
       const s = Math.floor(
-        (diferenca % (1000 * 60)) / 1000
+        (diferenca %
+          (1000 * 60)) /
+          1000
       );
 
       setTempoRestante({
-        horas: String(h).padStart(2, "0"),
-        minutos: String(m).padStart(2, "0"),
-        segundos: String(s).padStart(2, "0"),
+        horas: String(h).padStart(
+          2,
+          "0"
+        ),
+
+        minutos: String(m).padStart(
+          2,
+          "0"
+        ),
+
+        segundos: String(s).padStart(
+          2,
+          "0"
+        ),
       });
 
       setEncerrado(false);
@@ -219,15 +276,19 @@ function Produto() {
       return false;
     }
 
-    if (atualizar()) return;
+    if (atualizar()) {
+      return;
+    }
 
-    const interval = setInterval(() => {
-      if (atualizar()) {
-        clearInterval(interval);
-      }
-    }, 1000);
+    const interval =
+      setInterval(() => {
+        if (atualizar()) {
+          clearInterval(interval);
+        }
+      }, 1000);
 
-    return () => clearInterval(interval);
+    return () =>
+      clearInterval(interval);
   }, [dataFim]);
 
   // =========================
@@ -235,19 +296,30 @@ function Produto() {
   // =========================
 
   useEffect(() => {
-    if (!encerrado || !produto?.id) return;
+    if (
+      !encerrado ||
+      !produto?.id
+    ) {
+      return;
+    }
 
     async function recarregar() {
-      const { data } = await supabase
-        .from("produtos")
-        .select("*")
-        .eq("id", produto.id)
-        .maybeSingle();
+      const { data } =
+        await supabase
+          .from("produtos")
+          .select("*")
+          .eq("id", produto.id)
+          .maybeSingle();
 
       if (data) {
         setProduto(data);
+
         setLanceAtual(
-          Number(data.lance_atual ?? data.preco)
+          Number(
+            data.lance_atual ??
+              data.preco ??
+              0
+          )
         );
       }
     }
@@ -263,19 +335,25 @@ function Produto() {
     encerrado &&
     !!meuId &&
     !!produto?.id_licitante &&
-    produto.id_licitante === meuId;
+    String(produto.id_licitante) ===
+      String(meuId);
 
   const estouVencendo =
     !encerrado &&
     !!meuId &&
     !!produto?.id_licitante &&
-    produto.id_licitante === meuId;
+    String(produto.id_licitante) ===
+      String(meuId);
 
-  useEffect(() => {
-    if (euVenci) {
-      setPixAberto(true);
-    }
-  }, [euVenci]);
+  // =========================
+  // IMPORTANTE:
+  // NÃO ABRIMOS MAIS O PIX
+  // QUANDO O TEMPO ACABA
+  // =========================
+
+  // O Pix agora é aberto
+  // diretamente após o lance
+  // ser confirmado com sucesso.
 
   // =========================
   // IMAGENS
@@ -292,13 +370,17 @@ function Produto() {
 
   const anterior = () => {
     setSlideAtual((s) =>
-      s === 0 ? imagens.length - 1 : s - 1
+      s === 0
+        ? imagens.length - 1
+        : s - 1
     );
   };
 
   const proximo = () => {
     setSlideAtual((s) =>
-      s === imagens.length - 1 ? 0 : s + 1
+      s === imagens.length - 1
+        ? 0
+        : s + 1
     );
   };
 
@@ -310,14 +392,14 @@ function Produto() {
     produto?.incremento ?? 50
   );
 
-  const lanceMinimo = lanceAtual + incremento;
+  const lanceMinimo =
+    lanceAtual + incremento;
 
   const formatarValor = (valor) =>
-    Number(valor)
+    Number(valor || 0)
       .toFixed(2)
       .replace(".", ",");
 
-  // AGORA O DONO TAMBÉM É CONSIDERADO INDISPONÍVEL
   const indisponivel =
     produto?.disponibilidade === false ||
     encerrado ||
@@ -328,7 +410,6 @@ function Produto() {
   // =========================
 
   const abrirModal = () => {
-    // Impede o próprio dono de dar lance
     if (souDono) {
       return;
     }
@@ -343,10 +424,18 @@ function Produto() {
   };
 
   const fecharModal = () => {
+    if (salvando) {
+      return;
+    }
+
     setModalAberto(false);
     setNovoLance("");
     setErro("");
   };
+
+  // =========================
+  // FECHAR PIX
+  // =========================
 
   const fecharPix = () => {
     setPixAberto(false);
@@ -357,22 +446,33 @@ function Produto() {
   // =========================
 
   const confirmarLance = async () => {
-    // SEGURANÇA EXTRA:
-    // mesmo que alguém consiga abrir o modal,
-    // o dono não poderá salvar o lance.
+    // Segurança extra:
+    // vendedor nunca pode dar lance
     if (souDono) {
       setErro(
         "Você não pode dar lance no seu próprio produto."
       );
+
       return;
     }
 
-    const valor = Number(novoLance);
+    // Verifica se o leilão terminou
+    if (encerrado) {
+      setErro(
+        "O leilão já terminou."
+      );
+
+      return;
+    }
+
+    const valor =
+      Number(novoLance);
 
     if (!meuId) {
       setErro(
         "Aguarde um instante e tente novamente."
       );
+
       return;
     }
 
@@ -380,19 +480,34 @@ function Produto() {
       setErro(
         "Digite um valor para o novo lance."
       );
+
       return;
     }
 
-    if (valor < lanceMinimo) {
+    if (
+      !Number.isFinite(valor)
+    ) {
+      setErro(
+        "Digite um valor válido."
+      );
+
+      return;
+    }
+
+    if (
+      valor < lanceMinimo
+    ) {
       setErro(
         `O novo lance deve ser de no mínimo R$ ${formatarValor(
           lanceMinimo
         )}.`
       );
+
       return;
     }
 
     setSalvando(true);
+    setErro("");
 
     let query = supabase
       .from("produtos")
@@ -405,6 +520,7 @@ function Produto() {
         `lance_atual.is.null,lance_atual.lt.${valor}`
       );
 
+    // Impede lance depois do horário
     if (produto.data_fim) {
       query = query.gt(
         "data_fim",
@@ -412,9 +528,16 @@ function Produto() {
       );
     }
 
-    const { data, error } = await query
+    const {
+      data,
+      error,
+    } = await query
       .select()
       .maybeSingle();
+
+    // =========================
+    // ERRO NO SUPABASE
+    // =========================
 
     if (error) {
       setSalvando(false);
@@ -432,10 +555,18 @@ function Produto() {
       return;
     }
 
+    // =========================
+    // OUTRO USUÁRIO DEU LANCE
+    // =========================
+
     if (!data) {
-      const { data: atual } = await supabase
+      const {
+        data: atual,
+      } = await supabase
         .from("produtos")
-        .select("lance_atual, data_fim")
+        .select(
+          "lance_atual, data_fim"
+        )
         .eq("id", produto.id)
         .maybeSingle();
 
@@ -443,17 +574,24 @@ function Produto() {
 
       if (
         atual?.data_fim &&
-        new Date(atual.data_fim).getTime() <=
-          Date.now()
+        new Date(
+          atual.data_fim
+        ).getTime() <= Date.now()
       ) {
-        setErro("O leilão já terminou.");
+        setErro(
+          "O leilão já terminou."
+        );
       } else if (
         atual &&
         atual.lance_atual !== null &&
-        Number(atual.lance_atual) >= valor
+        Number(
+          atual.lance_atual
+        ) >= valor
       ) {
         setLanceAtual(
-          Number(atual.lance_atual)
+          Number(
+            atual.lance_atual
+          )
         );
 
         setErro(
@@ -468,19 +606,53 @@ function Produto() {
       return;
     }
 
+    // =========================
+    // LANCE SALVO COM SUCESSO
+    // =========================
+
     setSalvando(false);
+
     setProduto(data);
-    setLanceAtual(valor);
+
+    setLanceAtual(
+      Number(
+        data.lance_atual ??
+          valor
+      )
+    );
+
+    // Fecha o modal de lance
     setModalAberto(false);
+
+    setNovoLance("");
+    setErro("");
+
+    // ====================================
+    // ABRE O PIX IMEDIATAMENTE
+    // ====================================
+
+    setPixAberto(true);
   };
 
   // =========================
   // PIX
   // =========================
 
-  const pixCopiaCola = `00020126580014BR.GOV.BCB.PIX0136chave-pix-exemplo5204000053039865406${lanceAtual.toFixed(
-    2
-  )}5802BR5913Nome do Leilao6009SAO PAULO62070503***6304ABCD`;
+  /*
+   * ATENÇÃO:
+   *
+   * Este é um código PIX de exemplo.
+   * Para cobrança real, substitua pela
+   * chave PIX real do vendedor e gere
+   * o payload PIX corretamente.
+   */
+
+  const pixCopiaCola =
+    `00020126580014BR.GOV.BCB.PIX0136chave-pix-exemplo5204000053039865406${Number(
+      lanceAtual
+    ).toFixed(
+      2
+    )}5802BR5913Nome do Leilao6009SAO PAULO62070503***6304ABCD`;
 
   const qrCodeUrl =
     `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
@@ -495,13 +667,22 @@ function Produto() {
     return (
       <div className="body">
         <main className="content">
-          <p>Carregando produto...</p>
+          <p>
+            Carregando produto...
+          </p>
         </main>
       </div>
     );
   }
 
-  if (erroCarregar || !produto) {
+  // =========================
+  // ERRO
+  // =========================
+
+  if (
+    erroCarregar ||
+    !produto
+  ) {
     return (
       <div className="body">
         <main className="content">
@@ -514,6 +695,10 @@ function Produto() {
     );
   }
 
+  // =========================
+  // ESTILO DOS AVISOS
+  // =========================
+
   const estiloAviso = {
     padding: "10px 12px",
     borderRadius: "8px",
@@ -521,6 +706,10 @@ function Produto() {
     fontWeight: 600,
     textAlign: "center",
   };
+
+  // =========================
+  // TELA
+  // =========================
 
   return (
     <div className="body">
@@ -536,25 +725,36 @@ function Produto() {
             <div className="carousel">
 
               <div className="slides">
+
                 {imagens.length > 0 ? (
                   <img
-                    src={imagens[slideAtual]}
-                    alt={produto.nome}
+                    src={
+                      imagens[
+                        slideAtual
+                      ]
+                    }
+                    alt={
+                      produto.nome
+                    }
                   />
                 ) : (
                   <div className="slide slide-1">
                     Sem imagem
                   </div>
                 )}
+
               </div>
 
-              {imagens.length > 1 && (
+              {imagens.length >
+                1 && (
                 <div className="carousel-controls">
 
                   <button
                     className="btn-arrow"
                     type="button"
-                    onClick={anterior}
+                    onClick={
+                      anterior
+                    }
                   >
                     ←
                   </button>
@@ -562,7 +762,9 @@ function Produto() {
                   <button
                     className="btn-arrow"
                     type="button"
-                    onClick={proximo}
+                    onClick={
+                      proximo
+                    }
                   >
                     →
                   </button>
@@ -589,7 +791,8 @@ function Produto() {
               </p>
             )}
 
-            <br /><br />
+            <br />
+            <br />
 
             <p className="product-desc">
               {produto.descricao ||
@@ -605,6 +808,7 @@ function Produto() {
           <div className="bid-section">
 
             <div className="current-bid-display">
+
               <span>
                 {encerrado
                   ? "Lance vencedor"
@@ -612,43 +816,70 @@ function Produto() {
               </span>
 
               <strong>
-                R$ {formatarValor(lanceAtual)}
+                R${" "}
+                {formatarValor(
+                  lanceAtual
+                )}
               </strong>
+
             </div>
 
-            {/* AVISO PARA O DONO */}
-            {souDono && !encerrado && (
-              <div className="seller-warning">
-                Você publicou este produto.
-                <br />
-                Não é possível dar lance no seu próprio produto.
-              </div>
-            )}
+            {/* =========================
+                AVISO DO DONO
+            ========================= */}
+
+            {souDono &&
+              !encerrado && (
+                <div className="seller-warning">
+                  Você publicou este
+                  produto.
+                  <br />
+                  Não é possível dar lance
+                  no seu próprio produto.
+                </div>
+              )}
+
+            {/* =========================
+                ESTOU VENCENDO
+            ========================= */}
 
             {estouVencendo && (
               <div
                 style={{
                   ...estiloAviso,
-                  background: "#e6f7ee",
-                  color: "#1a7f4b",
+                  background:
+                    "#e6f7ee",
+                  color:
+                    "#1a7f4b",
                 }}
               >
-                Você está com o maior lance!
+                Você está com o
+                maior lance!
               </div>
             )}
+
+            {/* =========================
+                ENCERRADO SEM LANCES
+            ========================= */}
 
             {encerrado &&
               !produto.id_licitante && (
                 <div
                   style={{
                     ...estiloAviso,
-                    background: "#f0f0f0",
+                    background:
+                      "#f0f0f0",
                     color: "#555",
                   }}
                 >
-                  Leilão encerrado sem lances.
+                  Leilão encerrado
+                  sem lances.
                 </div>
               )}
+
+            {/* =========================
+                ENCERRADO OUTRO VENCEDOR
+            ========================= */}
 
             {encerrado &&
               produto.id_licitante &&
@@ -656,35 +887,31 @@ function Produto() {
                 <div
                   style={{
                     ...estiloAviso,
-                    background: "#f0f0f0",
+                    background:
+                      "#f0f0f0",
                     color: "#555",
                   }}
                 >
                   Leilão encerrado.
-                  Outro participante venceu.
+                  Outro participante
+                  venceu.
                 </div>
               )}
 
-            {/* BOTÃO PAGAR PARA O VENCEDOR */}
-            {euVenci && (
-              <button
-                className="btn-bid"
-                type="button"
-                onClick={() =>
-                  setPixAberto(true)
-                }
-              >
-                pagar agora
-              </button>
-            )}
+            {/* =========================
+                BOTÃO DAR LANCE
+            ========================= */}
 
-            {/* BOTÃO DE DAR LANCE */}
-            {!euVenci && !souDono && (
+            {!souDono && (
               <button
                 className="btn-bid"
                 type="button"
-                onClick={abrirModal}
-                disabled={indisponivel}
+                onClick={
+                  abrirModal
+                }
+                disabled={
+                  indisponivel
+                }
               >
                 {encerrado
                   ? "leilão encerrado"
@@ -692,30 +919,46 @@ function Produto() {
               </button>
             )}
 
-            {/* MENSAGEM CASO SEJA O DONO */}
-            {souDono && !encerrado && (
-              <button
-                className="btn-bid seller-disabled"
-                type="button"
-                disabled
-              >
-                você é o vendedor
-              </button>
-            )}
+            {/* =========================
+                DONO
+            ========================= */}
 
-            {/* PRÓXIMO LANCE */}
-            {!indisponivel && !souDono && (
-              <button
-                className="btn-bid-custom"
-                type="button"
-                onClick={abrirModal}
-              >
-                próximo lance mínimo de R${" "}
-                {formatarValor(lanceMinimo)}
-              </button>
-            )}
+            {souDono &&
+              !encerrado && (
+                <button
+                  className="btn-bid seller-disabled"
+                  type="button"
+                  disabled
+                >
+                  você é o vendedor
+                </button>
+              )}
 
-            {/* TIMER */}
+            {/* =========================
+                PRÓXIMO LANCE
+            ========================= */}
+
+            {!indisponivel &&
+              !souDono && (
+                <button
+                  className="btn-bid-custom"
+                  type="button"
+                  onClick={
+                    abrirModal
+                  }
+                >
+                  próximo lance
+                  mínimo de R${" "}
+                  {formatarValor(
+                    lanceMinimo
+                  )}
+                </button>
+              )}
+
+            {/* =========================
+                TIMER
+            ========================= */}
+
             <div className="timer-section">
 
               <h3>
@@ -725,19 +968,25 @@ function Produto() {
               <div className="timer">
 
                 <span className="time-box">
-                  {tempoRestante.horas}
+                  {
+                    tempoRestante.horas
+                  }
                 </span>
 
                 <span>:</span>
 
                 <span className="time-box">
-                  {tempoRestante.minutos}
+                  {
+                    tempoRestante.minutos
+                  }
                 </span>
 
                 <span>:</span>
 
                 <span className="time-box">
-                  {tempoRestante.segundos}
+                  {
+                    tempoRestante.segundos
+                  }
                 </span>
 
               </div>
@@ -748,145 +997,184 @@ function Produto() {
         </div>
       </main>
 
-      {/* =========================
+      {/* ==================================================
           MODAL DE LANCE
-      ========================= */}
+      ================================================== */}
 
-      {modalAberto && !souDono && (
-        <div
-          className="modal-overlay"
-          onClick={fecharModal}
-        >
+      {modalAberto &&
+        !souDono && (
           <div
-            className="bid-modal"
-            onClick={(e) =>
-              e.stopPropagation()
+            className="modal-overlay"
+            onClick={
+              fecharModal
             }
           >
 
-            <button
-              className="modal-close"
-              type="button"
-              onClick={fecharModal}
+            <div
+              className="bid-modal"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
             >
-              ×
-            </button>
 
-            <h2 className="modal-title">
-              Dar lance
-            </h2>
+              <button
+                className="modal-close"
+                type="button"
+                onClick={
+                  fecharModal
+                }
+                disabled={
+                  salvando
+                }
+              >
+                ×
+              </button>
 
-            <div className="modal-current-bid">
+              <h2 className="modal-title">
+                Dar lance
+              </h2>
 
-              <span>
-                Lance atual
-              </span>
-
-              <strong>
-                R$ {formatarValor(lanceAtual)}
-              </strong>
-
-            </div>
-
-            <div className="bid-rule">
-
-              <h3>
-                Regra do lance
-              </h3>
-
-              <p>
-                O novo lance deve ser pelo menos{" "}
-                <strong>
-                  R$ {formatarValor(incremento)} maior
-                </strong>{" "}
-                que o lance atual.
-              </p>
-
-              <div className="minimum-value">
+              <div className="modal-current-bid">
 
                 <span>
-                  Lance mínimo:
+                  Lance atual
                 </span>
 
                 <strong>
-                  R$ {formatarValor(lanceMinimo)}
+                  R${" "}
+                  {formatarValor(
+                    lanceAtual
+                  )}
                 </strong>
 
               </div>
 
-            </div>
+              <div className="bid-rule">
 
-            <label
-              className="modal-label"
-              htmlFor="novoLance"
-            >
-              Digite seu novo lance
-            </label>
+                <h3>
+                  Regra do lance
+                </h3>
 
-            <div className="bid-input">
+                <p>
+                  O novo lance deve
+                  ser pelo menos{" "}
+                  <strong>
+                    R${" "}
+                    {formatarValor(
+                      incremento
+                    )}{" "}
+                    maior
+                  </strong>{" "}
+                  que o lance atual.
+                </p>
 
-              <span>R$</span>
+                <div className="minimum-value">
 
-              <input
-                id="novoLance"
-                type="number"
-                min={lanceMinimo}
-                step="0.01"
-                placeholder={formatarValor(
-                  lanceMinimo
-                )}
-                value={novoLance}
-                onChange={(e) => {
-                  setNovoLance(
-                    e.target.value
-                  );
-                  setErro("");
-                }}
-              />
+                  <span>
+                    Lance mínimo:
+                  </span>
 
-            </div>
+                  <strong>
+                    R${" "}
+                    {formatarValor(
+                      lanceMinimo
+                    )}
+                  </strong>
 
-            {erro && (
-              <div className="bid-error">
-                {erro}
+                </div>
+
               </div>
-            )}
 
-            <div className="modal-buttons">
-
-              <button
-                className="modal-cancel"
-                type="button"
-                onClick={fecharModal}
+              <label
+                className="modal-label"
+                htmlFor="novoLance"
               >
-                Cancelar
-              </button>
+                Digite seu novo lance
+              </label>
 
-              <button
-                className="modal-confirm"
-                type="button"
-                onClick={confirmarLance}
-                disabled={salvando}
-              >
-                {salvando
-                  ? "Salvando..."
-                  : "Confirmar lance"}
-              </button>
+              <div className="bid-input">
+
+                <span>
+                  R$
+                </span>
+
+                <input
+                  id="novoLance"
+                  type="number"
+                  min={
+                    lanceMinimo
+                  }
+                  step="0.01"
+                  placeholder={formatarValor(
+                    lanceMinimo
+                  )}
+                  value={
+                    novoLance
+                  }
+                  onChange={(e) => {
+                    setNovoLance(
+                      e.target.value
+                    );
+
+                    setErro("");
+                  }}
+                />
+
+              </div>
+
+              {erro && (
+                <div className="bid-error">
+                  {erro}
+                </div>
+              )}
+
+              <div className="modal-buttons">
+
+                <button
+                  className="modal-cancel"
+                  type="button"
+                  onClick={
+                    fecharModal
+                  }
+                  disabled={
+                    salvando
+                  }
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  className="modal-confirm"
+                  type="button"
+                  onClick={
+                    confirmarLance
+                  }
+                  disabled={
+                    salvando
+                  }
+                >
+                  {salvando
+                    ? "Salvando..."
+                    : "Confirmar lance"}
+                </button>
+
+              </div>
 
             </div>
-
           </div>
-        </div>
-      )}
+        )}
 
-      {/* =========================
+      {/* ==================================================
           MODAL PIX
-      ========================= */}
+          AGORA ABRE LOGO APÓS CONFIRMAR O LANCE
+      ================================================== */}
 
-      {pixAberto && euVenci && (
+      {pixAberto && (
         <div
           className="modal-overlay"
-          onClick={fecharPix}
+          onClick={
+            fecharPix
+          }
         >
 
           <div
@@ -899,27 +1187,22 @@ function Produto() {
             <button
               className="pix-close"
               type="button"
-              onClick={fecharPix}
+              onClick={
+                fecharPix
+              }
             >
               ×
             </button>
 
-            <h2
-              style={{
-                textAlign: "center",
-                marginBottom: "4px",
-              }}
-            >
-              🎉 Parabéns! Você ganhou o leilão!
+            <h2 className="pix-success-title">
+              🎉 Lance confirmado!
             </h2>
 
-            <p
-              style={{
-                textAlign: "center",
-                marginTop: 0,
-              }}
-            >
-              Produto:{" "}
+            <p className="pix-product-name">
+              Você deu o maior lance
+              atual no produto:
+              <br />
+
               <strong>
                 {produto.nome}
               </strong>
@@ -950,27 +1233,34 @@ function Produto() {
             </div>
 
             <p className="pix-value-label">
-              Valor a pagar:
+              Valor do seu lance:
             </p>
 
             <p className="pix-value">
-              R$ {formatarValor(lanceAtual)}
+              R${" "}
+              {formatarValor(
+                lanceAtual
+              )}
             </p>
 
             <div className="pix-qrcode">
+
               <img
                 src={qrCodeUrl}
                 alt="QR Code Pix"
                 width="200"
                 height="200"
               />
+
             </div>
 
             <div className="pix-copia-cola">
 
               <input
                 readOnly
-                value={pixCopiaCola}
+                value={
+                  pixCopiaCola
+                }
                 onFocus={(e) =>
                   e.target.select()
                 }
@@ -978,11 +1268,12 @@ function Produto() {
 
               <button
                 type="button"
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    pixCopiaCola
-                  )
-                }
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText(
+                      pixCopiaCola
+                    );
+                }}
               >
                 Copiar
               </button>
@@ -990,28 +1281,49 @@ function Produto() {
             </div>
 
             <p className="pix-instructions">
-              Pagar com o Pix é fácil, rápido e seguro!
+              Pagar com Pix é fácil,
+              rápido e seguro!
             </p>
 
             <ol className="pix-steps">
 
               <li>
-                Abra o aplicativo do seu banco no celular.
+                Abra o aplicativo
+                do seu banco no
+                celular.
               </li>
 
               <li>
-                Escolha pagar via Pix com QR Code.
+                Escolha pagar via
+                Pix com QR Code.
               </li>
 
               <li>
-                Aponte a câmera para o código acima ou use o "copia e cola".
+                Aponte a câmera
+                para o código acima
+                ou use o
+                "copia e cola".
               </li>
 
               <li>
-                Confirme as informações e finalize o pagamento.
+                Confirme as
+                informações e
+                finalize o
+                pagamento.
               </li>
 
             </ol>
+
+            <div className="pix-warning">
+              ⚠️ O pagamento não
+              significa que o
+              leilão terminou.
+              <br />
+              Você ainda poderá
+              receber um lance
+              maior de outro
+              participante.
+            </div>
 
           </div>
         </div>

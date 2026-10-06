@@ -45,6 +45,7 @@
   border: 2px solid var(--border);
   border-radius: var(--radius-md);
   background-color: var(--surface);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,11 +62,14 @@
 .slide {
   width: 100%;
   height: 100%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background-color: var(--surface);
   color: var(--title);
+
   font-size: 30px;
 }
 
@@ -83,12 +87,16 @@
 .btn-arrow {
   width: 90px;
   height: 45px;
+
   background-color: var(--primary);
   color: var(--title);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   font-size: 20px;
   cursor: pointer;
+
   transition: var(--transition);
 }
 
@@ -112,6 +120,13 @@
   font-weight: 600;
 }
 
+.product-category {
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: -20px;
+}
+
 .product-desc {
   color: var(--text);
   font-size: 17px;
@@ -126,10 +141,14 @@
 .bid-section {
   width: 100%;
   min-height: 690px;
+
   background-color: var(--surface);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+
   padding: 100px 28px 30px;
+
   display: flex;
   flex-direction: column;
 }
@@ -141,14 +160,19 @@
 .current-bid-display {
   width: 100%;
   min-height: 70px;
+
   padding: 15px 18px;
+
   background-color: var(--bg);
   color: var(--title);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   margin-bottom: 18px;
 }
 
@@ -169,21 +193,31 @@
 .btn-bid {
   width: 100%;
   height: 60px;
+
   background-color: var(--primary);
   color: var(--title);
+
   border: 2px solid var(--primary);
   border-radius: var(--radius-sm);
+
   font-family: var(--font);
   font-size: 18px;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
-.btn-bid:hover {
+.btn-bid:hover:not(:disabled) {
   background-color: var(--accent);
   border-color: var(--accent);
   color: var(--bg);
+}
+
+.btn-bid:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* =========================
@@ -193,15 +227,21 @@
 .btn-bid-custom {
   width: 100%;
   min-height: 50px;
+
   margin-top: 18px;
   padding: 8px;
+
   background-color: var(--bg);
   color: var(--accent);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   font-family: var(--font);
   font-size: 14px;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
@@ -230,14 +270,19 @@
 .timer {
   width: 100%;
   height: 65px;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   gap: 8px;
+
   background-color: var(--bg);
   color: var(--accent);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   font-family: monospace;
   font-size: 28px;
 }
@@ -253,36 +298,56 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
+
   width: 100%;
   height: 100%;
 
-  /* antes: rgba(2, 6, 23, 0.85) */
-  background-color: color-mix(in srgb, var(--bg) 85%, transparent);
+  background-color:
+    color-mix(
+      in srgb,
+      var(--bg) 85%,
+      transparent
+    );
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 20px;
+
   z-index: 9999;
 }
 
 /* =========================
-   CAIXA DO MODAL DE LANCE
+   MODAL DE LANCE
 ========================= */
 
 .bid-modal {
   position: relative;
+
   width: 100%;
   max-width: 500px;
+
   background-color: var(--surface);
   color: var(--title);
+
   border-radius: var(--radius-lg);
   padding: 40px;
+
   border: 1px solid var(--border);
 
-  box-shadow: 0 20px 60px color-mix(in srgb, var(--bg) 70%, transparent);
+  box-shadow:
+    0 20px 60px
+    color-mix(
+      in srgb,
+      var(--bg) 70%,
+      transparent
+    );
 
-  animation: modalAparecer 0.2s ease-out;
+  animation:
+    modalAparecer
+    0.2s
+    ease-out;
 }
 
 @keyframes modalAparecer {
@@ -303,16 +368,23 @@
 
 .modal-close {
   position: absolute;
+
   top: 10px;
   right: 15px;
+
   width: 35px;
   height: 35px;
+
   background: transparent;
   border: none;
+
   color: var(--text);
+
   font-size: 30px;
   line-height: 30px;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
@@ -320,8 +392,13 @@
   color: var(--accent);
 }
 
+.modal-close:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* =========================
-   TÍTULO DO MODAL
+   TÍTULO MODAL
 ========================= */
 
 .modal-title {
@@ -338,14 +415,19 @@
 .modal-current-bid {
   width: 100%;
   min-height: 65px;
+
   padding: 15px;
+
   background-color: var(--bg);
   color: var(--title);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   margin-bottom: 18px;
 }
 
@@ -365,11 +447,15 @@
 
 .bid-rule {
   width: 100%;
+
   background-color: var(--bg);
   color: var(--text);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+
   padding: 18px;
+
   margin-bottom: 25px;
 }
 
@@ -393,7 +479,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding-top: 12px;
+
   border-top: 1px solid var(--border);
 }
 
@@ -413,26 +501,35 @@
 
 .modal-label {
   display: block;
+
   color: var(--title);
+
   font-size: 16px;
   font-weight: 600;
+
   margin-bottom: 8px;
 }
 
 /* =========================
-   CAMPO DO NOVO LANCE
+   CAMPO NOVO LANCE
 ========================= */
 
 .bid-input {
   width: 100%;
   height: 58px;
+
   display: flex;
   align-items: center;
+
   background-color: var(--bg);
+
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
+
   overflow: hidden;
+
   margin-bottom: 10px;
+
   transition: var(--transition);
 }
 
@@ -442,19 +539,25 @@
 
 .bid-input span {
   color: var(--accent);
+
   font-size: 19px;
   font-weight: 600;
+
   padding-left: 15px;
 }
 
 .bid-input input {
   width: 100%;
   height: 100%;
+
   padding: 0 15px;
+
   background: transparent;
   border: none;
   outline: none;
+
   color: var(--title);
+
   font-family: var(--font);
   font-size: 21px;
 }
@@ -480,14 +583,17 @@
 
 .bid-error {
   color: #f87171;
+
   font-size: 14px;
   font-weight: 600;
+
   line-height: 1.4;
+
   margin-bottom: 10px;
 }
 
 /* =========================
-   BOTÕES DO MODAL
+   BOTÕES MODAL
 ========================= */
 
 .modal-buttons {
@@ -499,62 +605,98 @@
 .modal-cancel {
   flex: 1;
   height: 50px;
+
   background-color: transparent;
   color: var(--text);
+
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
+
   font-family: var(--font);
   font-size: 15px;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
-.modal-cancel:hover {
+.modal-cancel:hover:not(:disabled) {
   background-color: var(--border);
   color: var(--title);
+}
+
+.modal-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .modal-confirm {
   flex: 1;
   height: 50px;
+
   background-color: var(--primary);
   color: var(--title);
+
   border: 2px solid var(--primary);
   border-radius: var(--radius-sm);
+
   font-family: var(--font);
   font-size: 15px;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
-.modal-confirm:hover {
+.modal-confirm:hover:not(:disabled) {
   background-color: var(--accent);
   border-color: var(--accent);
   color: var(--bg);
 }
 
+.modal-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* =========================
-   MODAL DE PAGAMENTO PIX
+   MODAL PIX
 ========================= */
 
 .pix-modal {
   position: relative;
+
   width: 100%;
   max-width: 420px;
   max-height: 90vh;
+
   overflow-y: auto;
+
   background-color: var(--surface);
   color: var(--title);
+
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+
   padding: 35px 30px 30px;
+
   text-align: center;
 
-  box-shadow: 0 20px 60px color-mix(in srgb, var(--bg) 70%, transparent);
+  box-shadow:
+    0 20px 60px
+    color-mix(
+      in srgb,
+      var(--bg) 70%,
+      transparent
+    );
 
-  animation: modalAparecer 0.2s ease-out;
+  animation:
+    modalAparecer
+    0.2s
+    ease-out;
+
   font-family: var(--font);
 }
 
@@ -564,21 +706,59 @@
 
 .pix-close {
   position: absolute;
+
   top: 10px;
   right: 15px;
+
   width: 35px;
   height: 35px;
+
   background: transparent;
   border: none;
+
   color: var(--text);
+
   font-size: 28px;
   line-height: 28px;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
 .pix-close:hover {
   color: var(--accent);
+}
+
+/* =========================
+   TÍTULO PIX
+========================= */
+
+.pix-success-title {
+  text-align: center;
+
+  margin-bottom: 8px;
+
+  color: var(--title);
+
+  font-size: 23px;
+  line-height: 1.3;
+}
+
+.pix-product-name {
+  text-align: center;
+
+  margin-top: 0;
+  margin-bottom: 20px;
+
+  color: var(--text);
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pix-product-name strong {
+  color: var(--title);
 }
 
 /* =========================
@@ -588,15 +768,24 @@
 .pix-header {
   display: flex;
   flex-direction: column;
+
   align-items: center;
+
   gap: 2px;
+
   margin-bottom: 18px;
+}
+
+.pix-icon {
+  margin-bottom: 4px;
 }
 
 .pix-brand {
   font-size: 30px;
   font-weight: 700;
+
   color: var(--title);
+
   letter-spacing: 1px;
 }
 
@@ -617,7 +806,9 @@
 .pix-value {
   font-size: 26px;
   font-weight: 700;
+
   color: var(--success);
+
   margin-bottom: 20px;
 }
 
@@ -627,10 +818,15 @@
 
 .pix-qrcode {
   width: 220px;
+
   margin: 0 auto 20px;
+
   padding: 8px;
+
   background-color: #ffffff;
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius-sm);
 }
 
@@ -646,19 +842,29 @@
 
 .pix-copia-cola {
   display: flex;
+
   gap: 8px;
+
   margin-bottom: 22px;
 }
 
 .pix-copia-cola input {
   flex: 1;
+
   min-width: 0;
+
   height: 42px;
+
   padding: 0 10px;
+
   background-color: var(--bg);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius-sm);
+
   font-size: 12px;
+
   color: var(--title);
 }
 
@@ -669,19 +875,31 @@
 
 .pix-copia-cola button {
   height: 42px;
+
   padding: 0 16px;
+
   background-color: var(--success);
   color: #ffffff;
+
   border: none;
+
   border-radius: var(--radius-sm);
+
   font-size: 13px;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: var(--transition);
 }
 
 .pix-copia-cola button:hover {
-  background-color: color-mix(in srgb, var(--success) 85%, var(--bg));
+  background-color:
+    color-mix(
+      in srgb,
+      var(--success) 85%,
+      var(--bg)
+    );
 }
 
 /* =========================
@@ -690,17 +908,92 @@
 
 .pix-instructions {
   color: var(--accent);
+
   font-weight: 600;
+
   font-size: 15px;
+
   margin-bottom: 12px;
 }
 
 .pix-steps {
   text-align: left;
+
   font-size: 13px;
+
   color: var(--text);
+
   line-height: 1.7;
+
   padding-left: 20px;
+}
+
+/* =========================
+   AVISO PIX
+========================= */
+
+.pix-warning {
+  margin-top: 20px;
+
+  padding: 12px;
+
+  background-color: var(--bg);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-sm);
+
+  color: var(--text);
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+/* =========================
+   AVISO DO VENDEDOR
+========================= */
+
+.seller-warning {
+  width: 100%;
+
+  padding: 14px;
+
+  margin: 12px 0;
+
+  background-color: var(--bg);
+  color: var(--accent);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-sm);
+
+  text-align: center;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   BOTÃO DESABILITADO VENDEDOR
+========================= */
+
+.seller-disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed !important;
+}
+
+.seller-disabled:hover {
+  background-color: var(--primary);
+
+  border-color: var(--primary);
+
+  color: var(--title);
 }
 
 /* =========================
@@ -736,6 +1029,18 @@
 ========================= */
 
 @media (max-width: 600px) {
+  .content {
+    padding: 20px 15px;
+  }
+
+  .product-title {
+    font-size: 27px;
+  }
+
+  .slides {
+    height: 300px;
+  }
+
   .bid-modal,
   .pix-modal {
     padding: 30px 20px;
@@ -770,36 +1075,16 @@
   .pix-copia-cola {
     flex-direction: column;
   }
-}
-/* =========================
-   AVISO DO VENDEDOR
-========================= */
 
-.seller-warning {
-  width: 100%;
-  padding: 14px;
-  margin: 12px 0;
-  background-color: var(--bg);
-  color: var(--accent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-}
+  .pix-copia-cola button {
+    width: 100%;
+  }
 
-/* =========================
-   BOTÃO DESABILITADO DO VENDEDOR
-========================= */
+  .timer-section {
+    margin-top: 60px;
+  }
 
-.seller-disabled {
-  opacity: 0.6;
-  cursor: not-allowed !important;
-}
-
-.seller-disabled:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: var(--title);
+  .timer {
+    font-size: 23px;
+  }
 }
